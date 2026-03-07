@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highline Beta BetaLink - Kenny Huang Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 850: '#202022', 950: '#0c0c0e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* ── Sticky Section Nav ── */
+        #section-nav {
+            position: fixed;
+            top: 80px;
+            /* sits right under the main nav */
+            left: 0;
+            width: 100%;
+            z-index: 40;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        #section-nav.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sec-link {
+            position: relative;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #71717a;
+            padding: 0 4px 14px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .sec-link:hover {
+            color: #18181b;
+            border-color: #a1a1aa;
+        }
+
+        .dark .sec-link:hover {
+            color: #f4f4f5;
+            border-color: #52525b;
+        }
+
+        .sec-link.active {
+            color: #6366f1;
+            border-color: #6366f1;
+        }
+
+        .dark .sec-link.active {
+            color: #818cf8;
+            border-color: #818cf8;
+        }
+
+        /* ── Nav inner scroll strip ── */
+        #section-nav-inner {
+            overflow-x: auto;
+            scrollbar-width: none;
+            /* Firefox */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #section-nav-inner::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari/Edge */
+        }
+
+        /* ── Ideation diagram ── */
+        .ideation-merge-arrow {
+            color: #6366f1;
+        }
+
+        /* ── Process track (unchanged) ── */
+        .process-track {
+            position: absolute;
+            top: 40%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #3b82f6;
+            z-index: 0;
+        }
+
+        .signal-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes signal-travel {
+            0% {
+                left: 11%;
+                opacity: 0;
+            }
+
+            2% {
+                opacity: 1;
+            }
+
+            38% {
+                opacity: 1;
+                left: 68%;
+            }
+
+            40%,
+            100% {
+                left: 68%;
+                opacity: 0;
+            }
+        }
+
+        .signal-line {
+            position: absolute;
+            top: 40%;
+            left: 11%;
+            width: 20%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ef4444, #ef4444, transparent);
+            box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
+            animation: signal-travel 4s linear infinite;
+            animation-delay: 3s;
+            animation-fill-mode: backwards;
+            z-index: 5;
+        }
+
+        @keyframes border-flash {
+
+            0%,
+            100% {
+                border-color: #3b82f6;
+                box-shadow: none;
+            }
+
+            50% {
+                border-color: #ef4444;
+                box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+            }
+        }
+
+        .process-card {
+            border: 4px solid #3b82f6;
+            animation: border-flash 4s linear infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .card-1 {
+            animation-delay: 1s;
+        }
+
+        .card-2 {
+            animation-delay: 2s;
+        }
+
+        .card-3 {
+            animation-delay: 3s;
+        }
+
+        @media (max-width:768px) {
+
+            .process-track,
+            .signal-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <!-- ══ Main Nav ══ -->
+    <nav
+        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1470185034458857574/khlogoblack.png?ex=698a6002&is=69890e82&hm=f556d3b99591a24785c51f24f61830a6f25ba649a6756c0dc86b870b15752589&=&format=webp&quality=lossless&width=801&height=800"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <span
+                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">Kenny
+                    Huang Design</span>
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
+                        Me</a>
+                    <a href="experience.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
+                    <a href="contact.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
+                </div>
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
+            <a href="about.html"
+                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
+                Me</a>
+            <a href="experience.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <!-- ══ Sticky Section Nav (appears after pitch button) ══ -->
+    <div id="section-nav">
+        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
+            <div id="section-nav-inner"
+                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
+                <button class="sec-link" data-target="section-problem">Problem Statement</button>
+                <button class="sec-link" data-target="section-research">Research</button>
+                <button class="sec-link" data-target="section-synthesis">Synthesis</button>
+                <button class="sec-link" data-target="section-ideation">Ideation</button>
+                <button class="sec-link" data-target="section-prototype">Final Prototype</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-20 pb-24 w-full">
+
+        <!-- Hero image -->
+        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
+            <img src="https://media.discordapp.net/attachments/692498995595051019/1471404424118276230/bracelet_render_5.png?ex=698ecfa8&is=698d7e28&hm=401a13d19d5b816f977d1408c087990d761d807b03fa61b853394befd9aad432&=&format=webp&quality=lossless&width=1421&height=800"
+                alt="Project Cover" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+        </div>
+
+        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
+
+            <!-- Project overview -->
+            <section
+                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
+                <div class="md:col-span-5">
+                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">Highline Beta BetaLink</h1>
+                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
+                        <div><span class="block text-zinc-400 mb-1">Role</span><span class="font-medium">Junior Product
+                                Designer</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Timeline</span><span class="font-medium">Oct 2025 -
+                                Nov 2025</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Client</span><span class="font-medium">Highline
+                                Beta</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Tools</span><span class="font-medium">Figma, Fusion
+                                360, Blender, PLA/TPU 3D Printing</span></div>
+                    </div>
+                </div>
+                <div class="md:col-span-7 md:pl-10">
+                    <h3 class="text-2xl font-bold mb-6">A Sleeker, Smarter Way to Network</h3>
+                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        <p>BetaLink wristbands are NFC-powered wristbands that allow for instant Linkedin connection
+                            with just one tap. Powered by a single NTAG216 NFC tag (no batteries needed), the wristbands
+                            are entirely rewriteable by the user in case social media URLs change. BetaLink supports
+                            both Apple and Android phones. Current prototypes are fully functional and feature a
+                            custom-printed PLA shell alongside a TPU wristband.</p>
+                        <p>Existing event wearables end up in one of two categories: either they are bulky and
+                            aesthetically unappealing networking devices, or they are sleek and simple wearable devices
+                            that only get used for attendance and are disposed of right after the event. BetaLink
+                            disrupts this current binary, offering a wearable device that is compact and aesthetically
+                            appealing, whilst retaining the functionality of existing networking devices.</p>
+                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
+                            <p>(NFC Tools app is required for rewriting the NFC tag; free to download on the App Store
+                                and Google Play)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Presentation slide + pitch button — scroll trigger sentinel is here -->
+            <section class="py-16 sm:py-24 space-y-16 sm:space-y-32">
+                <div class="space-y-12">
+                    <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-lg overflow-hidden shadow-2xl">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1471410132435992596/Highline_Beta_-_Networking_Improvement_Framework.png?ex=698ed4f9&is=698d8379&hm=4e55210aa3a296a3ce9b80ddd4072dcdb498bc38bc386601e9f4ffb976601254&=&format=webp&quality=lossless&width=1423&height=800"
+                            alt="Full Presentation" class="w-full h-auto">
+                    </div>
+
+                    <!-- SENTINEL — sticky nav appears when this scrolls out of view -->
+                    <div id="pitch-sentinel" class="flex justify-center pb-12">
+                        <a href="#placeholder-pdf-link"
+                            class="relative overflow-hidden inline-flex items-center justify-center px-12 py-5 font-bold text-white text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 bg-[length:200%_auto] rounded-3xl hover:scale-105 transition-all duration-300 hover:bg-[position:right_center] shadow-lg hover:shadow-xl">
+                            SEE PRESENTATION PITCH
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ══ PROBLEM STATEMENT ══ -->
+                <section id="section-problem"
+                    class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
+                    style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 20%, #4f46e5 45%, #7c3aed 65%, #db2777 85%, #f43f5e 100%);">
+                    <div class="absolute inset-0 opacity-20"
+                        style="background: radial-gradient(ellipse at 30% 50%, #a5b4fc 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, #f9a8d4 0%, transparent 60%);">
+                    </div>
+                    <div class="relative z-10 max-w-4xl mx-auto space-y-8">
+                        <p class="text-indigo-200 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
+                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                            Investor networking at Highline Beta events requires a tedious, manual exchange of contact
+                            information.
+                        </h2>
+                        <p class="text-lg sm:text-xl text-indigo-100/80 max-w-2xl mx-auto leading-relaxed">
+                            How can networking between attendees and Highline Beta staff be enhanced? How might we
+                            identify, understand, and overcome these challenges?
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ══ RESEARCH & MINDMAPS ══ -->
+                <section id="section-research" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Research</h3>
+                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Trends, tools,
+                            and opportunities map. Avoid/consider analysis. Staff/attendee psychological iceberg model.
+                        </p>
+                    </div>
+
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1474286620260700262/Highline_Beta_Design_Project3.png?ex=69994be9&is=6997fa69&hm=31d2be68e68c7b015c41c719e2a347311f61551019386e08e6ff55fb89fa8bdf&"
+                            alt="Research Map"
+                            class="w-full h-auto block transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1473535610206683218/Highline_Beta_Design_Project4.png?ex=6999337a&is=6997e1fa&hm=b57e467829cc1647a397f08249a136ae205767c37754647598d0e1f20d61d1da&"
+                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1473574964086050949/Highline_Beta_Design_Project5.png?ex=6996b521&is=699563a1&hm=702dcc5f318fd364efd95ea9f81d3e407ffbc9149728a65d2eb0c3a84f4a2516&"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                </section>
+
+                <!-- ══ SYNTHESIS ══ -->
+                <section id="section-synthesis" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Synthesis & Ideation</h3>
+                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Existing methods analysis,
+                            timelines, user experience roadmap. <strong>The answer to Highline Beta's networking
+                                improvements was not simply "make a wristband".</strong></p>
+                    </div>
+
+                    <!-- Placeholder images — same style as Research section -->
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1475297450096070790/Highline_Beta_Design_Project3.png?ex=699cf951&is=699ba7d1&hm=6e796c3247fe363330190aa7ba1a32daa3614e10ffdb284301a2c3f974d3a528&"
+                            alt="Avoid Consider Analysis"
+                            class="w-full h-auto block transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1475297449441497251/Highline_Beta_Design_Project2.png?ex=699cf951&is=699ba7d1&hm=c188c66d3ee484db6cc6619fa31c59528ade76f32ad8a816775a83edc88a5d44&"
+                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
+                    </div>
+                </section>
+
+                <!-- ══ IDEATION ══ -->
+                <section id="section-ideation" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">BetaLink Ideation</h3>
+                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Identifying the design
+                            space between two existing binaries for the physical aspect of BetaLink.</p>
+                    </div>
+
+                    <!-- Binary merger diagram -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-center gap-0 md:gap-0">
+
+                        <!-- Binary A -->
+                        <div
+                            class="flex-1 rounded-2xl border-2 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-8 text-center space-y-4 max-w-xs mx-auto md:mx-0">
+                            <div
+                                class="w-14 h-14 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto">
+                                <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-red-600 dark:text-red-400">Functional</h4>
+                            <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Networking wearables
+                                with NFC, QR codes, and digital features. Bulky, industrial, and aesthetically
+                                unappealing.</p>
+                            <div class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">e.g. Bizzabo Klik,
+                                Blendology</div>
+                        </div>
+
+                        <!-- Merge arrows + center solution -->
+                        <div
+                            class="flex flex-col md:flex-row items-center justify-center relative py-8 md:py-0 md:px-6 gap-4 md:gap-0">
+                            <!-- Left arrow -->
+                            <div class="hidden md:flex items-center">
+                                <div class="w-16 h-0.5 bg-gradient-to-r from-red-400 to-indigo-500"></div>
+                                <svg class="w-5 h-5 text-indigo-500 -ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="md:hidden flex flex-col items-center gap-1">
+                                <div class="w-0.5 h-8 bg-gradient-to-b from-red-400 to-indigo-500"></div>
+                                <svg class="w-5 h-5 text-indigo-500 -mt-1 rotate-90" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+
+                            <!-- Center: Design Solution -->
+                            <div
+                                class="relative z-10 rounded-3xl p-1 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 shadow-2xl shadow-indigo-500/30">
+                                <div
+                                    class="bg-white dark:bg-zinc-900 rounded-[20px] px-8 py-10 text-center space-y-4 w-56">
+                                    <div
+                                        class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/40">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                    </div>
+                                    <h4
+                                        class="text-lg font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                        BetaLink</h4>
+                                    <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">NFC wristband:
+                                        compact, aesthetic, and fully functional for digital networking.</p>
+                                    <div
+                                        class="inline-block text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
+                                        Design Solution</div>
+                                </div>
+                            </div>
+
+                            <!-- Right arrow -->
+                            <div class="hidden md:flex items-center">
+                                <svg class="w-5 h-5 text-indigo-500 -mr-1 rotate-180" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <div class="w-16 h-0.5 bg-gradient-to-l from-sky-400 to-indigo-500"></div>
+                            </div>
+                            <div class="md:hidden flex flex-col items-center gap-1">
+                                <svg class="w-5 h-5 text-indigo-500 -mb-1 rotate-[270deg]" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <div class="w-0.5 h-8 bg-gradient-to-t from-sky-400 to-indigo-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- Binary B -->
+                        <div
+                            class="flex-1 rounded-2xl border-2 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-8 text-center space-y-4 max-w-xs mx-auto md:mx-0">
+                            <div
+                                class="w-14 h-14 rounded-xl bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mx-auto">
+                                <svg class="w-7 h-7 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                </svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-sky-600 dark:text-sky-400">Aesthetic</h4>
+                            <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Small and
+                                non-obstructive wearables for events. Often have lights and QR code features but do not
+                                have tap-to-connect capabilities.</p>
+                            <div class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">e.g. Crowdpass,
+                                PixMob wristbands</div>
+                        </div>
+                    </div>
+
+                    <!-- Ideation sketches placeholder row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-8">
+                        <div
+                            class="bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center aspect-video">
+                            <div class="space-y-3 group cursor-pointer"
+                                onclick="openLightbox(this.querySelector('img').src)">
+                                <div
+                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
+                                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1475326530925367506/Screenshot_52.png?ex=699d1467&is=699bc2e7&hm=142409b64ca5a5ef3f9b7cb4817b1817f4bb8f462547e35fb81805f932baae0f&"
+                                        alt="Functional"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center aspect-video">
+                            <div class="space-y-3 group cursor-pointer"
+                                onclick="openLightbox(this.querySelector('img').src)">
+                                <div
+                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
+                                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1475326205245915357/Highline_Beta_Design_Project5.png?ex=699d1419&is=699bc299&hm=110bb5aedab4524cb2fc351a5f84a1b0d9fa68579c638eacd3c4896e79d59931&"
+                                        alt="Aesthetic"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ══ FINAL PROTOTYPE ══ -->
+                <section id="section-prototype" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Final BetaLink Prototype</h3>
+                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Two fully functional
+                            prototypes of the BetaLink wristband, user testing, and conceptual renders.</p>
+                    </div>
+
+                    <!-- BetaLink Prototype Divider -->
+                    <div class="relative flex py-8 items-center">
+                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
+                        <span
+                            class="flex-shrink-0 mx-6 text-2xl font-bold text-zinc-600 dark:text-zinc-400 uppercase"></span>
+                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
+                    </div>
+
+                    <!-- Variation 1 -->
+                    <div class="space-y-2">
+                        <h4 class="text-2xl font-bold">Prototype A: Flatface Design</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-3 group cursor-pointer"
+                                onclick="openLightbox(this.querySelector('img').src)">
+                                <div
+                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
+                                    <img src="https://media.discordapp.net/attachments/692498995595051019/1471404693589594234/Bracelet_v1_render_3.png?ex=698ecfe8&is=698d7e68&hm=7f4a58c0696ebb9c1898be02a020be2c4bc1d4ee772b3b6c431da60d69ee2c37&=&format=webp&quality=lossless&width=1730&height=733"
+                                        alt="Variation 1 Render"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                </div>
+                            </div>
+                            <div class="space-y-3 group cursor-pointer"
+                                onclick="openLightbox(this.querySelector('img').src)">
+                                <div
+                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
+                                    <img src="https://media.discordapp.net/attachments/692498995595051019/1471404419622109205/IMG_1048.jpg?ex=698ecfa7&is=698d7e27&hm=0d323f50de317cc0d25c3edfd9740fb63c0a0bb31b93c5c55fe82065becad00c&=&format=webp&width=1066&height=800"
+                                        alt="Variation 1 Physical Model"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Variation 2 -->
+                    <div class="space-y-6 mt-16">
+                        <h4 class="text-2xl font-bold">Prototype B: Curvetop Design</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-3 group cursor-pointer"
+                                onclick="openLightbox(this.querySelector('img').src)">
+                                <div
+                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
+                                    <img src="https://media.discordapp.net/attachments/692498995595051019/1471404691660345414/Bracelet_v2_render_3.png?ex=698ecfe7&is=698d7e67&hm=62cfa12ad692569c75628f11f430218b0b2dbbf55d96861fc316f4fd0eb46b6b&=&format=webp&quality=lossless&width=1730&height=733"
+                                        alt="Variation 2 Render"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                </div>
+                            </div>
+                            <div class="space-y-3 group cursor-pointer"
+                                onclick="openLightbox(this.querySelector('img').src)">
+                                <div
+                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
+                                    <img src="https://media.discordapp.net/attachments/692498995595051019/1471404418573275250/IMG_1047.jpg?ex=698ecfa6&is=698d7e26&hm=76913ef9959f3ac31eb99a1227b2c27688475e0b07a2e3d449aa8e891a2841a0&=&format=webp&width=1066&height=800"
+                                        alt="Variation 2 Physical Model"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interaction Process -->
+                    <div class="relative flex py-8 items-center mt-24">
+                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
+                        <span
+                            class="flex-shrink-0 mx-6 text-xl font-bold text-zinc-600 dark:text-zinc-400 uppercase">Interaction
+                            Process</span>
+                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
+                    </div>
+
+                    <div class="pt-4 pb-12 relative overflow-hidden">
+                        <div class="hidden md:block process-track"></div>
+                        <div class="hidden md:block signal-line"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
+                            <div class="flex flex-col items-center space-y-6">
+                                <div
+                                    class="w-full aspect-[3/4] rounded-2xl p-1 bg-white dark:bg-zinc-900 process-card card-1 shadow-lg relative overflow-hidden">
+                                    <div class="w-full h-full rounded-xl overflow-hidden">
+                                        <img src="https://media.discordapp.net/attachments/692498995595051019/1471318231091253248/IMG_1099.jpg?ex=698e7f62&is=698d2de2&hm=05a289e67e2fc17ce5525cd0dd19d0d641766e94722d17697d9077b79f750f6a&=&format=webp&width=698&height=930"
+                                            alt="Scan Wristband" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <h4 class="text-xl font-bold text-center">1. Scan Wristband</h4>
+                            </div>
+                            <div class="flex flex-col items-center space-y-6">
+                                <div
+                                    class="w-full aspect-[3/4] rounded-2xl p-1 bg-white dark:bg-zinc-900 process-card card-2 shadow-lg relative overflow-hidden">
+                                    <div class="w-full h-full rounded-xl overflow-hidden">
+                                        <img src="https://media.discordapp.net/attachments/692498995595051019/1471319014025203784/IMG_1461.png?ex=698e801c&is=698d2e9c&hm=ae3cd8e90a1d969355f9a220c46240397c9f035428714beff15497570d6e5055&=&format=webp&quality=lossless&width=450&height=800"
+                                            alt="Receive Notification" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <h4 class="text-xl font-bold text-center">2. Receive Notification</h4>
+                            </div>
+                            <div class="flex flex-col items-center space-y-6">
+                                <div
+                                    class="w-full aspect-[3/4] rounded-2xl p-1 bg-white dark:bg-zinc-900 process-card card-3 shadow-lg relative overflow-hidden">
+                                    <div class="w-full h-full rounded-xl overflow-hidden">
+                                        <img src="https://media.discordapp.net/attachments/692498995595051019/1471319014469795900/IMG_1462.png?ex=698e801c&is=698d2e9c&hm=865298cca85e84e76d5962209d6175befaef0e0215003b5011206fd8128fa740&=&format=webp&quality=lossless&width=450&height=800"
+                                            alt="Connect on LinkedIn" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <h4 class="text-xl font-bold text-center">3. Connect on LinkedIn</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Future Conceptual Renders -->
+                    <div class="relative flex py-8 items-center">
+                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
+                        <span
+                            class="flex-shrink-0 mx-6 text-xl font-bold text-zinc-600 dark:text-zinc-400 uppercase">Future
+                            Conceptual Renders</span>
+                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1471404420381151275/bracelet_render_10.png?ex=698ecfa7&is=698d7e27&hm=1f7c6e0e786a3182fbf664529aa301b1df7aaa35cb348372a8c6d9437e609c0e&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Render 1"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1471404421282922640/bracelet_render_8.png?ex=698ecfa7&is=698d7e27&hm=7cbfa9127f26e57c3b90400ec75cf674b4a29fb66241d624d956b5ecf0ac25d1&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Render 2"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1471404425502265415/bracelet_render_4.png?ex=698ecfa8&is=698d7e28&hm=ffebbf1cad2ba5d1f537399a4d866c4080a7f024d25bc0952e40b42b2eaaf34b&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Render 3"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1471404422142758987/bracelet_render_7.png?ex=698ecfa7&is=698d7e27&hm=7234a15709e716890b3fe30462fa5cedcde2afbc7441ca095d0c37e4937e4806&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Render 4"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                    </div>
+
+                    <!-- Phase 4: Client Presentation Pitch button -->
+                    <div class="flex justify-center pt-16 pb-4">
+                        <button
+                            onclick="document.getElementById('pitch-sentinel').scrollIntoView({ behavior: 'smooth', block: 'center' })"
+                            class="w-full max-w-7xl py-6 rounded-2xl font-bold text-xl sm:text-2xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 bg-[length:200%_auto] hover:bg-[position:right_center] hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 shadow-xl hover:shadow-2xl">
+                            <strong>Client Presentation Pitch</strong>
+                        </button>
+                    </div>
+                </section>
+
+            </section>
+
+        </div>
+
+        <div
+            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
+            <a href="index.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
+                Back to Home</a>
+            <a href="project2.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
+                Project &rarr;</a>
+        </div>
+
+        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
+            <div
+                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
+                <div class="h-12 flex items-center justify-center transition-transform">
+                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1471742423049703539/khbannerg.png?ex=69900a71&is=698eb8f1&hm=f42a11469ed017ea9e50c4207cb2ea359caf0c430e4f36ddd40a25e8c2f7a925&"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <div class="text-sm text-zinc-400">
+                    <p>&copy; 2026 Kenny Huang Design.</p>
+                    <p>All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox"
+        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="relative max-w-5xl w-full h-[85vh]">
+            <button onclick="closeLightbox()"
+                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+        </div>
+    </div>
+
+    <script>
+        // ── Theme + mobile menu ──
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        themeToggleBtn.addEventListener('click', function () {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+        });
+
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
+
+        // ── Lightbox ──
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.remove('hidden');
+            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => { lightbox.classList.add('hidden'); lightboxImg.src = ''; }, 300);
+            document.body.style.overflow = 'auto';
+        }
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
+
+        // ── Sticky Section Nav ──
+        const sectionNav = document.getElementById('section-nav');
+        const pitchSentinel = document.getElementById('pitch-sentinel');
+        const secLinks = document.querySelectorAll('.sec-link');
+
+        const sections = [
+            { id: 'section-problem', btn: document.querySelector('[data-target="section-problem"]') },
+            { id: 'section-research', btn: document.querySelector('[data-target="section-research"]') },
+            { id: 'section-synthesis', btn: document.querySelector('[data-target="section-synthesis"]') },
+            { id: 'section-ideation', btn: document.querySelector('[data-target="section-ideation"]') },
+            { id: 'section-prototype', btn: document.querySelector('[data-target="section-prototype"]') },
+        ];
+
+        // Show/hide sticky nav based on sentinel visibility
+        const sentinelObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // Show only if not intersecting AND the element has been scrolled past (above viewport)
+                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                    sectionNav.classList.add('visible');
+                } else {
+                    sectionNav.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0 });
+        sentinelObserver.observe(pitchSentinel);
+
+        // Scroll-spy: light up active section
+        function onScroll() {
+            const scrollY = window.scrollY;
+            const offset = 160; // nav + section-nav height
+            let active = null;
+
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const el = document.getElementById(sections[i].id);
+                if (el && el.getBoundingClientRect().top <= offset) {
+                    active = sections[i].id;
+                    break;
+                }
+            }
+
+            sections.forEach(s => {
+                if (s.btn) s.btn.classList.toggle('active', s.id === active);
+            });
+
+            // Auto-scroll the nav strip so the active button is centred (mobile)
+            if (active) {
+                const activeBtn = document.querySelector('.sec-link.active');
+                const navInner = document.getElementById('section-nav-inner');
+                if (activeBtn && navInner) {
+                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
+                    const navMid = navInner.offsetWidth / 2;
+                    navInner.scrollTo({ left: btnMid - navMid, behavior: 'smooth' });
+                }
+            }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Click to jump
+        secLinks.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                if (target) {
+                    const offset = 160;
+                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
