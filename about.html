@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Kenny Huang Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 850: '#202022', 950: '#0c0c0e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #dust-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .slogan-container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <nav
+        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1470185034458857574/khlogoblack.png?ex=698a6002&is=69890e82&hm=f556d3b99591a24785c51f24f61830a6f25ba649a6756c0dc86b870b15752589&=&format=webp&quality=lossless&width=801&height=800"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <span
+                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">
+                    Kenny Huang Design
+                </span>
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    <a href="about.html" class="text-zinc-900 dark:text-zinc-100 font-bold">About Me</a>
+                    <a href="experience.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
+                    <a href="contact.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
+                </div>
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
+            <a href="about.html" class="block px-4 py-3 text-sm font-bold bg-zinc-50 dark:bg-zinc-800 rounded-lg">About
+                Me</a>
+            <a href="experience.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-24 w-full px-6 sm:px-10 max-w-screen-2xl mx-auto">
+
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20 mb-24 items-start">
+            <div
+                class="md:col-span-4 w-full aspect-[4/5] bg-zinc-100 dark:bg-zinc-900 rounded-lg overflow-hidden order-2 md:order-1 max-w-sm mx-auto md:max-w-none">
+                <img src="https://media.discordapp.net/attachments/692498995595051019/1470695561144569886/jhjhj.png?ex=698c3b79&is=698ae9f9&hm=8262039d958997261683434b3e6e6231639ae114dd823acc7e2e53e56c0fb8dc&=&format=webp&quality=lossless&width=309&height=438"
+                    alt="Kenny Huang Portrait"
+                    class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-700">
+            </div>
+            <div class="md:col-span-8 flex flex-col justify-center h-full order-1 md:order-2 md:pt-4">
+                <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-8 leading-tight">
+                    Designing for <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-blue-500 dark:from-zinc-100 dark:to-blue-400">Everyday
+                        People</span>
+                </h1>
+                <div class="space-y-6 text-lg sm:text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-4xl">
+                    <p>Kenny Huang is a fourth-year industrial design major at OCAD University, currently based in
+                        Markham, Ontario. Taking on a particular interest in human-centric design solutions and user
+                        experience, he has a strong foundation in both the technical execution of product development as
+                        well as the critical research fundamental to early-stage concepts. Currently, his professional
+                        experience is rapidly expanding, from collaborative service projects for Cadillac Fairview to
+                        market analysis and project management for Highline Beta, he continues to engage with advancing
+                        AI technology to stay at the forefront of the product design industry.</p>
+                    <p>Having worked with a range of software like the Adobe Suite and multiple CAD applications since
+                        the age of 16, he continues to broaden his digital capabilities through programs like Figma,
+                        Visual Studio Code, Stitch, and Cursor in university. With a diverse skillset and a strong
+                        ambition to push his creative boundaries, he aims to create user experiences that seamlessly
+                        merge functionality, aesthetics, and innovative technology into one.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-32 relative overflow-hidden py-32 sm:py-48 flex justify-center items-center"
+            id="slogan-section">
+            <canvas id="dust-canvas"></canvas>
+            <div class="slogan-container relative z-10 max-w-5xl mx-auto text-center px-4">
+                <h2 class="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-zinc-900 dark:text-white">
+                    My ultimate ambition is to improve people's daily life through design.
+                </h2>
+            </div>
+        </section>
+
+        <section id="design-process-section" class="mb-32 pt-16">
+            <div class="flex flex-col md:grid md:grid-cols-12 gap-10 relative">
+
+                <div class="contents md:block md:col-span-5 relative">
+                    <div
+                        class="sticky top-20 md:top-28 z-0 md:z-0 pb-8 md:pb-0 h-auto md:h-[50vh] flex flex-col items-start md:items-center rounded-b-3xl md:rounded-none transition-all duration-300">
+                        <h2 class="text-4xl sm:text-6xl font-bold mb-12 md:mb-64 text-center p-4 rounded-xl w-full">
+                            My Design Process</h2>
+
+                        <div
+                            class="fixed md:relative bottom-20 md:bottom-auto left-0 md:left-auto w-full md:w-full h-48 md:h-48 flex justify-center items-center md:items-end z-0">
+                            <div class="process-number absolute transition-all duration-700 opacity-0 transform translate-y-8"
+                                data-target="step-1">
+                                <div class="flex flex-col items-center">
+                                    <span
+                                        class="text-8xl md:text-[10rem] font-bold tracking-tighter text-blue-600 dark:text-blue-400 leading-none">01</span>
+                                    <span
+                                        class="text-3xl md:text-5xl font-bold tracking-wider text-blue-600 dark:text-blue-400 opacity-50 -mt-2">STAGE</span>
+                                </div>
+                            </div>
+                            <div class="process-number absolute transition-all duration-700 opacity-0 transform translate-y-8"
+                                data-target="step-2">
+                                <div class="flex flex-col items-center">
+                                    <span
+                                        class="text-8xl md:text-[10rem] font-bold tracking-tighter text-purple-600 dark:text-purple-400 leading-none">02</span>
+                                    <span
+                                        class="text-3xl md:text-5xl font-bold tracking-wider text-purple-600 dark:text-purple-400 opacity-50 -mt-2">STAGE</span>
+                                </div>
+                            </div>
+                            <div class="process-number absolute transition-all duration-700 opacity-0 transform translate-y-8"
+                                data-target="step-3">
+                                <div class="flex flex-col items-center">
+                                    <span
+                                        class="text-8xl md:text-[10rem] font-bold tracking-tighter text-emerald-600 dark:text-emerald-400 leading-none">03</span>
+                                    <span
+                                        class="text-3xl md:text-5xl font-bold tracking-wider text-emerald-600 dark:text-emerald-400 opacity-50 -mt-2">STAGE</span>
+                                </div>
+                            </div>
+                            <div class="process-number absolute transition-all duration-700 opacity-0 transform translate-y-8"
+                                data-target="step-4">
+                                <div class="flex flex-col items-center">
+                                    <span
+                                        class="text-8xl md:text-[10rem] font-bold tracking-tighter text-rose-600 dark:text-rose-400 leading-none">04</span>
+                                    <span
+                                        class="text-3xl md:text-5xl font-bold tracking-wider text-rose-600 dark:text-rose-400 opacity-50 -mt-2">STAGE</span>
+                                </div>
+                            </div>
+                            <div class="process-number absolute transition-all duration-700 opacity-0 transform translate-y-8"
+                                data-target="step-5">
+                                <div class="flex flex-col items-center">
+                                    <span
+                                        class="text-8xl md:text-[10rem] font-bold tracking-tighter text-amber-500 dark:text-amber-400 leading-none">05</span>
+                                    <span
+                                        class="text-3xl md:text-5xl font-bold tracking-wider text-amber-500 dark:text-amber-400 opacity-50 -mt-2">STAGE</span>
+                                </div>
+                            </div>
+                            <div class="process-number absolute transition-all duration-700 opacity-0 transform translate-y-8"
+                                data-target="step-6">
+                                <div class="flex flex-col items-center">
+                                    <span
+                                        class="text-8xl md:text-[10rem] font-bold tracking-tighter text-cyan-600 dark:text-cyan-400 leading-none">06</span>
+                                    <span
+                                        class="text-3xl md:text-5xl font-bold tracking-wider text-cyan-600 dark:text-cyan-400 opacity-50 -mt-2">STAGE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 pt-20 md:pt-80 md:pl-12 relative z-10">
+                    <div class="flex flex-col space-y-[60vh] md:space-y-[80vh] pb-[20vh] md:pb-[40vh]">
+
+                        <div id="step-1"
+                            class="process-step transition-opacity duration-500 opacity-20 snap-center snap-always">
+                            <h4 class="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400">Problem Identification
+                            </h4>
+                            <p class="text-zinc-500 text-xl leading-relaxed max-w-xl">Identify the problem at hand
+                                first. Without a problem, there is no solution to design for. Everything comes after
+                                this step.</p>
+                        </div>
+
+                        <div id="step-2"
+                            class="process-step transition-opacity duration-500 opacity-20 snap-center snap-always">
+                            <h4 class="text-3xl font-bold mb-4 text-purple-600 dark:text-purple-400">Exploration &
+                                Research</h4>
+                            <p class="text-zinc-500 text-xl leading-relaxed max-w-xl">Explore the previously identified
+                                problem in all its facets. The initial problem might change and early directions might
+                                pivot depending on research.
+                            </p>
+                        </div>
+
+                        <div id="step-3"
+                            class="process-step transition-opacity duration-500 opacity-20 snap-center snap-always">
+                            <h4 class="text-3xl font-bold mb-4 text-emerald-600 dark:text-emerald-400">Synthesis
+                            </h4>
+                            <p class="text-zinc-500 text-xl leading-relaxed max-w-xl">Fully understand
+                                <strong>what</strong> the problem
+                                is, <strong>why</strong> it matters, <strong>who</strong> is affected,
+                                <strong>where</strong> it's most relevant to, <strong>when</strong> a solution might
+                                be needed, and <strong>how</strong> to approach solving it.
+                            </p>
+                        </div>
+
+                        <div id="step-4"
+                            class="process-step transition-opacity duration-500 opacity-20 snap-center snap-always">
+                            <h4 class="text-3xl font-bold mb-4 text-rose-600 dark:text-rose-400">Ideation</h4>
+                            <p class="text-zinc-500 text-xl leading-relaxed max-w-xl">Brainstorming and generating
+                                multiple possible solutions to the problem based on prior research and mapping. Being as
+                                critical as possible during this stage to root out unfeasible solutions early on.</p>
+                        </div>
+
+                        <div id="step-5"
+                            class="process-step transition-opacity duration-500 opacity-20 snap-center snap-always">
+                            <h4 class="text-3xl font-bold mb-4 text-amber-500 dark:text-amber-400">Prototyping & Testing
+                            </h4>
+                            <p class="text-zinc-500 text-xl leading-relaxed max-w-xl">Creating mockups, maps, and other
+                                representations of the solution to test with stakeholders and users. Iterating on
+                                designs based on feedback.</p>
+                        </div>
+
+                        <div id="step-6"
+                            class="process-step transition-opacity duration-500 opacity-20 snap-center snap-always">
+                            <h4 class="text-3xl font-bold mb-4 text-cyan-600 dark:text-cyan-400">Implementation</h4>
+                            <p class="text-zinc-500 text-xl leading-relaxed max-w-xl">Presenting the final product and
+                                relevant research to stakeholders and users. Getting feedback to understand what could
+                                be improved further and how I could apply current learnings to future projects.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-32 border-t border-zinc-100 dark:border-zinc-800 pt-24">
+            <h2 class="text-5xl sm:text-6xl font-bold mb-16 text-center">Core Skills</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div
+                    class="p-8 pt-6 border-[3.5px] border-blue-200 dark:border-blue-900/50 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all duration-300 hover:-rotate-2 cursor-default group">
+                    <h3
+                        class="text-xl font-bold mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        Research & Development</h3>
+                    <p class="text-sm text-zinc-500 mb-4">Exploring concepts, systems, and technologies to expand my
+                        knowledge across domains. <strong>(Disruptors, Emerging Trends, Human
+                            Behaviour, etc.)</strong></p>
+                    <div
+                        class="w-16 h-16 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center">
+                        <svg class="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div
+                    class="p-8 pt-6 border-[3.5px] border-orange-200 dark:border-orange-900/50 rounded-2xl hover:bg-orange-50 dark:hover:bg-orange-900/10 transition-all duration-300 hover:rotate-2 cursor-default group">
+                    <h3
+                        class="text-xl font-bold mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                        AI Literacy</h3>
+                    <p class="text-sm text-zinc-500 mb-4">Understanding Generative AI tools and integrating them
+                        seamlessly into workflows. <strong>(Gemini, Claude, Antigravity, Stitch, Cursor, Hugging Face,
+                            etc.)</strong>
+                    </p>
+                    <div
+                        class="w-16 h-16 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center">
+                        <svg class="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div
+                    class="p-8 pt-6 border-[3.5px] border-purple-200 dark:border-purple-900/50 rounded-2xl hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all duration-300 hover:-rotate-2 cursor-default group">
+                    <h3
+                        class="text-xl font-bold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                        3D Design & Prototyping</h3>
+                    <p class="text-sm text-zinc-500 mb-4">3D modelling, rendering, and animation <strong>(Fusion360,
+                            Solidworks,
+                            Blender)</strong>. 3D printing and physical prototyping <strong>(Bambu Lab, Prusa, Arduino,
+                            KiCad)</strong></p>
+                    <div
+                        class="w-16 h-16 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center">
+                        <svg class="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div
+                    class="p-8 pt-6 border-[3.5px] border-teal-200 dark:border-teal-900/50 rounded-2xl hover:bg-teal-50 dark:hover:bg-teal-900/10 transition-all duration-300 hover:rotate-2 cursor-default group">
+                    <h3
+                        class="text-xl font-bold mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                        2D Design Softwares</h3>
+                    <p class="text-sm text-zinc-500 mb-4">UI/UX design workflows, creating vectors, digital layouts, and
+                        photo editing. <strong>(Figma, Photoshop, Illustrator, InDesign, Canva)</strong>.</p>
+                    <div
+                        class="w-16 h-16 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center">
+                        <svg class="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-32 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-5xl sm:text-6xl font-bold mb-8">Personal Interests</h2>
+                <p class="text-zinc-600 dark:text-zinc-400 mb-8 text-lg">Outside of my academic and professional
+                    life, I enjoy activities that allow me to express my creativity and sharpen my thinking.</p>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-3 text-zinc-700 dark:text-zinc-300"><span
+                            class="w-2 h-2 bg-blue-500 rounded-full"></span>Music</li>
+                    <li class="flex items-center gap-3 text-zinc-700 dark:text-zinc-300"><span
+                            class="w-2 h-2 bg-purple-500 rounded-full"></span>Storywriting and Storytelling</li>
+                    <li class="flex items-center gap-3 text-zinc-700 dark:text-zinc-300"><span
+                            class="w-2 h-2 bg-emerald-500 rounded-full"></span>Researching PC Hardware and Tech</li>
+                    <li class="flex items-center gap-3 text-zinc-700 dark:text-zinc-300"><span
+                            class="w-2 h-2 bg-orange-500 rounded-full"></span>Urban Planning and Transportation</li>
+                    <li class="flex items-center gap-3 text-zinc-700 dark:text-zinc-300"><span
+                            class="w-2 h-2 bg-rose-500 rounded-full"></span>Philosophy</li>
+                    <li class="flex items-center gap-3 text-zinc-700 dark:text-zinc-300"><span
+                            class="w-2 h-2 bg-yellow-500 rounded-full"></span>Acrylic Painting</li>
+                </ul>
+            </div>
+            <div class="relative w-full aspect-[4/3] group rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+                <div id="slideshow-track" class="flex h-full w-full transition-transform duration-700 ease-in-out">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1424916284625260585/IMG_1928.jpg?ex=699b9f33&is=699a4db3&hm=2adca6213788418bd574ab0825192bdc11b79c6075e61cc6c571444f31ee986f&=&format=webp&width=1066&height=800"
+                        class="w-full h-full object-cover flex-shrink-0" alt="Slide 1">
+                    <img src="https://media.discordapp.net/attachments/503694656983269387/1108215730379432097/inverse_rose.jpg?ex=699b0f13&is=6999bd93&hm=6b519af830a6c77bc12129751fe5ba81216bb37c4f6cc2c1827701f982e1fc98&=&format=webp&width=600&height=800"
+                        class="w-full h-full object-cover flex-shrink-0" alt="Slide 2">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1474944258589855774/IMG_7541.jpg?ex=699bb062&is=699a5ee2&hm=4329a7341f2a07da7c3b52d2a56e7a7a0a0afef085592b55ea7aa0205aa98409&=&format=webp&width=1066&height=800"
+                        class="w-full h-full object-cover flex-shrink-0" alt="Slide 3">
+                </div>
+                <button id="prev-slide"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white dark:hover:bg-black text-zinc-800 dark:text-white"><svg
+                        class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg></button>
+                <button id="next-slide"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white dark:hover:bg-black text-zinc-800 dark:text-white"><svg
+                        class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg></button>
+            </div>
+        </section>
+
+        <section
+            class="py-24 bg-zinc-200 dark:bg-zinc-900 rounded-3xl flex flex-col items-center justify-center text-center w-full mx-auto">
+            <h3 class="text-3xl font-bold mb-6">Interested in Working Together?</h3>
+            <a href="contact.html"
+                class="relative inline-flex items-center justify-center px-8 py-4 font-bold text-white bg-blue-500 hover:bg-blue-600 rounded-full hover:scale-105 transition-all duration-300 group">
+                <span
+                    class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span class="relative">Get in Touch &rarr;</span>
+            </a>
+        </section>
+    </main>
+
+    <script>
+        // --- Dark Mode & Mobile Menu ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        themeToggleBtn.addEventListener('click', function () {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+            initParticles();
+        });
+
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
+
+        // --- SCROLLYTELLING LOGIC ---
+        const processSteps = document.querySelectorAll('.process-step');
+
+        // Threshold: 0.5 means when 50% of the text is visible
+        const observerOptions = { root: null, rootMargin: '-40% 0px -40% 0px', threshold: 0.5 };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+
+                // Select the matching number in the left column
+                const matchingNumber = document.querySelector(`.process-number[data-target="${id}"]`);
+
+                if (entry.isIntersecting) {
+                    // Activate Text: Fade to full opacity
+                    entry.target.classList.remove('opacity-20');
+                    entry.target.classList.add('opacity-100');
+
+                    // Activate Number: Fade in & move to center
+                    if (matchingNumber) {
+                        matchingNumber.classList.remove('opacity-0', 'translate-y-8');
+                        matchingNumber.classList.add('opacity-100', 'translate-y-0');
+                    }
+                } else {
+                    // Deactivate Text: Fade out
+                    entry.target.classList.add('opacity-20');
+                    entry.target.classList.remove('opacity-100');
+
+                    // Deactivate Number: Fade out & move down
+                    if (matchingNumber) {
+                        matchingNumber.classList.add('opacity-0', 'translate-y-8');
+                        matchingNumber.classList.remove('opacity-100', 'translate-y-0');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        processSteps.forEach(step => observer.observe(step));
+
+
+        // --- Slideshow ---
+        const track = document.getElementById('slideshow-track'); const prevBtn = document.getElementById('prev-slide'); const nextBtn = document.getElementById('next-slide');
+        let slideIndex = 0; const totalSlides = 3; let slideInterval;
+        function updateSlide() { const offset = slideIndex * -100; track.style.transform = `translateX(${offset}%)`; }
+        function nextSlide() { slideIndex = (slideIndex + 1) % totalSlides; updateSlide(); }
+        function prevSlide() { slideIndex = (slideIndex - 1 + totalSlides) % totalSlides; updateSlide(); }
+        function startAutoScroll() { slideInterval = setInterval(nextSlide, 3500); }
+        function stopAutoScroll() { clearInterval(slideInterval); }
+        nextBtn.addEventListener('click', () => { stopAutoScroll(); nextSlide(); startAutoScroll(); });
+        prevBtn.addEventListener('click', () => { stopAutoScroll(); prevSlide(); startAutoScroll(); });
+        startAutoScroll();
+
+        // --- UPDATED PARTICLE CANVAS (Subtle Movement) ---
+        const canvas = document.getElementById('dust-canvas');
+        const ctx = canvas.getContext('2d');
+        const sloganSection = document.getElementById('slogan-section');
+        let particlesArray;
+        let mouse = { x: null, y: null, radius: 150 };
+
+        function resizeCanvas() {
+            canvas.width = sloganSection.offsetWidth;
+            canvas.height = sloganSection.offsetHeight;
+            initParticles();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        sloganSection.addEventListener('mousemove', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = event.clientX - rect.left;
+            mouse.y = event.clientY - rect.top;
+        });
+        sloganSection.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x; this.y = y;
+                this.directionX = directionX; this.directionY = directionY;
+                this.size = size; this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            update() {
+                // Mouse Interaction (Fleeing)
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouse.radius - distance) / mouse.radius;
+
+                        // Reduced force from 5 to 1.5 for subtler movement
+                        const moveX = forceDirectionX * force * 1.5;
+                        const moveY = forceDirectionY * force * 1.5;
+
+                        this.x -= moveX;
+                        this.y -= moveY;
+                    }
+                }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                    this.directionY = -this.directionY;
+                }
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            const numberOfParticles = (canvas.height * canvas.width) / 10000;
+            const isDark = document.documentElement.classList.contains('dark');
+            const color = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 3) + 2;
+                let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
+
+                let directionX = (Math.random() * 0.2) - 0.1;
+                let directionY = (Math.random() * 0.2) - 0.1;
+
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+        }
+
+        setTimeout(() => {
+            resizeCanvas();
+            animateParticles();
+        }, 100);
+
+        // --- Process Section: CSS snap for trackpad/mobile, JS snap for mouse ---
+        (function () {
+            const steps = Array.from(document.querySelectorAll('.process-step'));
+            const designSection = document.getElementById('design-process-section');
+            if (!steps.length || !designSection) return;
+
+            const html = document.documentElement;
+            let isScrolling = false;
+            let isInsideSection = false;
+            let mouseActive = false;     // true once a mouse wheel fires in this visit
+            let needsInitialSnap = false; // true on section entry; anchors user to entry step
+            let initialSnapIndex = 0;    // 0 = entering from top, last = entering from bottom
+            const COOLDOWN = 750;
+
+            // ── CSS snap (trackpad / mobile) ──────────────────────────────────────────
+            // The snap-center snap-always classes are already on the step divs.
+            // This observer toggles snap-mandatory on <html> when the section is in view,
+            // but only when the user hasn't switched to mouse control.
+            const cssSnapObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !mouseActive) {
+                        html.classList.add('snap-y', 'snap-mandatory');
+                    } else {
+                        html.classList.remove('snap-y', 'snap-mandatory');
+                    }
+                });
+            }, { rootMargin: '-10% 0px -10% 0px' });
+            cssSnapObserver.observe(designSection);
+
+            // ── Section presence (drives JS snap state) ───────────────────────────────
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        isInsideSection = true;
+                        needsInitialSnap = true;
+                        // Determine whether we entered from top or bottom
+                        const r = designSection.getBoundingClientRect();
+                        const sectionMidY = (r.top + r.bottom) / 2;
+                        initialSnapIndex = sectionMidY >= window.innerHeight / 2 ? 0 : steps.length - 1;
+                    } else {
+                        isInsideSection = false;
+                        needsInitialSnap = false;
+                        mouseActive = false; // reset for next visit
+                        html.classList.remove('snap-y', 'snap-mandatory');
+                    }
+                });
+            }, { threshold: 0.05 });
+            sectionObserver.observe(designSection);
+
+            // ── Helpers ───────────────────────────────────────────────────────────────
+            // Mouse wheels fire large integer deltaY; trackpads fire small fractional values.
+            function isMouseWheel(e) {
+                if (e.deltaMode === 1 || e.deltaMode === 2) return true;
+                return Math.abs(e.deltaY) >= 50 && Number.isInteger(e.deltaY);
+            }
+
+            function getActiveStepIndex() {
+                const mid = window.innerHeight / 2;
+                let best = -1, bestDist = Infinity;
+                steps.forEach((s, i) => {
+                    const r = s.getBoundingClientRect();
+                    const dist = Math.abs((r.top + r.bottom) / 2 - mid);
+                    if (dist < bestDist) { bestDist = dist; best = i; }
+                });
+                return best;
+            }
+
+            function scrollToStep(index) {
+                if (index < 0 || index >= steps.length) return;
+                isScrolling = true;
+                const r = steps[index].getBoundingClientRect();
+                const target = window.scrollY + r.top - (window.innerHeight - r.height) / 2;
+                window.scrollTo({ top: target, behavior: 'smooth' });
+                setTimeout(() => { isScrolling = false; }, COOLDOWN);
+            }
+
+            // Programmatically scroll past the section so isInsideSection becomes false.
+            // Needed because CSS snap is removed for mouse; we can't just release
+            // preventDefault or snap-mandatory would pull the user back.
+            function exitSection(goingDown) {
+                isScrolling = true;
+                const r = designSection.getBoundingClientRect();
+                const target = goingDown
+                    ? window.scrollY + r.bottom + 10          // just past section bottom
+                    : Math.max(0, window.scrollY + r.top - window.innerHeight - 10); // just above section top
+                window.scrollTo({ top: target, behavior: 'smooth' });
+                setTimeout(() => { isScrolling = false; }, COOLDOWN + 300);
+            }
+
+            // ── Mouse wheel handler ───────────────────────────────────────────────────
+            window.addEventListener('wheel', function (e) {
+                if (!isInsideSection || !isMouseWheel(e)) return;
+
+                // First mouse event in this section visit:
+                // hand control from CSS snap to JS and disable CSS snap.
+                if (!mouseActive) {
+                    mouseActive = true;
+                    html.classList.remove('snap-y', 'snap-mandatory');
+                }
+
+                // Always prevent default so CSS snap-mandatory never fights JS.
+                e.preventDefault();
+                if (isScrolling) return;
+
+                const goingDown = e.deltaY > 0;
+
+                // Anchor user to the entry step before advancing.
+                // This prevents step 1 being skipped when entering from top
+                // and step 6 being skipped when entering from bottom.
+                if (needsInitialSnap) {
+                    needsInitialSnap = false;
+                    scrollToStep(initialSnapIndex);
+                    return;
+                }
+
+                const active = getActiveStepIndex();
+
+                if (goingDown) {
+                    if (active < steps.length - 1) {
+                        scrollToStep(active + 1);
+                    } else {
+                        exitSection(true);  // past step 6 → exit downward
+                    }
+                } else {
+                    if (active > 0) {
+                        scrollToStep(active - 1);
+                    } else {
+                        exitSection(false); // before step 1 → exit upward
+                    }
+                }
+            }, { passive: false });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenny Huang Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 850: '#202022', 950: '#0c0c0e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        // theme initialization
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <nav
+        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1470185034458857574/khlogoblack.png?ex=698a6002&is=69890e82&hm=f556d3b99591a24785c51f24f61830a6f25ba649a6756c0dc86b870b15752589&=&format=webp&quality=lossless&width=801&height=800"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+
+                <span
+                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">
+                    Kenny Huang Design
+                </span>
+            </a>
+
+            <div class="flex items-center gap-6">
+
+                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
+                        Me</a>
+                    <a href="experience.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
+                    <a href="contact.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
+                </div>
+
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu"
+            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
+            <a href="about.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
+                Me</a>
+            <a href="experience.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-24 w-full px-6 sm:px-10">
+        <div class="max-w-screen-2xl mx-auto space-y-12">
+
+            <a href="project.html" class="block group relative overflow-hidden rounded-lg">
+                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1471404420381151275/bracelet_render_10.png?ex=698ecfa7&is=698d7e27&hm=1f7c6e0e786a3182fbf664529aa301b1df7aaa35cb348372a8c6d9437e609c0e&=&format=webp&quality=lossless&width=1421&height=800"
+                        alt="Project 1" class="object-cover w-full h-full">
+
+                    <div
+                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
+                        <h2
+                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            Highline Beta BetaLink</h2>
+                        <p
+                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                            Networking Wristband</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="project2.html" class="block group relative overflow-hidden rounded-lg">
+                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1475396669381283935/EnviroStoneRender4.png?ex=699d55b9&is=699c0439&hm=0df7ec576c99814e30fdf347b12f26691fbc7984abdd20875ff896bbe1e11491&=&format=webp&quality=lossless&width=1421&height=800"
+                        alt="Project 2" class="object-cover w-full h-full">
+
+                    <div
+                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
+                        <h2
+                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            iEmbrace Stone & Charging Pad</h2>
+                        <p
+                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                            Personal Meditation Device</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="project3.html" class="block group relative overflow-hidden rounded-lg">
+                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
+                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1474284693976514600/nexusbuilds_logo.png?ex=69994a1d&is=6997f89d&hm=7b71f2c952d6c35e42ee021026e64ec4cb47258148ddfdf09d6c8a3414a89775&"
+                        alt="Project 3" class="object-cover w-full h-full">
+
+                    <div
+                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
+                        <h2
+                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            NexusBuilds PC Building Service</h2>
+                        <p
+                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                            Digital Service Design</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="block group relative overflow-hidden rounded-lg">
+                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1471649617677648075/pixel_phone_asset_v4.png?ex=698fb402&is=698e6282&hm=648e80cee224b67ded3eda31ac43cff4ea8d5fd0d26cec429412eb67d0a732c2&=&format=webp&quality=lossless&width=1730&height=733"
+                        alt="Project 4" class="object-cover w-full h-full">
+
+                    <div
+                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
+                        <h2
+                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            Relay (Work in Progress)</h2>
+                        <p
+                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                            Autonomous Social Task Agent</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="project5.html" class="block group relative overflow-hidden rounded-lg">
+                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
+                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1476364718938787890/Final_Pitch_CF.png?ex=69a0db4a&is=699f89ca&hm=5356d19cab4314b68f3a27a58b39a5a0da46c143de62a01c8340aee9d2050ab8&"
+                        alt="Project 5" class="object-cover w-full h-full">
+
+                    <div
+                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
+                        <h2
+                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            Cadillac Fairview +</h2>
+                        <p
+                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                            Seasonal Event Service</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // dark mode logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        themeToggleBtn.addEventListener('click', function () {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+        });
+
+        // mobile menu logic
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+
+        // close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            }
+        });
+    </script>
+</body>
+
+</html>

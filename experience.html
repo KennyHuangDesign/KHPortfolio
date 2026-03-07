@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience - Kenny Huang Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 850: '#202022', 950: '#0c0c0e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <nav
+        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1470185034458857574/khlogoblack.png?ex=698a6002&is=69890e82&hm=f556d3b99591a24785c51f24f61830a6f25ba649a6756c0dc86b870b15752589&=&format=webp&quality=lossless&width=801&height=800"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <span
+                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">
+                    Kenny Huang Design
+                </span>
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
+                        Me</a>
+                    <a href="experience.html" class="text-zinc-900 dark:text-zinc-100 font-bold">Experience</a>
+                    <a href="contact.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
+                </div>
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
+            <a href="about.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
+                Me</a>
+            <a href="experience.html"
+                class="block px-4 py-3 text-sm font-bold bg-zinc-50 dark:bg-zinc-800 rounded-lg">Experience</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-24 w-full px-6 sm:px-10 max-w-screen-lg mx-auto min-h-screen flex flex-col">
+
+        <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-16">Personal & Professional Experience</h1>
+
+        <div class="flex-grow space-y-24">
+
+            <section>
+                <h2 class="text-2xl font-bold mb-10 border-b border-zinc-200 dark:border-zinc-800 pb-4">Education</h2>
+
+                <div class="space-y-12">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">2022 - 2026</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">Bachelor of Industrial Design
+                            </h3>
+                            <p class="text-zinc-500 mb-4 font-medium">OCAD University | Toronto, ON</p>
+                            <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Specialization in Human-centered
+                                Product Design and Design Research.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-10 border-b border-zinc-200 dark:border-zinc-800 pb-4">Work Experience
+                </h2>
+
+                <div class="space-y-12">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">Oct 2025 - Nov 2025</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">Junior Product Designer</h3>
+                            <p class="text-zinc-500 mb-4 font-medium">Highline Beta | Toronto, ON (Hybrid)</p>
+                            <ul class="list-disc ml-4 space-y-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                <li>Managed phase one of a major design project entirely alone</li>
+                                <li>Performed extensive research in trends, markets, and user behaviour</li>
+                                <li>Created a high-fidelity and fully functional prototype in 1 week</li>
+                                <li>Presented a two-step future proposal to the platform director, product manager, and
+                                    two lead product designers</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">Feb 2025 - Sep 2025</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">Product Designer</h3>
+                            <p class="text-zinc-500 mb-4 font-medium">iEmbrace | International (Remote)</p>
+                            <ul class="list-disc ml-4 space-y-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                <li>Performed extensive CAD modelling, including hyper-realistic photo and video renders
+                                </li>
+                                <li>Communicated with managers, engineers, and software developers</li>
+                                <li>Collaborated with another product designer</li>
+                                <li>Presented a final 6-month end-to-end design project</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">Sep 2024 - Dec 2024</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">Student Service Designer</h3>
+                            <p class="text-zinc-500 mb-4 font-medium">Cadillac Fairview | Toronto, ON (Co-op)</p>
+                            <ul class="list-disc ml-4 space-y-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                <li>Presented 4 month series of research and development to CF representatives</li>
+                                <li>Collaborated with a team of 5 in-person and independently</li>
+                                <li>Mapped user journeys, designed system diagrams, created front-end/back-end UX
+                                    blueprints</li>
+                                <li>Conducted on-site research</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-10 border-b border-zinc-200 dark:border-zinc-800 pb-4">Personal Design
+                    Projects</h2>
+                <div class="space-y-12">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">2026</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">OCADU Industrial Design
+                                Program Rework</h3>
+                            <p class="text-zinc-500 mb-4 font-medium">Systems Design & Research</p>
+                            <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Redesigned the OCADU Industrial
+                                Design program curriculum to better prepare students
+                                for the modern design industry</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">2025</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">"Tag Tapper" NFC Display</h3>
+                            <p class="text-zinc-500 mb-4 font-medium">Interaction Design & 3D Printing</p>
+                            <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Created an interactive display
+                                that pulls up custom screens depending on NFC tag input; powered by two Arduino boards
+                                and 3D-printed components</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">2024</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">Bonfire Lamp
+                            </h3>
+                            <p class="text-zinc-500 mb-4 font-medium">Industrial Design & 3D Printing</p>
+                            <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Created a motion-sensored desk
+                                lamp
+                                powered by Arduino and 3D-printed components</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">2023</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">Spotify Mobile App Redesign
+                            </h3>
+                            <p class="text-zinc-500 mb-4 font-medium">UI/UX Design</p>
+                            <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Created a wireframe redesign of
+                                the Spotify mobile app to improve user experience</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+                        <div class="text-zinc-500 font-medium md:pt-1">2023</div>
+                        <div class="md:col-span-3">
+                            <h3 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">"Culture Clash!"
+                                Intergenerational Trivia Game</h3>
+                            <p class="text-zinc-500 mb-4 font-medium">Human-centered Product Design</p>
+                            <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">Designed a trivia game with
+                                questions catered to different generations as a way to bridge generational gaps</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <section class="mt-32 flex flex-col items-center space-y-8">
+            <h2 class="text-xl font-bold text-zinc-500 hover:text-blue-600 transition-colors">
+                <a href="contact.html">See my Linkedin for details</a>
+            </h2>
+            <a href="Kenny_Huang_Resume.pdf" download
+                class="group flex items-center gap-3 px-8 py-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-full font-bold uppercase tracking-wide text-sm transition-transform hover:scale-105 active:scale-95">
+                Download Resume
+                <svg class="w-5 h-5 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-100 dark:border-zinc-800 py-16">
+        <div
+            class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
+            <div class="h-12 flex items-center justify-center transition-transform">
+                <img src="https://cdn.discordapp.com/attachments/692498995595051019/1471742423049703539/khbannerg.png?ex=69900a71&is=698eb8f1&hm=f42a11469ed017ea9e50c4207cb2ea359caf0c430e4f36ddd40a25e8c2f7a925&"
+                    alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+            </div>
+            <div class="text-sm text-zinc-400">
+                <p>&copy; 2026 Kenny Huang Design.</p>
+                <p>All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        themeToggleBtn.addEventListener('click', function () {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+        });
+
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
+    </script>
+</body>
+
+</html>

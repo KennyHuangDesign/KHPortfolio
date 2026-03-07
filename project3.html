@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusBuilds Service - Kenny Huang Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 850: '#202022', 950: '#0c0c0e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* ── Sticky Section Nav ── */
+        #section-nav {
+            position: fixed;
+            top: 80px;
+            /* sits right under the main nav */
+            left: 0;
+            width: 100%;
+            z-index: 40;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        #section-nav.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sec-link {
+            position: relative;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #71717a;
+            padding: 0 4px 14px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .sec-link:hover {
+            color: #18181b;
+            border-color: #a1a1aa;
+        }
+
+        .dark .sec-link:hover {
+            color: #f4f4f5;
+            border-color: #52525b;
+        }
+
+        .sec-link.active {
+            color: #fde047;
+            border-color: #fde047;
+        }
+
+        .dark .sec-link.active {
+            color: #fde047;
+            border-color: #fde047;
+        }
+
+        /* ── Nav inner scroll strip ── */
+        #section-nav-inner {
+            overflow-x: auto;
+            scrollbar-width: none;
+            /* Firefox */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #section-nav-inner::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari/Edge */
+        }
+
+        /* ── Ideation diagram ── */
+        .ideation-merge-arrow {
+            color: #6366f1;
+        }
+
+        /* ── Process track (unchanged) ── */
+        .process-track {
+            position: absolute;
+            top: 40%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #3b82f6;
+            z-index: 0;
+        }
+
+        .signal-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes signal-travel {
+            0% {
+                left: 11%;
+                opacity: 0;
+            }
+
+            2% {
+                opacity: 1;
+            }
+
+            38% {
+                opacity: 1;
+                left: 68%;
+            }
+
+            40%,
+            100% {
+                left: 68%;
+                opacity: 0;
+            }
+        }
+
+        .signal-line {
+            position: absolute;
+            top: 40%;
+            left: 11%;
+            width: 20%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ef4444, #ef4444, transparent);
+            box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
+            animation: signal-travel 4s linear infinite;
+            animation-delay: 3s;
+            animation-fill-mode: backwards;
+            z-index: 5;
+        }
+
+        @keyframes border-flash {
+
+            0%,
+            100% {
+                border-color: #3b82f6;
+                box-shadow: none;
+            }
+
+            50% {
+                border-color: #ef4444;
+                box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+            }
+        }
+
+        .process-card {
+            border: 4px solid #3b82f6;
+            animation: border-flash 4s linear infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .card-1 {
+            animation-delay: 1s;
+        }
+
+        .card-2 {
+            animation-delay: 2s;
+        }
+
+        .card-3 {
+            animation-delay: 3s;
+        }
+
+        @media (max-width:768px) {
+
+            .process-track,
+            .signal-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <!-- ══ Main Nav ══ -->
+    <nav
+        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="h-8 flex items-center justify-center">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1470185034458857574/khlogoblack.png?ex=698a6002&is=69890e82&hm=f556d3b99591a24785c51f24f61830a6f25ba649a6756c0dc86b870b15752589&=&format=webp&quality=lossless&width=801&height=800"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <span
+                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">Kenny
+                    Huang Design</span>
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
+                        Me</a>
+                    <a href="experience.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
+                    <a href="contact.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
+                </div>
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
+            <a href="about.html"
+                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
+                Me</a>
+            <a href="experience.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <!-- ══ Sticky Section Nav (appears after pitch button) ══ -->
+    <div id="section-nav">
+        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
+            <div id="section-nav-inner"
+                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
+                <button class="sec-link" data-target="section-problem">Problem Statement</button>
+                <button class="sec-link" data-target="section-research">Research</button>
+                <button class="sec-link" data-target="section-synthesis">Synthesis</button>
+                <button class="sec-link" data-target="section-user-testing">User Testing</button>
+                <button class="sec-link" data-target="section-feedback">Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-20 pb-24 w-full">
+
+        <!-- Hero image -->
+        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
+            <img src="https://cdn.discordapp.com/attachments/692498995595051019/1474284693976514600/nexusbuilds_logo.png?ex=69a6791d&is=69a5279d&hm=e271430e3dc403e15f89076d61c68c642297d1f1b5e96d89cece4056276782d8&"
+                alt="Project Cover" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+        </div>
+
+        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
+
+            <!-- Project overview -->
+            <section
+                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
+                <div class="md:col-span-5">
+                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">NexusBuilds PC Building Service</h1>
+                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
+                        <div><span class="block text-zinc-400 mb-1">Role</span><span class="font-medium">Product
+                                Designer</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Timeline</span><span class="font-medium">Feb 2026
+                            </span></div>
+                        <div><span class="block text-zinc-400 mb-1">Client</span><span
+                                class="font-medium">Personal</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Tools</span><span class="font-medium">Figma, Stitch,
+                                Antigravity
+                            </span></div>
+                    </div>
+                </div>
+                <div class="md:col-span-7 md:pl-10">
+                    <h3 class="text-2xl font-bold mb-6">A PC Building Service for Everyone</h3>
+                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        <p>The NexusBuilds PC Building Service is a service aimed towards streamlining the PC building
+                            process for both clients and builders. It incorporates a unique, communication-focused
+                            approach to PC building, where clients of varying experience can express their needs and
+                            preferences to builders in a detailed and organized manner, turning consulting into an
+                            optional process for builders.</p>
+                        <p>Almost everyone will need a PC nowadays, with a growing number of people interested in a
+                            custom-built PC rather than the default store-bought counterpart. However, the process of
+                            building a PC can be too challenging for beginners, while those with more experience often
+                            have specific wants but lack the time or resources to build a PC on their own. NexusBuilds
+                            acknowledges both audiences, offering a seamless and personalized PC building experience for
+                            everyone.</p>
+                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
+                            <p>Credit: Unsplash, Pexels (Stock images; used under Unsplash and Pexels licenses)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SENTINEL placed to keep the sticky nav behaviour -->
+            <div id="pitch-sentinel" class="h-1 w-full absolute pt-16 pointer-events-none text-transparent">-</div>
+
+            <section class="py-16 space-y-16">
+                <!-- INTERACTIVE PROTOTYPE -->
+                <section id="section-interactive-prototype-container" class="space-y-4">
+                    <div class="flex items-center justify-end gap-3 px-2">
+                        <a href="https://kennyhuangdesign.github.io/NexusBuilds" target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                </path>
+                            </svg>
+                            Open in New Tab
+                        </a>
+                        <button onclick="document.getElementById('section-interactive-prototype').requestFullscreen()"
+                            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
+                                </path>
+                            </svg>
+                            Full Screen
+                        </button>
+                    </div>
+                    <section id="section-interactive-prototype"
+                        class="w-full h-[80vh] min-h-[700px] rounded-3xl overflow-hidden shadow-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 relative">
+
+                        <!-- Floating Exit Full Screen Button (only visible in full screen) -->
+                        <button id="exit-fullscreen-btn" onclick="document.exitFullscreen()"
+                            class="hidden absolute top-6 left-1/2 transform -translate-x-1/2 z-50 items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-zinc-900/95 hover:bg-black backdrop-blur-md border border-zinc-700/50 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Exit Full Screen
+                        </button>
+
+                        <iframe id="nexus-iframe" src="https://kennyhuangdesign.github.io/NexusBuilds"
+                            class="absolute inset-0 w-full h-full border-none bg-white dark:bg-zinc-950"
+                            title="NexusBuilds Interactive Prototype"></iframe>
+                    </section>
+                </section>
+
+                <script>
+                    document.addEventListener('fullscreenchange', () => {
+                        const exitBtn = document.getElementById('exit-fullscreen-btn');
+                        if (exitBtn) {
+                            if (document.fullscreenElement) {
+                                exitBtn.classList.remove('hidden');
+                                exitBtn.classList.add('flex');
+                            } else {
+                                exitBtn.classList.add('hidden');
+                                exitBtn.classList.remove('flex');
+                            }
+                        }
+                    });
+                </script>
+
+                <!-- PROBLEM STATEMENT -->
+                <section id="section-problem"
+                    class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
+                    style="background: linear-gradient(135deg, #fef08a 0%, #fde047 25%, #facc15 50%, #eab308 75%, #ca8a04 100%);">
+                    <div class="absolute inset-0 opacity-40 mix-blend-overlay"
+                        style="background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.8) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.8) 0%, transparent 60%);">
+                    </div>
+                    <div class="relative z-10 max-w-4xl mx-auto space-y-8">
+                        <p class="text-zinc-600 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
+                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-zinc-900 leading-tight">
+                            The audiences in need of a tailored PC are extremely varied, with builders needing to
+                            accomodate as many people as possible.
+                        </h2>
+                        <p class="text-lg sm:text-xl text-zinc-700 max-w-2xl mx-auto leading-relaxed">
+                            How might we make the process of obtaining a custom PC more accessible to
+                            consumers, while easing the burden of communication for custom PC builders?
+                        </p>
+                    </div>
+                </section>
+
+                <!-- RESEARCH -->
+                <section id="section-research" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800"
+                    style="margin-top: 2rem;">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Research</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-8">
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478979034372243579/4.png?ex=69aa5e0f&is=69a90c8f&hm=d5f40440313b1b261074c7a885820f1fc53ebca1c730030c11c4ecaa7fb8a1be&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Research Placeholder 1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478979034850398369/5.png?ex=69aa5e10&is=69a90c90&hm=203479b52ea0bb82609c0945b4cf0e4dcad84a25c0c0a139a2b899a6e568caae&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Research Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://cdn.discordapp.com/attachments/692498995595051019/1478979035542454332/6.png?ex=69aa5e10&is=69a90c90&hm=83f990356ba41f826b59b349801b5be749b7cf11a6949fb37a871824f081b27d&"
+                                alt="Research Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://cdn.discordapp.com/attachments/692498995595051019/1478979554327531530/NexusBuilds_User_Journey_Map1.png?ex=69aa5e8b&is=69a90d0b&hm=be0bac54dd0d1fe0ab1142d350a5c41ff24d109e00a34ff8eaa7d9d7bc89fdb5&"
+                                alt="Research Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SYNTHESIS -->
+                <section id="section-synthesis" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Synthesis</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-8">
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478979036498890782/8.png?ex=69aa5e10&is=69a90c90&hm=6fce1ecd603d07fd92ccd238fde16357d508e5d39461e3397d067903844c820b&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Ideation Placeholder 1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478980024152621210/NexusBuilds_User_Journey_Map2.png?ex=69aa5efb&is=69a90d7b&hm=20713980173078998ac0e0cb4942ae8c4a8282b3fe85c05e24111529acf516b2&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478980024605610095/NexusBuilds_User_Journey_Map3.png?ex=69aa5efb&is=69a90d7b&hm=c230a15aefa454f6959adbfaab71a8693cc7b235e5ff717f88509ec00c3d8842&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478979036880568502/10.png?ex=69aa5e10&is=69a90c90&hm=743ec71071f4f899c5801d64187107bda96502d451f2723476cd1956bd24473a&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://cdn.discordapp.com/attachments/692498995595051019/1478979554696626186/NexusBuilds_User_Journey_Map.png?ex=69aa5e8b&is=69a90d0b&hm=0a7ff5e29e4f3bd93957f4a255d8c3a73b27cbf9986c3746283e93b668f89eab&"
+                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- USER TESTING -->
+                <section id="section-user-testing"
+                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">User Testing</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-8">
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478979033839571045/NexusBuilds_UX_Research_Presentation.pptx.png?ex=69aa5e0f&is=69a90c8f&hm=aa52ee3313786a7532fdb37c6b9575a326969319d115d2beb95c6c18cd87c944&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="Direction Refinement Placeholder 1" class="w-full h-full object-cover">
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- FEEDBACK -->
+                <section id="section-feedback" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Feedback</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-8">
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://cdn.discordapp.com/attachments/692498995595051019/1478979037228564532/14.png?ex=69aa5e10&is=69a90c90&hm=e3b789f341209c6e17dd0e6a88f2c32e0e349bc345414b89bd48d972a861cf9d&"
+                                alt="First Prototype Placeholder 1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
+                            onclick="openLightbox(this.querySelector('img').src)">
+                            <img src="https://media.discordapp.net/attachments/692498995595051019/1478979037614309517/15.png?ex=69aa5e10&is=69a90c90&hm=270bba5e1f1fc64d7454acfd610c476364e13f1e6a76ec4cd65695fa274d8ab8&=&format=webp&quality=lossless&width=1421&height=800"
+                                alt="First Prototype Placeholder 2" class="w-full h-full object-cover">
+                        </div>
+
+                    </div>
+                </section>
+
+        </div>
+
+        </div>
+
+        <div
+            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
+            <a href="index.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
+                Back to Home</a>
+            <a href="project5.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
+                Project &rarr;</a>
+        </div>
+
+        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
+            <div
+                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
+                <div class="h-12 flex items-center justify-center transition-transform">
+                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1471742423049703539/khbannerg.png?ex=69900a71&is=698eb8f1&hm=f42a11469ed017ea9e50c4207cb2ea359caf0c430e4f36ddd40a25e8c2f7a925&"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <div class="text-sm text-zinc-400">
+                    <p>&copy; 2026 Kenny Huang Design.</p>
+                    <p>All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox"
+        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="relative max-w-5xl w-full h-[85vh]">
+            <button onclick="closeLightbox()"
+                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+        </div>
+    </div>
+
+    <script>
+        // ── Theme + mobile menu ──
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        themeToggleBtn.addEventListener('click', function () {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+        });
+
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
+
+        // ── Lightbox ──
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.remove('hidden');
+            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => { lightbox.classList.add('hidden'); lightboxImg.src = ''; }, 300);
+            document.body.style.overflow = 'auto';
+        }
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
+
+        // ── Sticky Section Nav ──
+        const sectionNav = document.getElementById('section-nav');
+        const pitchSentinel = document.getElementById('pitch-sentinel');
+        const secLinks = document.querySelectorAll('.sec-link');
+
+        const sections = [
+            { id: 'section-problem', btn: document.querySelector('[data-target="section-problem"]') },
+            { id: 'section-research', btn: document.querySelector('[data-target="section-research"]') },
+            { id: 'section-synthesis', btn: document.querySelector('[data-target="section-synthesis"]') },
+            { id: 'section-user-testing', btn: document.querySelector('[data-target="section-user-testing"]') },
+            { id: 'section-feedback', btn: document.querySelector('[data-target="section-feedback"]') },
+        ];
+
+        // Show/hide sticky nav based on sentinel visibility
+        const sentinelObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // Show only if not intersecting AND the element has been scrolled past (above viewport)
+                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                    sectionNav.classList.add('visible');
+                } else {
+                    sectionNav.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0 });
+        sentinelObserver.observe(pitchSentinel);
+
+        // Scroll-spy: light up active section
+        function onScroll() {
+            const scrollY = window.scrollY;
+            const offset = 160; // nav + section-nav height
+            let active = null;
+
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const el = document.getElementById(sections[i].id);
+                if (el && el.getBoundingClientRect().top <= offset) {
+                    active = sections[i].id;
+                    break;
+                }
+            }
+
+            sections.forEach(s => {
+                if (s.btn) s.btn.classList.toggle('active', s.id === active);
+            });
+
+            // Auto-scroll the nav strip so the active button is centred (mobile)
+            if (active) {
+                const activeBtn = document.querySelector('.sec-link.active');
+                const navInner = document.getElementById('section-nav-inner');
+                if (activeBtn && navInner) {
+                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
+                    const navMid = navInner.offsetWidth / 2;
+                    navInner.scrollTo({ left: btnMid - navMid, behavior: 'smooth' });
+                }
+            }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Click to jump
+        secLinks.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                if (target) {
+                    const offset = 160;
+                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

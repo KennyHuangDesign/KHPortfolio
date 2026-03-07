@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadillac Fairview Plus - Kenny Huang Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 850: '#202022', 950: '#0c0c0e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* ── Sticky Section Nav ── */
+        #section-nav {
+            position: fixed;
+            top: 80px;
+            /* sits right under the main nav */
+            left: 0;
+            width: 100%;
+            z-index: 40;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        #section-nav.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sec-link {
+            position: relative;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #71717a;
+            padding: 0 4px 14px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .sec-link:hover {
+            color: #18181b;
+            border-color: #a1a1aa;
+        }
+
+        .dark .sec-link:hover {
+            color: #f4f4f5;
+            border-color: #52525b;
+        }
+
+        .sec-link.active {
+            color: #b9dde9;
+            border-color: #b9dde9;
+        }
+
+        .dark .sec-link.active {
+            color: #b9dde9;
+            border-color: #b9dde9;
+        }
+
+        /* ── Nav inner scroll strip ── */
+        #section-nav-inner {
+            overflow-x: auto;
+            scrollbar-width: none;
+            /* Firefox */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #section-nav-inner::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari/Edge */
+        }
+
+        /* ── Ideation diagram ── */
+        .ideation-merge-arrow {
+            color: #6366f1;
+        }
+
+        /* ── Process track (unchanged) ── */
+        .process-track {
+            position: absolute;
+            top: 40%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #3b82f6;
+            z-index: 0;
+        }
+
+        .signal-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes signal-travel {
+            0% {
+                left: 11%;
+                opacity: 0;
+            }
+
+            2% {
+                opacity: 1;
+            }
+
+            38% {
+                opacity: 1;
+                left: 68%;
+            }
+
+            40%,
+            100% {
+                left: 68%;
+                opacity: 0;
+            }
+        }
+
+        .signal-line {
+            position: absolute;
+            top: 40%;
+            left: 11%;
+            width: 20%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #136398, #136398, transparent);
+            box-shadow: 0 0 10px #136398, 0 0 20px #136398;
+            animation: signal-travel 4s linear infinite;
+            animation-delay: 3s;
+            animation-fill-mode: backwards;
+            z-index: 5;
+        }
+
+        @keyframes border-flash {
+
+            0%,
+            100% {
+                border-color: #3b82f6;
+                box-shadow: none;
+            }
+
+            50% {
+                border-color: #136398;
+                box-shadow: 0 0 15px rgba(19, 99, 152, 0.5);
+            }
+        }
+
+        .process-card {
+            border: 4px solid #3b82f6;
+            animation: border-flash 4s linear infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .card-1 {
+            animation-delay: 1s;
+        }
+
+        .card-2 {
+            animation-delay: 2s;
+        }
+
+        .card-3 {
+            animation-delay: 3s;
+        }
+
+        @media (max-width:768px) {
+
+            .process-track,
+            .signal-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <!-- ══ Main Nav ══ -->
+    <nav
+        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1470185034458857574/khlogoblack.png?ex=698a6002&is=69890e82&hm=f556d3b99591a24785c51f24f61830a6f25ba649a6756c0dc86b870b15752589&=&format=webp&quality=lossless&width=801&height=800"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <span
+                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">Kenny
+                    Huang Design</span>
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
+                        Me</a>
+                    <a href="experience.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
+                    <a href="contact.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
+                </div>
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
+            <a href="about.html"
+                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
+                Me</a>
+            <a href="experience.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <!-- ══ Sticky Section Nav (appears after pitch button) ══ -->
+    <div id="section-nav">
+        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
+            <div id="section-nav-inner"
+                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
+                <button class="sec-link" data-target="section-desk-research">Site Research</button>
+                <button class="sec-link" data-target="section-user-research">User Research</button>
+                <button class="sec-link" data-target="section-synthesis">Synthesis</button>
+                <button class="sec-link" data-target="section-ideation">Ideation</button>
+                <button class="sec-link" data-target="section-final-product">Final Product</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-20 pb-24 w-full">
+
+        <!-- Hero image -->
+        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
+            <img src="https://cdn.discordapp.com/attachments/692498995595051019/1478985234770038886/Final_Pitch_CF1.png?ex=69aa63d6&is=69a91256&hm=a083a59a2950acfeac7fc1759d0a257e7db4e7469d5a2b6f3f41a10c8e1a6af8&"
+                alt="Project Cover" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+        </div>
+
+        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
+
+            <!-- Project overview -->
+            <section
+                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
+                <div class="md:col-span-5">
+                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">Cadillac Fairview Plus</h1>
+                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
+                        <div><span class="block text-zinc-400 mb-1">Role</span><span class="font-medium">Service
+                                Designer</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Timeline</span><span class="font-medium">Sep 2024 -
+                                Dec 2024</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Client</span><span class="font-medium">CF Sherway
+                                Gardens</span></div>
+                        <div><span class="block text-zinc-400 mb-1">Tools</span><span class="font-medium">Figma, Canva
+                            </span></div>
+                    </div>
+                </div>
+                <div class="md:col-span-7 md:pl-10">
+                    <h3 class="text-2xl font-bold mb-6">A New Realm for New Canadians</h3>
+                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        <p>CF Plus is a loyalty program for CF Sherway Gardens (scalable to other CF malls) that rewards
+                            customers for
+                            attending the rotating seasonal events hosted at the mall. It utilizes physical point cards
+                            that allow customers to earn points for every
+                            dollar they spend at the mall during the events, as well as participation in event
+                            activities. The points can be redeemed for rewards such as discounts
+                            on future purchases, free parking, and other perks.</p>
+                        <p>The program is designed to be simple and easy to use, turning the, currently low-traffic,
+                            mall into a go-to destination for events and a future hub for new Canadians moving into its
+                            adjacent planned developments. A mobile app was originally intended for the program, but was
+                            later scrapped in favour of a more accessible solution that accommodates for the older
+                            demographics of the target audience.</p>
+                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Presentation slide + pitch button — scroll trigger sentinel is here -->
+            <section class="py-16 sm:py-24 space-y-16 sm:space-y-32">
+                <div class="space-y-12">
+                    <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-lg overflow-hidden shadow-2xl">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1476364718938787890/Final_Pitch_CF.png?ex=69aa15ca&is=69a8c44a&hm=d3eccba74bd5db84dfe4357a73fd54fd1d69113bc2f7064170cac29014e7b1b4&"
+                            alt="Full Presentation" class="w-full h-auto">
+                    </div>
+
+                    <!-- SENTINEL — sticky nav appears when this scrolls out of view -->
+                    <div id="pitch-sentinel" class="flex justify-center pb-12">
+                        <a href="#placeholder-pdf-link"
+                            class="relative overflow-hidden inline-flex items-center justify-center px-12 py-5 font-bold text-white text-xl bg-[linear-gradient(to_right,#b9dde9,#136398,#053c5b,#0b223e,#053c5b,#136398,#b9dde9)] bg-[length:200%_auto] rounded-3xl hover:scale-105 transition-all duration-300 hover:bg-[position:right_center] shadow-lg hover:shadow-xl">
+                            SEE PRESENTATION PITCH
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ══ PROBLEM STATEMENT ══ -->
+                <section id="section-problem"
+                    class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
+                    style="background: linear-gradient(135deg, #b9dde9 0%, #136398 33%, #053c5b 66%, #0b223e 100%);">
+                    <div class="absolute inset-0 opacity-20"
+                        style="background: radial-gradient(ellipse at 30% 50%, #b9dde9 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, #136398 0%, transparent 60%);">
+                    </div>
+                    <div class="relative z-10 max-w-4xl mx-auto space-y-8">
+                        <p class="text-indigo-200 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
+                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                            A public realm in which new Canadians can connect to their new home!
+                        </h2>
+                        <p class="text-lg sm:text-xl text-indigo-100/80 max-w-2xl mx-auto leading-relaxed">
+                            How can we transform CF Sherway Gardens into a central social hub for new Canadians?
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ══ DESK RESEARCH ══ -->
+                <section id="section-desk-research"
+                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Site Research</h3>
+                    </div>
+
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479216782454817000/1.png?ex=69ab3b7b&is=69a9e9fb&hm=3bae7cd0eb0429068870fc81eccc1db67c7efadd6b70e8e3b5ed969d46662694&"
+                            alt="Research Map" class="w-full h-auto block transition-transform ">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479216778726084698/3.png?ex=69ab3b7a&is=69a9e9fa&hm=4ade1b00f6a1d3edb726971a25381b425d6341c3401b7f60d18278470b7e5cac&"
+                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479216779128602726/4.png?ex=69ab3b7a&is=69a9e9fa&hm=14c2743c9252fa7d5a91c687ae604e6aecf9c704caf2c49878d747470ed6a906&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479216779552096266/5.png?ex=69ab3b7a&is=69a9e9fa&hm=9e407fd4340a3becf4f862de6bc11a0815982201b698878a0fd7e2df0db9c0ff&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479216779988308119/6.png?ex=69ab3b7a&is=69a9e9fa&hm=2129b2b3e5b5348645139fb2ee781b8647259788b4b1fac9a26ed693fba9d324&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479216780420452512/7.png?ex=69ab3b7a&is=69a9e9fa&hm=9a0c114fecf745507c9663a2e9cdc856fc2676eaa5804437d9f1973124d04344&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479216780982353952/8.png?ex=69ab3b7b&is=69a9e9fb&hm=c775c3f2046127f05f4304065fada24fd99159d8b902c4556043313659677394&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479216781469159576/9.png?ex=69ab3b7b&is=69a9e9fb&hm=62b2659bf7da67b2bb3bf76a4a5c5805e4353800e0dfd5a2628f60fb0aa7077a&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479216782052036729/11.png?ex=69ab3b7b&is=69a9e9fb&hm=9c1d73d9bd2610de1bcbcced2a9fb162482feeac93300310f2cfd691c7c332e5&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Staff Attendee Psychological Iceberg Model"
+                            class="w-full h-auto block transition-transform">
+                    </div>
+                </section>
+
+
+                <!-- ══ USER RESEARCH ══ -->
+                <section id="section-user-research"
+                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">User Research</h3>
+                    </div>
+
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479378896574087208/1.png?ex=69abd276&is=69aa80f6&hm=bd7a7ab47b12d55ca7d2cd25b4aa4a6d316ce5e035fc64fde97221fe7f2c2c9c&"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479378897131802755/6.png?ex=69abd276&is=69aa80f6&hm=6e1447c2573012388423f694b97c84f290c4555c3772a4df3e35c5597048a8b5&"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479378897534586951/7.png?ex=69abd276&is=69aa80f6&hm=e54ac47b1eb659869c5068d2a77531c83a2abec3c94b6480afa8e7d9a88d4285&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479378897882845325/10.png?ex=69abd276&is=69aa80f6&hm=b21df71036a8581beadc24b2bd6b9f019a0f3bf54b52c76377484cd52f3af607&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479378898398482442/11.png?ex=69abd276&is=69aa80f6&hm=637c2fbba74890a322a03416f4f7f385b03dd409c41e836f877919903a58326e&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479378904161587342/12.png?ex=69abd278&is=69aa80f8&hm=c1d0d1b8c47c3966dd684862af0bcf6646e8c9d153ac7f4634f81bfe84a79a97&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479378904446930964/13.png?ex=69abd278&is=69aa80f8&hm=8de717be818eeb62024a6670add8de3f1574e213491c23e5d072c73aab090440&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479378904744464510/14.png?ex=69abd278&is=69aa80f8&hm=9ba7eda4f0dcb731b1bbe4d166731f46a3db266908078275436dcc70ff671f35&"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479384730351964184/15.png?ex=69abd7e5&is=69aa8665&hm=473307d649f0fd3b79c2323239886ee42707f687484d5bcaca291407f429b185&"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479384731060666380/16.png?ex=69abd7e5&is=69aa8665&hm=687495118799f136f8117a8c583bc6dd187a7c64a4aba5d38508e041e26c465a&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+
+                </section>
+
+                <!-- ══ SYNTHESIS ══ -->
+                <section id="section-synthesis" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Synthesis</h3>
+                    </div>
+
+                    <!-- Placeholder images — same style as Research section -->
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479530753946816532/4.png?ex=69ac5fe4&is=69ab0e64&hm=3ff3192eea029c99686c5b7ad11d72634c662f1b72b8a060aaaafb3aa9f7f1e2&"
+                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479384731576434849/18.png?ex=69abd7e5&is=69aa8665&hm=bab5457c9813503c4e5ad11abdc136b64201cea88cd35c38e03d7cc6935a2cd8&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479532890223153304/CF_Service_Design_Research_Sheet.png?ex=69ac61e1&is=69ab1061&hm=94c3576866205dbc5117c99f94ff33eb49f2e3bf4602f43431456f875247012d&"
+                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530754777288796/6.png?ex=69ac5fe4&is=69ab0e64&hm=b27973ce58c7dac5d5fedb01e2de1caba26ce18e069a8e2cca7d8f0c2bf5f60a&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479389888653819996/23.png?ex=69abdcb3&is=69aa8b33&hm=355f6e152f40622c12dd6f28d923b49a19c44d6a866731fd29e6d946c136f09b&=&format=webp&quality=lossless&width=1423&height=800"
+                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
+                    </div>
+                </section>
+
+                <!-- ══ IDEATION ══ -->
+                <section id="section-ideation" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Ideation</h3>
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479384732759359600/20.png?ex=69abd7e5&is=69aa8665&hm=24096e56872d38f35b11b0168ddcf5ea70473f661113c249bf15c344b1053d3a&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479384733287710800/21.png?ex=69abd7e6&is=69aa8666&hm=54a9d462f0cf27245d24b2df16f2f2908aa5abe0adf78a2756e08fdc4d6bfb49&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479384732176486410/19.png?ex=69abd7e5&is=69aa8665&hm=3a7ee3195da191670a09f0e027de23d7b26eb2b3044055ca9aa4542a44b26e54&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479576673962950829/CF_Service_Design_Research_Sheet1.png?ex=69ac8aa8&is=69ab3928&hm=1a2a9773f83ecaa4b5498c05af7b99939653f1068f774d636ee3c31cd75adbcd&"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479531377522381033/Needs_to_be_altered.png?ex=69ac6078&is=69ab0ef8&hm=aade06503a2047352387324e9b9d8ebdcdc7f49cebe1eb9fe528dd869280e28a&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530755754430656/11.png?ex=69ac5fe4&is=69ab0e64&hm=3d32bf0079628b2c3ce964c2ea22715add61e704ac27d0cd7a322c55b72c7daf&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530756316598355/12.png?ex=69ac5fe4&is=69ab0e64&hm=85640852f4c3cf3189c22291f0fc213ad1fd698358964a9ddc36e7867cc6c937&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530756979294208/13.png?ex=69ac5fe4&is=69ab0e64&hm=9b5ed78fb75d16237360387d4f979f9c6f417ed1d0b6d6432ecb81dddfdfcc5e&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479581369624563732/16.png?ex=69ac8f07&is=69ab3d87&hm=3dd67d1534ca692c7b1d6f2e7fd03f337c8acfa7f9146b62d332381c153c8383&=&format=webp&quality=lossless&width=1423&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530758564483082/17.png?ex=69ac5fe5&is=69ab0e65&hm=896639bd2ac7cf6a8135517105d17cbe5830c43c6445126f2a2648f96affc9cc&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530869948678355/19.png?ex=69ac5fff&is=69ab0e7f&hm=58634fd8ebf69e967b21a87796cb968b8a154b831e2ffcac0f0fbfe22020a639&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530871039197305/23.png?ex=69ac6000&is=69ab0e80&hm=f72543d9f92294e465babc4b06df04e225b1ab9724ede0266c6173c8cac7153c&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530871605301398/24.png?ex=69ac6000&is=69ab0e80&hm=e307af878af00b9d5a95942521daab73ae0f34fce9601af5d09d37b634955465&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530872184242277/25.png?ex=69ac6000&is=69ab0e80&hm=671af03610a3ace9b476afc8d6d5715520bb3ea6fd859628114b7ac0342788cd&=&format=webp&quality=lossless&width=1421&height=800"
+                            alt="Placeholder" class="w-full h-auto block transition-transform">
+                    </div>
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://media.discordapp.net/attachments/692498995595051019/1479530872800542892/Focus_on_this.png?ex=69ac6000&is=69ab0e80&hm=02e8285dbd243f049357963064f9bf2303a625684df8894b230564963af8b5d2&=&format=webp&quality=lossless&width=1421&height=8000"
+                            alt="" class="w-full h-auto block transition-transform">
+                    </div>
+                </section>
+
+                <!-- ══ FINAL PRODUCT ══ -->
+                <section id="section-final-product"
+                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
+                    <div class="text-center space-y-4">
+                        <h3 class="text-3xl sm:text-4xl font-bold">Final Product</h3>
+                    </div>
+
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
+                        onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="https://cdn.discordapp.com/attachments/692498995595051019/1479585980897038559/Final_Pitch_CF2.png?ex=69ac9353&is=69ab41d3&hm=37e6e68720e427e77a188e174d8dc0b36fd8fc97aa90b1c4a89738717328ccaa&"
+                            alt="Placeholder"
+                            class="w-full h-auto block transition-transform duration-700 group-hover:scale-105">
+                    </div>
+
+                    <!-- Phase 4: Client Presentation Pitch button -->
+                    <div class="flex justify-center pt-16 pb-4">
+                        <button
+                            onclick="document.getElementById('pitch-sentinel').scrollIntoView({ behavior: 'smooth', block: 'center' })"
+                            class="w-full max-w-7xl py-6 rounded-2xl font-bold text-xl sm:text-2xl text-white bg-[linear-gradient(to_right,#b9dde9,#136398,#053c5b,#0b223e,#053c5b,#136398,#b9dde9)] bg-[length:200%_auto] hover:bg-[position:right_center] hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 shadow-xl hover:shadow-2xl">
+                            <strong>Client Presentation Pitch</strong>
+                        </button>
+                    </div>
+                </section>
+
+            </section>
+
+        </div>
+
+        <div
+            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
+            <a href="index.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
+                Back to Home</a>
+            <a href="project.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
+                Project &rarr;</a>
+        </div>
+
+        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
+            <div
+                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
+                <div class="h-12 flex items-center justify-center transition-transform">
+                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1471742423049703539/khbannerg.png?ex=69900a71&is=698eb8f1&hm=f42a11469ed017ea9e50c4207cb2ea359caf0c430e4f36ddd40a25e8c2f7a925&"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <div class="text-sm text-zinc-400">
+                    <p>&copy; 2026 Kenny Huang Design.</p>
+                    <p>All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox"
+        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="relative max-w-5xl w-full h-[85vh]">
+            <button onclick="closeLightbox()"
+                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+        </div>
+    </div>
+
+    <script>
+        // ── Theme + mobile menu ──
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        themeToggleBtn.addEventListener('click', function () {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+        });
+
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
+
+        // ── Lightbox ──
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.remove('hidden');
+            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => { lightbox.classList.add('hidden'); lightboxImg.src = ''; }, 300);
+            document.body.style.overflow = 'auto';
+        }
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
+
+        // ── Sticky Section Nav ──
+        const sectionNav = document.getElementById('section-nav');
+        const pitchSentinel = document.getElementById('pitch-sentinel');
+        const secLinks = document.querySelectorAll('.sec-link');
+
+        const sections = [
+            { id: 'section-desk-research', btn: document.querySelector('[data-target="section-desk-research"]') },
+            { id: 'section-user-research', btn: document.querySelector('[data-target="section-user-research"]') },
+            { id: 'section-synthesis', btn: document.querySelector('[data-target="section-synthesis"]') },
+            { id: 'section-ideation', btn: document.querySelector('[data-target="section-ideation"]') },
+            { id: 'section-final-product', btn: document.querySelector('[data-target="section-final-product"]') },
+        ];
+
+        // Show/hide sticky nav based on sentinel visibility
+        const sentinelObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // Show only if not intersecting AND the element has been scrolled past (above viewport)
+                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                    sectionNav.classList.add('visible');
+                } else {
+                    sectionNav.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0 });
+        sentinelObserver.observe(pitchSentinel);
+
+        // Scroll-spy: light up active section
+        function onScroll() {
+            const scrollY = window.scrollY;
+            const offset = 160; // nav + section-nav height
+            let active = null;
+
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const el = document.getElementById(sections[i].id);
+                if (el && el.getBoundingClientRect().top <= offset) {
+                    active = sections[i].id;
+                    break;
+                }
+            }
+
+            sections.forEach(s => {
+                if (s.btn) s.btn.classList.toggle('active', s.id === active);
+            });
+
+            // Auto-scroll the nav strip so the active button is centred (mobile)
+            if (active) {
+                const activeBtn = document.querySelector('.sec-link.active');
+                const navInner = document.getElementById('section-nav-inner');
+                if (activeBtn && navInner) {
+                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
+                    const navMid = navInner.offsetWidth / 2;
+                    navInner.scrollTo({ left: btnMid - navMid, behavior: 'smooth' });
+                }
+            }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Click to jump
+        secLinks.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                if (target) {
+                    const offset = 160;
+                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
