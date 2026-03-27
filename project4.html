@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<!--Reminder to incorporate design process as a menu alongside the journey through how i designed this-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Detail - Kenny Huang Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 850: '#202022', 950: '#0c0c0e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* ── Sticky Section Nav ── */
+        #section-nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            z-index: 40;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        #section-nav.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sec-link {
+            position: relative;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #71717a;
+            padding: 0 4px 14px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .sec-link:hover {
+            color: #18181b;
+            border-color: #a1a1aa;
+        }
+
+        .dark .sec-link:hover {
+            color: #f4f4f5;
+            border-color: #52525b;
+        }
+
+        .sec-link.active {
+            color: #fde047;
+            border-color: #fde047;
+        }
+
+        .dark .sec-link.active {
+            color: #fde047;
+            border-color: #fde047;
+        }
+
+        /* Per-section active highlight colors — higher specificity than .dark .sec-link.active */
+        .sec-link[data-target="section-problem"].active {
+            color: #fde047 !important;
+            border-color: #fde047 !important;
+        }
+
+        .sec-link[data-target="section-core"].active {
+            color: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+        }
+
+        .sec-link[data-target="section-background"].active {
+            color: #84cc16 !important;
+            border-color: #84cc16 !important;
+        }
+
+        .sec-link[data-target="section-initial-idea"].active {
+            color: #06b6d4 !important;
+            border-color: #06b6d4 !important;
+        }
+
+        .sec-link[data-target="section-refined-idea"].active {
+            color: #F59714 !important;
+            border-color: #F59714 !important;
+        }
+
+        .sec-link[data-target="section-relay"].active {
+            color: #4AD496 !important;
+            border-color: #4AD496 !important;
+        }
+
+        .sec-link[data-target="section-switchboard"].active {
+            color: #E03E1A !important;
+            border-color: #E03E1A !important;
+        }
+
+        .sec-link[data-target="section-prototype"].active {
+            background: linear-gradient(90deg, #4AD496, #E03E1A) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            border-image: linear-gradient(90deg, #4AD496, #E03E1A) 1 !important;
+            border-color: transparent !important;
+        }
+
+        /* Animated gradient button */
+        @keyframes gradient-slide {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #4AD496, #F3C11B, #E03E1A, #4AD496);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Per-section button gradients */
+        .btn-gradient-problem {
+            background: linear-gradient(135deg, #fef9c3, #fde047, #ca8a04, #fde047);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient-problem:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-gradient-core {
+            background: linear-gradient(135deg, #93c5fd, #3b82f6, #1d4ed8, #3b82f6);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient-core:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-gradient-background {
+            background: linear-gradient(135deg, #d9f99d, #84cc16, #3f6212, #84cc16);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient-background:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-gradient-initial {
+            background: linear-gradient(135deg, #a5f3fc, #06b6d4, #0e7490, #06b6d4);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient-initial:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-gradient-relay {
+            background: linear-gradient(135deg, #a7f3d0, #4AD496, #059669, #4AD496);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient-relay:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-gradient-switchboard {
+            background: linear-gradient(135deg, #fca5a5, #E03E1A, #991b1b, #E03E1A);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient-switchboard:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-gradient-prototype {
+            background: linear-gradient(135deg, #4AD496, #a3e635, #E03E1A, #4AD496);
+            background-size: 300% 300%;
+            background-position: 0% 50%;
+            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient-prototype:hover {
+            background-position: 100% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        #section-nav-inner {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #section-nav-inner::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <!-- ══ Sticky Section Nav ══ -->
+    <div id="section-nav">
+        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
+            <div id="section-nav-inner"
+                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
+                <button class="sec-link" data-target="section-problem">Problem Statement</button>
+                <button class="sec-link" data-target="section-core">Core</button>
+                <button class="sec-link" data-target="section-background">Background</button>
+                <button class="sec-link" data-target="section-initial-idea">Initial Idea</button>
+                <button class="sec-link" data-target="section-refined-idea">Refined Idea</button>
+                <button class="sec-link" data-target="section-relay">Relay</button>
+                <button class="sec-link" data-target="section-switchboard">Switchboard</button>
+                <button class="sec-link" data-target="section-prototype">Prototype</button>
+            </div>
+        </div>
+    </div>
+
+    <nav
+        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1470185034458857574/khlogoblack.png?ex=698a6002&is=69890e82&hm=f556d3b99591a24785c51f24f61830a6f25ba649a6756c0dc86b870b15752589&=&format=webp&quality=lossless&width=801&height=800"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+                <span
+                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">
+                    Kenny Huang Design
+                </span>
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
+                        Me</a>
+                    <a href="experience.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
+                    <a href="contact.html"
+                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
+                </div>
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
+            <a href="about.html"
+                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
+                Me</a>
+            <a href="experience.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <main class="pt-20 pb-24 w-full">
+
+        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
+            <img src="https://media.discordapp.net/attachments/692498995595051019/1471404424118276230/bracelet_render_5.png?ex=698ecfa8&is=698d7e28&hm=401a13d19d5b816f977d1408c087990d761d807b03fa61b853394befd9aad432&=&format=webp&quality=lossless&width=1421&height=800"
+                alt="Project Cover" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+        </div>
+
+        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
+
+            <section
+                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
+
+                <div class="md:col-span-5">
+                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">Relay + Switchboard</h1>
+
+                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
+                        <div>
+                            <span class="block text-zinc-400 mb-1">Role</span>
+                            <span class="font-medium">Product Designer</span>
+                        </div>
+                        <div>
+                            <span class="block text-zinc-400 mb-1">Timeline</span>
+                            <span class="font-medium">Sep 2025 - May 2026</span>
+                        </div>
+                        <div>
+                            <span class="block text-zinc-400 mb-1">Client</span>
+                            <span class="font-medium">Thesis Project</span>
+                        </div>
+                        <div>
+                            <span class="block text-zinc-400 mb-1">Tools</span>
+                            <span class="font-medium">Figma, Claude, Gemini, Ngrok, Python, HTML, CSS, Javascript,
+                                Node.js, Antigravity, Github,
+                                Fusion 360, Blender</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 md:pl-10">
+                    <h3 class="text-2xl font-bold mb-6">AI as Infrastructure</h3>
+                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        <p>
+                            Relay and Switchboard are an integrated front-end and back-end system that allows users to
+                            make and take calls using a personal AI agent.
+                            Relay is the front-end agent that makes and takes menial calls for the user, providing
+                            real-time and post-call transcripts, as well as context learning, memory, and the ability to
+                            autonomously execute social tasks for the user. It also acts as a call screening tool,
+                            declining dubious calls whilst relaying more complex calls to the user.
+                            Switchboard is the back-end system that manages the user's AI agents, providing an
+                            interface within the phone's settings for delegating agents, setting personalization,
+                            accessing transcripts, understanding privacy, and managing access to external applications.
+                        </p>
+                        <p>
+                            With the Gartner Hype Cycle predicting that Generative AI will reach its peak in the coming
+                            years,
+                            it is important to consider how Generative AI will look and function after it reaches a
+                            fully integrated state of mainstream adoption.
+                            Relay and Switchboard are an exploration of AI as pieces of infrastructure rather than as
+                            standalone applications, visualizing the potential for Generative AI to be seamlessly
+                            integrated into our lives without it being forced into applications it does not fit.
+
+                        </p>
+                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
+                            <p>
+                                (Prototype is available on Github to try, but is only available at specified times as it
+                                utilizes a personal API key and Node.js back-end)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SENTINEL: triggers sticky nav -->
+            <div id="pitch-sentinel" class="h-1 w-full pointer-events-none text-transparent">-</div>
+
+            <!-- Sections: Problem Statement, Core, Background, Initial Idea, Refined Idea, Relay, Switchboard -->
+
+            <!-- Problem Statement -->
+            <section id="section-problem"
+                class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
+                style="background: linear-gradient(135deg, #4AD496 0%, #F3C11B 50%, #E03E1A 100%);">
+                <div class="absolute inset-0 opacity-40 mix-blend-overlay"
+                    style="background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.8) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.8) 0%, transparent 60%);">
+                </div>
+                <div class="relative z-10 max-w-4xl mx-auto space-y-8">
+                    <p class="text-zinc-800 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
+                    <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-zinc-900 leading-tight">
+                        People dislike the hassle of menial phone calls, but still desire to communicate with others out
+                        of necessity.
+                    </h2>
+                    <p class="text-lg sm:text-xl text-zinc-800 max-w-2xl mx-auto leading-relaxed">
+                        How can we create a utility that positions AI as infrastructure without losing the core human
+                        element of phone communication?
+                    </p>
+                </div>
+            </section>
+
+            <!-- Core -->
+            <section id="section-core" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Core</h2>
+                <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
+                    <img src="https://media.discordapp.net/attachments/692498995595051019/1471410132435992596/Highline_Beta_-_Networking_Improvement_Framework.png?ex=698ed4f9&is=698d8379&hm=4e55210aa3a296a3ce9b80ddd4072dcdb498bc38bc386601e9f4ffb976601254&=&format=webp&quality=lossless&width=1423&height=800"
+                        alt="Project Thumbnail" class="w-full h-auto">
+                </div>
+                <div class="flex justify-center">
+                    <a href="#placeholder-pdf-link"
+                        class="btn-gradient-core inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
+                        SEE PRESENTATION PITCH
+                    </a>
+                </div>
+                </a>
+        </div>
+        </section>
+
+        <!-- Background -->
+        <section id="section-background" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Background</h2>
+            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
+                <img src="https://media.discordapp.net/attachments/692498995595051019/1471410132435992596/Highline_Beta_-_Networking_Improvement_Framework.png?ex=698ed4f9&is=698d8379&hm=4e55210aa3a296a3ce9b80ddd4072dcdb498bc38bc386601e9f4ffb976601254&=&format=webp&quality=lossless&width=1423&height=800"
+                    alt="Project Thumbnail" class="w-full h-auto">
+            </div>
+            <div class="flex justify-center">
+                <a href="#placeholder-pdf-link"
+                    class="btn-gradient-background inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
+                    SEE PRESENTATION PITCH
+                </a>
+            </div>
+        </section>
+
+        <!-- Initial Idea -->
+        <section id="section-initial-idea" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Initial Idea</h2>
+            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
+                <img src="https://media.discordapp.net/attachments/692498995595051019/1471410132435992596/Highline_Beta_-_Networking_Improvement_Framework.png?ex=698ed4f9&is=698d8379&hm=4e55210aa3a296a3ce9b80ddd4072dcdb498bc38bc386601e9f4ffb976601254&=&format=webp&quality=lossless&width=1423&height=800"
+                    alt="Project Thumbnail" class="w-full h-auto">
+            </div>
+            <div class="flex justify-center">
+                <a href="#placeholder-pdf-link"
+                    class="btn-gradient-initial inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
+                    SEE PRESENTATION PITCH
+                </a>
+            </div>
+        </section>
+
+        <!-- Refined Idea -->
+        <section id="section-refined-idea" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Refined Idea</h2>
+            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
+                <img src="https://media.discordapp.net/attachments/692498995595051019/1471410132435992596/Highline_Beta_-_Networking_Improvement_Framework.png?ex=698ed4f9&is=698d8379&hm=4e55210aa3a296a3ce9b80ddd4072dcdb498bc38bc386601e9f4ffb976601254&=&format=webp&quality=lossless&width=1423&height=800"
+                    alt="Project Thumbnail" class="w-full h-auto">
+            </div>
+            <div class="flex justify-center">
+                <a href="#placeholder-pdf-link"
+                    class="btn-gradient inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
+                    SEE PRESENTATION PITCH
+                </a>
+            </div>
+        </section>
+
+        <!-- Relay -->
+        <section id="section-relay" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Relay</h2>
+            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
+                <img src="https://media.discordapp.net/attachments/692498995595051019/1471410132435992596/Highline_Beta_-_Networking_Improvement_Framework.png?ex=698ed4f9&is=698d8379&hm=4e55210aa3a296a3ce9b80ddd4072dcdb498bc38bc386601e9f4ffb976601254&=&format=webp&quality=lossless&width=1423&height=800"
+                    alt="Project Thumbnail" class="w-full h-auto">
+            </div>
+            <div class="flex justify-center">
+                <a href="#placeholder-pdf-link"
+                    class="btn-gradient-relay inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
+                    SEE PRESENTATION PITCH
+                </a>
+            </div>
+        </section>
+
+        <!-- Switchboard -->
+        <section id="section-switchboard" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Switchboard</h2>
+            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
+                <img src="https://media.discordapp.net/attachments/692498995595051019/1471410132435992596/Highline_Beta_-_Networking_Improvement_Framework.png?ex=698ed4f9&is=698d8379&hm=4e55210aa3a296a3ce9b80ddd4072dcdb498bc38bc386601e9f4ffb976601254&=&format=webp&quality=lossless&width=1423&height=800"
+                    alt="Project Thumbnail" class="w-full h-auto">
+            </div>
+            <div class="flex justify-center">
+                <a href="#placeholder-pdf-link"
+                    class="btn-gradient-switchboard inline-flex items-center justify-center px-12 py-5 font-bold text-white text-xl rounded-3xl shadow-lg">
+                    SEE PRESENTATION PITCH
+                </a>
+            </div>
+        </section>
+
+        <!-- Relay + Switchboard Prototype -->
+        <section id="section-prototype" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Relay + Switchboard Prototype</h2>
+            <div class="space-y-4">
+                <div class="flex items-center justify-end gap-3 px-2">
+                    <a href="https://kennyhuangdesign.github.io/Relay/" target="_blank" rel="noopener noreferrer"
+                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                            </path>
+                        </svg>
+                        Open in New Tab
+                    </a>
+                    <button onclick="document.getElementById('relay-prototype-frame').requestFullscreen()"
+                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
+                            </path>
+                        </svg>
+                        Full Screen
+                    </button>
+                </div>
+                <div id="relay-prototype-frame"
+                    class="relative mx-auto rounded-[2.5rem] overflow-hidden shadow-2xl border-[6px] border-zinc-800 dark:border-zinc-600 bg-zinc-950"
+                    style="width: 375px; height: 812px; max-width: 100%;">
+
+                    <!-- Floating Exit Full Screen Button (only visible in full screen) -->
+                    <button id="relay-exit-fullscreen-btn" onclick="document.exitFullscreen()"
+                        class="hidden absolute top-6 left-1/2 transform -translate-x-1/2 z-50 items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-zinc-900/95 hover:bg-black backdrop-blur-md border border-zinc-700/50 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Exit Full Screen
+                    </button>
+
+                    <iframe id="relay-iframe" src="https://kennyhuangdesign.github.io/Relay/"
+                        class="w-full h-full border-none bg-white dark:bg-zinc-950"
+                        title="Relay + Switchboard Interactive Prototype"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            document.addEventListener('fullscreenchange', () => {
+                const exitBtn = document.getElementById('relay-exit-fullscreen-btn');
+                if (exitBtn) {
+                    if (document.fullscreenElement && document.fullscreenElement.id === 'relay-prototype-frame') {
+                        exitBtn.classList.remove('hidden');
+                        exitBtn.classList.add('flex');
+                    } else {
+                        exitBtn.classList.add('hidden');
+                        exitBtn.classList.remove('flex');
+                    }
+                }
+            });
+        </script>
+
+        </div>
+
+        <div
+            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
+            <a href="index.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
+                Back to Home</a>
+            <a href="project5.html"
+                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
+                Project &rarr;</a>
+        </div>
+
+        </div>
+
+        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
+            <div
+                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
+
+                <div class="h-12 flex items-center justify-center transition-transform">
+                    <img src="https://cdn.discordapp.com/attachments/692498995595051019/1471742423049703539/khbannerg.png?ex=69900a71&is=698eb8f1&hm=f42a11469ed017ea9e50c4207cb2ea359caf0c430e4f36ddd40a25e8c2f7a925&"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                </div>
+
+                <div class="text-sm text-zinc-400">
+                    <p>&copy; 2026 Kenny Huang Design.</p>
+                    <p>All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox"
+        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="relative max-w-5xl w-full max-h-screen">
+            <button onclick="closeLightbox()"
+                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+        </div>
+    </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        themeToggleBtn.addEventListener('click', function () {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+        });
+
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
+
+        // ── Sticky Section Nav ──
+        const sectionNav = document.getElementById('section-nav');
+        const pitchSentinel = document.getElementById('pitch-sentinel');
+        const secLinks = document.querySelectorAll('.sec-link');
+
+        const sections = [
+            { id: 'section-problem', btn: document.querySelector('[data-target="section-problem"]') },
+            { id: 'section-core', btn: document.querySelector('[data-target="section-core"]') },
+            { id: 'section-background', btn: document.querySelector('[data-target="section-background"]') },
+            { id: 'section-initial-idea', btn: document.querySelector('[data-target="section-initial-idea"]') },
+            { id: 'section-refined-idea', btn: document.querySelector('[data-target="section-refined-idea"]') },
+            { id: 'section-relay', btn: document.querySelector('[data-target="section-relay"]') },
+            { id: 'section-switchboard', btn: document.querySelector('[data-target="section-switchboard"]') },
+            { id: 'section-prototype', btn: document.querySelector('[data-target="section-prototype"]') },
+        ];
+
+        const sentinelObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                    sectionNav.classList.add('visible');
+                } else {
+                    sectionNav.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0 });
+        sentinelObserver.observe(pitchSentinel);
+
+        function onScroll() {
+            const offset = 160;
+            let active = null;
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const el = document.getElementById(sections[i].id);
+                if (el && el.getBoundingClientRect().top <= offset) {
+                    active = sections[i].id;
+                    break;
+                }
+            }
+            sections.forEach(s => {
+                if (s.btn) s.btn.classList.toggle('active', s.id === active);
+            });
+            if (active) {
+                const activeBtn = document.querySelector('.sec-link.active');
+                const navInner = document.getElementById('section-nav-inner');
+                if (activeBtn && navInner) {
+                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
+                    navInner.scrollTo({ left: btnMid - navInner.offsetWidth / 2, behavior: 'smooth' });
+                }
+            }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        secLinks.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                if (target) {
+                    const top = target.getBoundingClientRect().top + window.scrollY - 160;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Lightbox Logic
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.remove('hidden');
+            // Small delay to allow display:flex to apply before opacity transition
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightboxImg.src = '';
+            }, 300); // Wait for transition
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Close on background click
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+
+</html>
