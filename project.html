@@ -209,8 +209,12 @@
         <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
             <a href="index.html" class="flex items-center gap-4 group">
                 <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
-                    <img src="global_images/khlogoback2.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
+                    <!-- Light mode logo (black) -->
+                    <img src="global_images/khlogobackdark.png"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain block dark:hidden">
+                    <!-- Dark mode logo (white) -->
+                    <img src="global_images/khlogobacklight.png"
+                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain hidden dark:block">
                 </div>
                 <span
                     class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">Kenny
