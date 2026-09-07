@@ -369,7 +369,7 @@
                         <div>
                             <span class="block text-zinc-400 mb-1">Tools</span>
                             <span class="font-medium">Figma, Claude, Gemini, Ngrok, Python, HTML, CSS, Javascript,
-                                Node.js, Antigravity, Github,
+                                Node.js, Antigravity, Firebase,
                                 Fusion 360, Blender</span>
                         </div>
                     </div>
@@ -379,30 +379,22 @@
                     <h3 class="text-2xl font-bold mb-6">AI as Infrastructure</h3>
                     <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
                         <p>
-                            Relay and Switchboard are an integrated front-end and back-end system that allows users to
-                            make and take calls using a personal AI agent.
-                            Relay is the front-end agent that makes and takes menial calls for the user, providing
-                            real-time and post-call transcripts, as well as context learning, memory, and the ability to
-                            autonomously execute social tasks for the user. It also acts as a call screening tool,
-                            declining dubious calls whilst relaying more complex calls to the user.
-                            Switchboard is the back-end system that manages the user's AI agents, providing an
-                            interface within the phone's settings for delegating agents, setting personalization,
-                            accessing transcripts, understanding privacy, and managing access to external applications.
+                            Relay is an OS-level system that allows users to delegate their phone calls and voicemails to AI agents of their choice.
+                            Relay keeps track of real-time and post-call transcripts, as well as context learning, memory, and the ability to
+                            autonomously execute social tasks for the user. It also acts as a call screening tool with the autonomy to relay complex/sensitive calls to the user.
+                            Switchboard is the universal protocol that allows for AI agents, regardless of developer, to be integratable and controllable via Relay settings.
                         </p>
                         <p>
-                            With the Gartner Hype Cycle predicting that Generative AI will reach its peak in the coming
-                            years,
-                            it is important to consider how Generative AI will look and function after it reaches a
+                            With the Gartner Hype Cycle predicting that Generative AI will inevitably reach its peak in the near future,
+                            Relay explores how Generative AI will look and function after it reaches a
                             fully integrated state of mainstream adoption.
-                            Relay and Switchboard are an exploration of AI as pieces of infrastructure rather than as
-                            standalone applications, visualizing the potential for Generative AI to be seamlessly
-                            integrated into our lives without it being forced into applications it does not fit.
+                            At its core, Relay and Switchboard represent AI as digital infrastructure.
 
                         </p>
                         <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
                             <p>
-                                (Prototype is available on Github to try, but is only available at specified times as it
-                                utilizes a personal API key and Node.js back-end)
+                                (Two-part prototype is available on Firebase to try, but is only available upon request 
+                                as it runs on my home Node.js server)
                             </p>
                         </div>
                     </div>
@@ -424,19 +416,19 @@
                 <div class="relative z-10 max-w-4xl mx-auto space-y-8">
                     <p class="text-zinc-800 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
                     <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-zinc-900 leading-tight">
-                        People dislike the hassle of menial phone calls, but still desire to communicate with others out
+                        People dislike menial phone calls, but still must communicate with others out
                         of necessity.
                     </h2>
                     <p class="text-lg sm:text-xl text-zinc-800 max-w-2xl mx-auto leading-relaxed">
                         How can we create a utility that positions AI as infrastructure without losing the core human
-                        element of phone communication?
+                        element of telephonic communication?
                     </p>
                 </div>
             </section>
 
             <!-- Core -->
             <section id="section-core" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Core</h2>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Where it all Started</h2>
                 <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
                     <img src="relay_images/gate1cover.png"
                         alt="Project Thumbnail" class="w-full h-auto">
@@ -453,7 +445,7 @@
 
         <!-- Background -->
         <section id="section-background" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Background</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Personal Background & Initial Research</h2>
             <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
                 <img src="relay_images/gate2cover.png"
                     alt="Project Thumbnail 2" class="w-full h-auto">
@@ -468,7 +460,7 @@
 
         <!-- Initial Idea -->
         <section id="section-initial-idea" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Initial Idea</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Initial Idea: Relay Beta</h2>
             <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
                 <img src="relay_images/gate3cover.png"
                     alt="Project Thumbnail 3" class="w-full h-auto">
@@ -483,7 +475,7 @@
 
         <!-- Refined Idea -->
         <section id="section-refined-idea" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Refined Idea</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Refined Idea: Relay v.0 & Switchboard v.0</h2>
             <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
                 <img src="relay_images/gate4cover.png"
                     alt="Project Thumbnail 4" class="w-full h-auto">
@@ -498,7 +490,7 @@
 
         <!-- Relay -->
         <section id="section-relay" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Relay</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Refined Focus: Relay v.1</h2>
             <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
                 <img src="relay_images/gate5cover.png"
                     alt="Project Thumbnail" class="w-full h-auto">
@@ -513,7 +505,7 @@
 
         <!-- Switchboard -->
         <section id="section-switchboard" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Switchboard</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Thesis Final: Relay v.1.5 & Switchboard v.1</h2>
             <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
                 <img src="relay_images/gate6cover.png"
                     alt="Project Thumbnail" class="w-full h-auto">
@@ -528,10 +520,10 @@
 
         <!-- Relay + Switchboard Prototype -->
         <section id="section-prototype" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Relay + Switchboard Prototype</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Two-part Relay Prototype</h2>
             <div class="space-y-4">
                 <div class="flex items-center justify-end gap-3 px-2">
-                    <a href="https://kennyhuangdesign.github.io/Relay/" target="_blank" rel="noopener noreferrer"
+                    <a href="https://relay-16835.web.app" target="_blank" rel="noopener noreferrer"
                         class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
