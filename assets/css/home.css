@@ -1,0 +1,211 @@
+/* Kenny Huang portfolio: homepage (Studio direction)
+   Shared colors, type, nav, footer and motion live in site.css, which loads first. */
+
+/* Projects */
+.projects { display: flex; flex-direction: column; gap: 48px; padding-top: 48px; padding-bottom: var(--section-space); }
+.tile { display: block; border-radius: var(--radius-thumb); }
+
+.tile-media {
+  position: relative; aspect-ratio: 2 / 1; overflow: hidden;
+  border-radius: var(--radius-thumb); background: var(--raise);
+}
+.tile-media img,
+.tile-media video { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.tile-media video { position: absolute; inset: 0; opacity: 0; transition: opacity 400ms ease; }
+.tile-media.has-video video { opacity: 1; }
+
+/* Each tile grows into its project's hero image when the project page opens (see site.css) */
+.tile-media[data-vt="relay"] { view-transition-name: hero-relay; }
+.tile-media[data-vt="betalink"] { view-transition-name: hero-betalink; }
+.tile-media[data-vt="nexusbuilds"] { view-transition-name: hero-nexusbuilds; }
+.tile-media[data-vt="iembrace"] { view-transition-name: hero-iembrace; }
+.tile-media[data-vt="cfplus"] { view-transition-name: hero-cfplus; }
+
+.tile-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 24px; text-align: center; color: #ffffff;
+  background: var(--scrim);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 300ms var(--ease);
+}
+.tile-overlay-title {
+  font-family: var(--font-display); font-size: clamp(32px, 3.4vw, 52px); font-weight: 600;
+  line-height: 1.05; letter-spacing: -0.02em;
+  transform: translateY(14px); transition: transform 420ms var(--ease);
+}
+.tile-overlay-sub {
+  font-size: 20px; line-height: 1.4; color: rgba(255, 255, 255, 0.86);
+  transform: translateY(14px); transition: transform 420ms var(--ease) 50ms;
+}
+.tile:focus-visible .tile-overlay { opacity: 1; }
+.tile:focus-visible .tile-overlay-title,
+.tile:focus-visible .tile-overlay-sub { transform: none; }
+
+.tile-caption { display: none; }
+.tile-title { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+.tile-meta { margin: 4px 0 0; font-size: 14px; color: var(--ink-2); }
+
+/* About me */
+.about,
+.contact { border-top: 1px solid var(--line); padding: var(--section-space) 0; transition: border-color 300ms ease; }
+.section-title {
+  margin: 0; font-family: var(--font-display); font-size: 68px; font-weight: 400;
+  line-height: 1.1; letter-spacing: -0.02em;
+}
+.about-row {
+  display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  gap: 96px; margin-top: 32px; align-items: start;
+}
+.photo { aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius-tile) 0 0 0; background: var(--raise); }
+.photo img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.bio { margin: 0; font-family: var(--font-display); font-size: 26px; line-height: 1.32; }
+.bio + .bio { margin-top: 1em; }
+.more-link {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-top: 24px;
+  font-size: 17px;
+}
+.more-link svg { width: 18px; height: 18px; flex: none; transition: transform 200ms var(--ease); }
+
+.skills { list-style: none; margin: 64px 0 0; padding: 0; display: flex; gap: 48px; }
+.skill {
+  flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column; gap: 12px; padding-top: 24px;
+  border-top: 1px solid var(--line);
+  transition: border-color 300ms ease, flex-grow 450ms var(--ease);
+}
+.skill-head { display: flex; align-items: flex-start; gap: 10px; }
+/* Icon artwork starts about 2px inside its box, so the negative margin sets it flush with the column edge.
+   The top margin centres it on the title's first line. */
+.skill-icon { flex: none; margin: 2px 0 0 -2px; color: var(--ink); }
+.skill-icon svg { width: 24px; height: 24px; }
+.skill-name { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.25; }
+.skill-list { list-style: none; margin: 0; padding: 0; }
+/* The 14px gap lines the list text up with the title above it */
+.skill-list li {
+  display: flex; align-items: center; gap: 14px;
+  padding: 3px 0; font-size: 16px; line-height: 1.5; color: var(--ink-2); white-space: nowrap;
+  transition: color 160ms ease;
+}
+.skill-mini { flex: none; width: 18px; height: 18px; }
+.skill-mini:empty { border: 1px dashed currentColor; border-radius: 4px; opacity: 0.5; }
+.skill-mini svg,
+.skill-mini img { width: 100%; height: 100%; }
+
+/* Link underlines: on hover or keyboard focus the line sweeps out to the right and back in from the left */
+.ul { position: relative; }
+.ul::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: currentColor; transform-origin: left;
+}
+@keyframes sweep {
+  0% { transform: scaleX(1); transform-origin: right; }
+  49% { transform: scaleX(0); transform-origin: right; }
+  50% { transform: scaleX(0); transform-origin: left; }
+  100% { transform: scaleX(1); transform-origin: left; }
+}
+.more-link:focus-visible .ul::after,
+.social a:focus-visible .ul::after,
+.email:focus-visible::after { animation: sweep 600ms var(--ease); }
+
+/* Contact */
+.email {
+  position: relative; display: inline-block; margin-top: 24px; padding-bottom: 6px;
+  font-family: var(--font-display); font-size: 32px; line-height: 1.25; letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+.email::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: currentColor; transform-origin: left;
+}
+.social { display: flex; flex-wrap: wrap; gap: 4px 32px; margin-top: 28px; }
+.social a {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 17px;
+}
+.social svg { width: 20px; height: 20px; flex: none; transition: transform 200ms var(--ease); }
+
+/* The first tile reveals on page load */
+.tile-first .tile-media { animation: wipe 1000ms var(--ease) 120ms both; }
+.tile-first .tile-media > img { animation: settle 1400ms var(--ease) 120ms both; }
+
+/* Browsers with scroll-driven animations: motion follows the scroll position */
+@supports (animation-timeline: view()) {
+  .tile:not(.tile-first) .tile-media { animation: wipe var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+  .tile:not(.tile-first) .tile-media > img { animation: settle var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .photo { animation: wipe var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+  .photo img { animation: settle var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .bio { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 10% entry 90%; }
+  .more-link { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 20% entry 100%; }
+  .skill { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
+  .skill:nth-child(2) { animation-range: entry 5% entry 95%; }
+  .skill:nth-child(3) { animation-range: entry 10% entry 100%; }
+  .skill:nth-child(4) { animation-range: entry 15% entry 100%; }
+  .skill-icon { animation: pop var(--ease) both; animation-timeline: view(); animation-range: entry 30% entry 100%; }
+  .email { view-timeline-name: --email; animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 10% entry 90%; }
+  .email::after { animation: draw var(--ease) both; animation-timeline: --email; animation-range: entry 100% contain 10%; }
+  .social a { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+  .social a:nth-child(2) { animation-range: entry 10% entry 90%; }
+  .social a:nth-child(3) { animation-range: entry 20% entry 100%; }
+}
+
+/* Reveal fallback, homepage parts (the shared part is in site.css) */
+/* Skills keep their hover widening alongside the reveal, without the reveal's stagger delay */
+.io .skill[data-reveal="rise"] {
+  transition: opacity 700ms var(--ease) var(--delay, 0ms), transform 700ms var(--ease) var(--delay, 0ms),
+    border-color 300ms ease, flex-grow 450ms var(--ease);
+}
+.io .email::after { transform: scaleX(0); transition: transform 900ms var(--ease) 250ms; }
+.io .email.in::after { transform: scaleX(1); }
+
+/* Hover only on devices with a mouse */
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover .tile-overlay { opacity: 1; }
+  .tile:hover .tile-overlay-title,
+  .tile:hover .tile-overlay-sub { transform: none; }
+  .more-link:hover .ul::after,
+  .social a:hover .ul::after,
+  .email:hover::after { animation: sweep 600ms var(--ease); }
+  .more-link:hover svg { transform: translate(2px, -2px); }
+  .social a:hover svg { transform: translateY(-2px); }
+  .skill-list li:hover { color: var(--lit); }
+}
+
+/* The hovered skill column widens, only where the four columns sit side by side */
+@media (hover: hover) and (pointer: fine) and (min-width: 1081px) and (prefers-reduced-motion: no-preference) {
+  .skill:hover { flex-grow: 1.4; }
+}
+
+/* Touch screens and phones: titles sit under the image instead of appearing on hover */
+@media (hover: none), (max-width: 720px) {
+  .tile-caption { display: block; padding-top: 14px; }
+  .tile-overlay { display: none; }
+}
+
+/* Titles can wrap to two lines as columns narrow on hover. Reserving both lines keeps the lists level and still. */
+@media (min-width: 1081px) {
+  .skill-name { min-height: 2.5em; }
+}
+
+/* Below this the four columns leave titles too little room, so they fold into two rows of two */
+@media (max-width: 1080px) {
+  .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 48px; }
+}
+
+@media (max-width: 720px) {
+  .projects { gap: 40px; padding-top: 24px; padding-bottom: var(--section-space); }
+  .tile-media { aspect-ratio: 4 / 3; }
+  .about, .contact { padding: var(--section-space) 0; }
+  .section-title { font-size: 48px; }
+  .about-row { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+  .bio { font-family: var(--font-text); font-size: 17px; line-height: 1.45; }
+  .more-link { margin-top: 12px; }
+  .skills { grid-template-columns: minmax(0, 1fr); margin-top: 32px; }
+  .email { margin-top: 16px; padding-top: 8px; padding-bottom: 8px; font-size: 21px; line-height: 28px; }
+  .social { gap: 0 24px; margin-top: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile-overlay-title, .tile-overlay-sub, .more-link svg, .social svg { transform: none !important; transition: none !important; }
+}

@@ -1,667 +1,380 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusBuilds Service - Kenny Huang Design</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexusBuilds PC Building Service, Kenny Huang</title>
+  <meta name="description" content="NexusBuilds, a PC building service where clients of any experience level can describe their needs to builders in a detailed, organized way. A product design case study by Kenny Huang.">
+  <meta name="theme-color" content="#d9d9d8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://kennyhuangdesign.github.io/KHPortfolio/project3.html">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        zinc: { 850: '#202022', 950: '#0c0c0e' }
-                    }
-                }
-            }
-        }
-    </script>
+  <!-- Share preview (LinkedIn, iMessage, Slack) -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="NexusBuilds PC Building Service, Kenny Huang">
+  <meta property="og:description" content="Digital service design: a PC building service for clients of every experience level.">
+  <meta property="og:url" content="https://kennyhuangdesign.github.io/KHPortfolio/project3.html">
+  <meta property="og:image" content="https://kennyhuangdesign.github.io/KHPortfolio/assets/img/og/nexusbuilds.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-    <style>
-        /* ── Sticky Section Nav ── */
-        #section-nav {
-            position: fixed;
-            top: 80px;
-            /* sits right under the main nav */
-            left: 0;
-            width: 100%;
-            z-index: 40;
-            transform: translateY(-100%);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
-            pointer-events: none;
-        }
+  <!-- Apply the saved or system theme before the page paints, and skip the hero entrance
+       when the page opens through a page transition from the homepage -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      } catch (e) {}
+      window.addEventListener('pagereveal', function (e) {
+        if (e.viewTransition) document.documentElement.classList.add('vt-in');
+      });
+    })();
+  </script>
+  <link rel="expect" href="#hero" blocking="render">
 
-        #section-nav.visible {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: all;
-        }
+  <link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 
-        .sec-link {
-            position: relative;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: #71717a;
-            padding: 0 4px 14px;
-            border-bottom: 2px solid transparent;
-            transition: color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .sec-link:hover {
-            color: #18181b;
-            border-color: #a1a1aa;
-        }
-
-        .dark .sec-link:hover {
-            color: #f4f4f5;
-            border-color: #52525b;
-        }
-
-        .sec-link.active {
-            color: #fde047;
-            border-color: #fde047;
-        }
-
-        .dark .sec-link.active {
-            color: #fde047;
-            border-color: #fde047;
-        }
-
-        /* ── Nav inner scroll strip ── */
-        #section-nav-inner {
-            overflow-x: auto;
-            scrollbar-width: none;
-            /* Firefox */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #section-nav-inner::-webkit-scrollbar {
-            display: none;
-            /* Chrome/Safari/Edge */
-        }
-
-        /* ── Ideation diagram ── */
-        .ideation-merge-arrow {
-            color: #6366f1;
-        }
-
-        /* ── Process track (unchanged) ── */
-        .process-track {
-            position: absolute;
-            top: 40%;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background-color: #3b82f6;
-            z-index: 0;
-        }
-
-        .signal-container {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-        }
-
-        @keyframes signal-travel {
-            0% {
-                left: 11%;
-                opacity: 0;
-            }
-
-            2% {
-                opacity: 1;
-            }
-
-            38% {
-                opacity: 1;
-                left: 68%;
-            }
-
-            40%,
-            100% {
-                left: 68%;
-                opacity: 0;
-            }
-        }
-
-        .signal-line {
-            position: absolute;
-            top: 40%;
-            left: 11%;
-            width: 20%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #ef4444, #ef4444, transparent);
-            box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
-            animation: signal-travel 4s linear infinite;
-            animation-delay: 3s;
-            animation-fill-mode: backwards;
-            z-index: 5;
-        }
-
-        @keyframes border-flash {
-
-            0%,
-            100% {
-                border-color: #3b82f6;
-                box-shadow: none;
-            }
-
-            50% {
-                border-color: #ef4444;
-                box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-            }
-        }
-
-        .process-card {
-            border: 4px solid #3b82f6;
-            animation: border-flash 4s linear infinite;
-            transition: transform 0.3s ease;
-        }
-
-        .card-1 {
-            animation-delay: 1s;
-        }
-
-        .card-2 {
-            animation-delay: 2s;
-        }
-
-        .card-3 {
-            animation-delay: 3s;
-        }
-
-        @media (max-width:768px) {
-
-            .process-track,
-            .signal-line {
-                display: none;
-            }
-        }
-    </style>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/project.css">
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/project.js" defer></script>
 </head>
+<body class="cs" style="--accent: #fac638; --on-accent: #181811">
+  <a class="skip" href="#overview">Skip to case study</a>
 
-<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300 overflow-x-hidden">
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="index.html" data-back aria-label="Back to all projects">
+        <img class="logo-back logo-back-light" src="assets/img/logo/khlogobacklight-84.png" width="28" height="28" alt="">
+        <img class="logo-back logo-back-dark" src="assets/img/logo/khlogobackdark-84.png" width="28" height="28" alt="">
+        <span>KENNY HUANG DESIGN</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Main">
+          <a href="index.html#projects" aria-current="page">Projects</a>
+          <a href="index.html#about">About me</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="about.html">More</a>
+        </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <!-- ══ Main Nav ══ -->
-    <nav
-        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
-        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
-            <a href="index.html" class="flex items-center gap-4 group">
-                <div class="h-8 flex items-center justify-center">
-                    <!-- Light mode logo (black) -->
-                    <img src="global_images/khlogobacklight.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain block dark:hidden">
-                    <!-- Dark mode logo (white) -->
-                    <img src="global_images/khlogobackdark.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain hidden dark:block">
-                </div>
-                <span
-                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">Kenny
-                    Huang Design</span>
-            </a>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
-                        Me</a>
-                    <a href="experience.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
-                    <a href="contact.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
-                </div>
-                <button id="theme-toggle"
-                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
-                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                            fill-rule="evenodd" clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
-                <button id="mobile-menu-btn"
-                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
+  <main>
+    <div class="wrap cs-top">
+      <figure class="cs-hero" id="hero" style="view-transition-name: hero-nexusbuilds">
+        <img src="assets/img/nexusbuilds/hero-1920.webp"
+             srcset="assets/img/nexusbuilds/hero-960.webp 960w, assets/img/nexusbuilds/hero-1920.webp 1919w"
+             sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+             width="1919" height="876" fetchpriority="high"
+             alt="NexusBuilds wordmark beside its yellow processor-chip logo">
+      </figure>
+
+      <header class="cs-head">
+        <p class="cs-kicker">Digital Service Design</p>
+        <h1 class="cs-title">NexusBuilds PC Building Service</h1>
+      </header>
+
+      <div class="cs-grid cs-intro" id="overview">
+        <dl class="facts" data-reveal="rise">
+          <div class="fact"><dt>Role</dt><dd>Product Designer</dd></div>
+          <div class="fact"><dt>Timeline</dt><dd>Feb 2026</dd></div>
+          <div class="fact"><dt>Client</dt><dd>Personal</dd></div>
+          <div class="fact"><dt>Tools</dt><dd>Figma, Stitch, Antigravity</dd></div>
+        </dl>
+        <div class="overview" data-reveal="rise" style="--delay: 100ms">
+          <h2 class="overview-title"><mark class="hl"><span>A PC building service for everyone</span></mark></h2>
+          <p class="overview-lead">The NexusBuilds PC Building Service is a service aimed towards streamlining the PC building process for both clients and builders. It incorporates a unique, communication-focused approach to PC building, where <mark class="hl"><span>clients of varying experience can express their needs and preferences to builders in a detailed and organized manner, turning consulting into an optional process for builders</span></mark>.</p>
+          <p class="overview-body">Almost everyone will need a PC nowadays, with a growing number of people interested in a custom-built PC rather than the default store-bought counterpart. However, <mark class="hl"><span>the process of building a PC can be too challenging for beginners, while those with more experience often have specific wants but lack the time or resources</span></mark> to build a PC on their own. <mark class="hl"><span>NexusBuilds acknowledges both audiences</span></mark>, offering a seamless and personalized PC building experience for everyone.</p>
+          <p class="credit">Credit: Unsplash, Pexels (stock images, used under the Unsplash and Pexels licenses)</p>
         </div>
-        <div id="mobile-menu"
-            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
-            <a href="about.html"
-                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
-                Me</a>
-            <a href="experience.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
-            <a href="contact.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+      </div>
+    </div>
+
+    <!-- Section bar: one link per section below. It sticks under the nav and highlights the section being read. -->
+    <nav class="secnav" aria-label="Case study sections">
+      <div class="wrap">
+        <div class="secnav-strip">
+          <span class="secnav-pill" aria-hidden="true"></span>
+          <a href="#live-site">Live site</a>
+          <a href="#problem">Problem</a>
+          <a href="#research">Research</a>
+          <a href="#synthesis">Synthesis</a>
+          <a href="#testing">Testing</a>
+          <a href="#feedback">Feedback</a>
         </div>
+      </div>
+      <span class="secnav-progress" aria-hidden="true"></span>
     </nav>
 
-    <!-- ══ Sticky Section Nav (appears after pitch button) ══ -->
-    <div id="section-nav">
-        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
-            <div id="section-nav-inner"
-                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
-                <button class="sec-link" data-target="section-problem">Problem Statement</button>
-                <button class="sec-link" data-target="section-research">Research</button>
-                <button class="sec-link" data-target="section-synthesis">Synthesis</button>
-                <button class="sec-link" data-target="section-user-testing">User Testing</button>
-                <button class="sec-link" data-target="section-feedback">Feedback</button>
+    <div class="wrap">
+      <section class="cs-sec" id="live-site" aria-labelledby="live-site-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="live-site-title">Live site</h2>
+          <p class="cs-lede">*This is the working website. Open in new tab for a better experience.</p>
+        </div>
+        <div class="embed" data-embed data-reveal="rise">
+          <div class="embed-bar">
+            <div class="embed-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="embed-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>kennyhuangdesign.github.io/NexusBuilds</span></div>
+            <div class="embed-actions">
+              <a class="embed-btn" href="https://kennyhuangdesign.github.io/NexusBuilds" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="label">Open in new tab</span></a>
+              <button class="embed-btn" type="button" data-embed-full hidden><svg class="i-max" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg><svg class="i-min" style="display: none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg><span class="label">Full screen</span></button>
             </div>
+          </div>
+          <div class="embed-view">
+            <iframe src="https://kennyhuangdesign.github.io/NexusBuilds" title="NexusBuilds live site" loading="lazy"></iframe>
+            <button class="embed-cover" type="button" data-embed-cover><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg>Try the live site</span></button>
+          </div>
         </div>
-    </div>
+      </section>
 
-    <main class="pt-20 pb-24 w-full">
-
-        <!-- Hero image -->
-        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
-            <img src="nexusbuilds_images/nexusbuilds_logo.png"
-                alt="Project Cover" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+      <section class="cs-sec" id="problem" aria-labelledby="problem-title">
+        <div class="statement" data-reveal="wipe">
+          <h2 class="statement-label" id="problem-title">PROBLEM STATEMENT</h2>
+          <p class="statement-text">The audience in need of a PC tailored to their workflow is diverse, forcing builders to accommodate as many people as possible.</p>
+          <p class="statement-hmw">How might we make the process of obtaining a custom PC more accessible to consumers without increasing the burden of communication for builders?</p>
         </div>
+      </section>
 
-        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
-
-            <!-- Project overview -->
-            <section
-                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
-                <div class="md:col-span-5">
-                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">NexusBuilds PC Building Service</h1>
-                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
-                        <div><span class="block text-zinc-400 mb-1">Role</span><span class="font-medium">Product
-                                Designer</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Timeline</span><span class="font-medium">Feb 2026
-                            </span></div>
-                        <div><span class="block text-zinc-400 mb-1">Client</span><span
-                                class="font-medium">Personal</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Tools</span><span class="font-medium">Figma, Stitch,
-                                Antigravity
-                            </span></div>
-                    </div>
-                </div>
-                <div class="md:col-span-7 md:pl-10">
-                    <h3 class="text-2xl font-bold mb-6">A PC Building Service for Everyone</h3>
-                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                        <p>The NexusBuilds PC Building Service is a service aimed towards streamlining the PC building
-                            process for both clients and builders. It incorporates a unique, communication-focused
-                            approach to PC building, where clients of varying experience can express their needs and
-                            preferences to builders in a detailed and organized manner, turning consulting into an
-                            optional process for builders.</p>
-                        <p>Almost everyone will need a PC nowadays, with a growing number of people interested in a
-                            custom-built PC rather than the default store-bought counterpart. However, the process of
-                            building a PC can be too challenging for beginners, while those with more experience often
-                            have specific wants but lack the time or resources to build a PC on their own. NexusBuilds
-                            acknowledges both audiences, offering a seamless and personalized PC building experience for
-                            everyone.</p>
-                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
-                            <p>Credit: Unsplash, Pexels (Stock images; used under Unsplash and Pexels licenses)</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SENTINEL placed to keep the sticky nav behaviour -->
-            <div id="pitch-sentinel" class="h-1 w-full absolute pt-16 pointer-events-none text-transparent">-</div>
-
-            <section class="py-16 space-y-16">
-                <!-- INTERACTIVE PROTOTYPE -->
-                <section id="section-interactive-prototype-container" class="space-y-4">
-                    <div class="flex items-center justify-end gap-3 px-2">
-                        <a href="https://kennyhuangdesign.github.io/NexusBuilds" target="_blank"
-                            rel="noopener noreferrer"
-                            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
-                                </path>
-                            </svg>
-                            Open in New Tab
-                        </a>
-                        <button onclick="document.getElementById('section-interactive-prototype').requestFullscreen()"
-                            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
-                                </path>
-                            </svg>
-                            Full Screen
-                        </button>
-                    </div>
-                    <section id="section-interactive-prototype"
-                        class="w-full h-[80vh] min-h-[700px] rounded-3xl overflow-hidden shadow-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 relative">
-
-                        <!-- Floating Exit Full Screen Button (only visible in full screen) -->
-                        <button id="exit-fullscreen-btn" onclick="document.exitFullscreen()"
-                            class="hidden absolute top-6 left-1/2 transform -translate-x-1/2 z-50 items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-zinc-900/95 hover:bg-black backdrop-blur-md border border-zinc-700/50 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                            Exit Full Screen
-                        </button>
-
-                        <iframe id="nexus-iframe" src="https://kennyhuangdesign.github.io/NexusBuilds"
-                            class="absolute inset-0 w-full h-full border-none bg-white dark:bg-zinc-950"
-                            title="NexusBuilds Interactive Prototype"></iframe>
-                    </section>
-                </section>
-
-                <script>
-                    document.addEventListener('fullscreenchange', () => {
-                        const exitBtn = document.getElementById('exit-fullscreen-btn');
-                        if (exitBtn) {
-                            if (document.fullscreenElement) {
-                                exitBtn.classList.remove('hidden');
-                                exitBtn.classList.add('flex');
-                            } else {
-                                exitBtn.classList.add('hidden');
-                                exitBtn.classList.remove('flex');
-                            }
-                        }
-                    });
-                </script>
-
-                <!-- PROBLEM STATEMENT -->
-                <section id="section-problem"
-                    class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
-                    style="background: linear-gradient(135deg, #fef08a 0%, #fde047 25%, #facc15 50%, #eab308 75%, #ca8a04 100%);">
-                    <div class="absolute inset-0 opacity-40 mix-blend-overlay"
-                        style="background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.8) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.8) 0%, transparent 60%);">
-                    </div>
-                    <div class="relative z-10 max-w-4xl mx-auto space-y-8">
-                        <p class="text-zinc-600 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
-                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-zinc-900 leading-tight">
-                            The audiences in need of a tailored PC are extremely varied, with builders needing to
-                            accomodate as many people as possible.
-                        </h2>
-                        <p class="text-lg sm:text-xl text-zinc-700 max-w-2xl mx-auto leading-relaxed">
-                            How might we make the process of obtaining a custom PC more accessible to
-                            consumers, while easing the burden of communication for custom PC builders?
-                        </p>
-                    </div>
-                </section>
-
-                <!-- RESEARCH -->
-                <section id="section-research" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800"
-                    style="margin-top: 2rem;">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Research</h3>
-                    </div>
-                    <div class="grid grid-cols-1 gap-8">
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx4.png"
-                                alt="Research Placeholder 1" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx5.png"
-                                alt="Research Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx6.png"
-                                alt="Research Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/stakeholdersnx.png"
-                                alt="Research Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-
-                    </div>
-                </section>
-
-                <!-- SYNTHESIS -->
-                <section id="section-synthesis" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Synthesis</h3>
-                    </div>
-                    <div class="grid grid-cols-1 gap-8">
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx8.png"
-                                alt="Ideation Placeholder 1" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/monthlyprofitnx.png"
-                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/feevsvolumenx.png"
-                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx10.png"
-                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/userjourneynx.png"
-                                alt="Ideation Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                </section>
-
-                <!-- USER TESTING -->
-                <section id="section-user-testing"
-                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">User Testing</h3>
-                    </div>
-                    <div class="grid grid-cols-1 gap-8">
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx16.png"
-                                alt="Direction Refinement Placeholder 1" class="w-full h-full object-cover">
-                        </div>
-
-                    </div>
-                </section>
-
-                <!-- FEEDBACK -->
-                <section id="section-feedback" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Feedback</h3>
-                    </div>
-                    <div class="grid grid-cols-1 gap-8">
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx14.png"
-                                alt="First Prototype Placeholder 1" class="w-full h-full object-cover">
-                        </div>
-                        <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer aspect-[16/9]"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="nexusbuilds_images/nx15.png"
-                                alt="First Prototype Placeholder 2" class="w-full h-full object-cover">
-                        </div>
-
-                    </div>
-                </section>
-
+      <section class="cs-sec" id="research" aria-labelledby="research-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="research-title">Research</h2>
         </div>
-
-        </div>
-
-        <div
-            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
-            <a href="index.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
-                Back to Home</a>
-            <a href="project4.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
-                Project &rarr;</a>
-        </div>
-
-        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
-            <div
-                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
-                <div class="h-12 flex items-center justify-center transition-transform">
-                    <img src="global_images/khbannerg.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
-                </div>
-                <div class="text-sm text-zinc-400">
-                    <p>&copy; 2026 Kenny Huang Design.</p>
-                    <p>All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-
-    </main>
-
-    <!-- Lightbox Modal -->
-    <div id="lightbox"
-        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="relative max-w-5xl w-full h-[85vh]">
-            <button onclick="closeLightbox()"
-                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
+        <ul class="stats" aria-label="Research scope">
+          <li class="stat" data-reveal="rise"><span class="stat-num" data-count="24">24</span><span class="stat-label">Participants</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 80ms"><span class="stat-num" data-count="3">3</span><span class="stat-label">Experience levels</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 160ms"><span class="stat-num" data-count="6">6</span><span class="stat-label">Use cases</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 240ms"><span class="stat-num" data-count="18">18</span><span class="stat-label">Testing sessions</span></li>
+        </ul>
+        <div class="figs">
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/research-objectives-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/research-objectives-960.webp"
+                   srcset="assets/img/nexusbuilds/research-objectives-960.webp 960w, assets/img/nexusbuilds/research-objectives-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: research objectives, from understanding needs across experience levels to how builders could adopt the system, ending with the guiding question">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
             </button>
-            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+          </figure>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/research-methods-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/research-methods-960.webp"
+                   srcset="assets/img/nexusbuilds/research-methods-960.webp 960w, assets/img/nexusbuilds/research-methods-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: research methods, covering user interviews, stakeholder analysis, journey mapping and usability testing">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/stakeholder-landscape-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/stakeholder-landscape-960.webp"
+                   srcset="assets/img/nexusbuilds/stakeholder-landscape-960.webp 960w, assets/img/nexusbuilds/stakeholder-landscape-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: nine groups in the market for a custom PC, from gamers and IT professionals to office workers, placed by budget and hardware familiarity">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/shared-desire-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/shared-desire-960.webp"
+                   srcset="assets/img/nexusbuilds/shared-desire-960.webp 960w, assets/img/nexusbuilds/shared-desire-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: the desire all stakeholders share, users want a PC tailored to their wants, a personalized computer and not just a personal computer">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/stakeholder-map-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/stakeholder-map-960.webp"
+                   srcset="assets/img/nexusbuilds/stakeholder-map-960.webp 960w, assets/img/nexusbuilds/stakeholder-map-1440.webp 1440w, assets/img/nexusbuilds/stakeholder-map-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Diagram linking each stakeholder group, through the core desire and their specific wants, to three ultimate needs that differ by experience level">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
         </div>
+      </section>
+
+      <section class="cs-sec" id="synthesis" aria-labelledby="synthesis-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="synthesis-title">Synthesis</h2>
+        </div>
+        <div class="figs">
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/build-tiers-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/build-tiers-960.webp"
+                   srcset="assets/img/nexusbuilds/build-tiers-960.webp 960w, assets/img/nexusbuilds/build-tiers-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: the Ultra ($500 and up), Advanced ($275) and Standard ($175) build tiers, what each offers and who it is for">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/fee-volume-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/nexusbuilds/fee-volume-1920.webp"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Chart: fee per unit and units per month for the Standard, Advanced and Ultra tiers">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/monthly-profit-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/nexusbuilds/monthly-profit-960.webp"
+                     srcset="assets/img/nexusbuilds/monthly-profit-960.webp 960w, assets/img/nexusbuilds/monthly-profit-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(740px, calc(50vw - 60px))"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Chart: average monthly profit of $3,675 for Standard, $2,475 for Advanced and $500 for Ultra">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/journey-map-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/journey-map-960.webp"
+                   srcset="assets/img/nexusbuilds/journey-map-960.webp 960w, assets/img/nexusbuilds/journey-map-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Flowchart of the full service journey, from visiting the site through configuration, quotation and payment to delivery and feedback">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="testing" aria-labelledby="testing-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="testing-title">User testing</h2>
+        </div>
+        <div class="figs">
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/testing-stats-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/testing-stats-960.webp"
+                   srcset="assets/img/nexusbuilds/testing-stats-960.webp 960w, assets/img/nexusbuilds/testing-stats-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: user testing stats, how each step of the configurator performed and completion efficiency for experienced, neutral and inexperienced users">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/key-observations-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/key-observations-960.webp"
+                   srcset="assets/img/nexusbuilds/key-observations-960.webp 960w, assets/img/nexusbuilds/key-observations-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: key observations from testing, the successes and the pain points">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="feedback" aria-labelledby="feedback-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="feedback-title">Feedback</h2>
+        </div>
+        <div class="figs">
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/feedback-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/feedback-960.webp"
+                   srcset="assets/img/nexusbuilds/feedback-960.webp 960w, assets/img/nexusbuilds/feedback-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: feedback themes, transparency and tracking, simplified communication, expert guidance and personalization">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/nexusbuilds/recommendations-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/nexusbuilds/recommendations-960.webp"
+                   srcset="assets/img/nexusbuilds/recommendations-960.webp 960w, assets/img/nexusbuilds/recommendations-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="Slide: recommendations and next steps, ending with the question of why someone would consult NexusBuilds instead of a private builder">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="More projects">
+        <a href="project5.html">
+          <div class="pager-media" data-reveal="wipe">
+            <img src="assets/img/covers/cf-plus-960.webp"
+                 srcset="assets/img/covers/cf-plus-960.webp 960w, assets/img/covers/cf-plus-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Previous project</p>
+          <p class="pager-title">Cadillac Fairview +</p>
+        </a>
+        <a href="project.html">
+          <div class="pager-media" data-reveal="wipe" style="--delay: 80ms">
+            <img src="assets/img/covers/betalink-960.webp"
+                 srcset="assets/img/covers/betalink-960.webp 960w, assets/img/covers/betalink-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></p>
+          <p class="pager-title">Highline Beta BetaLink</p>
+        </a>
+      </nav>
     </div>
+  </main>
 
-    <script>
-        // ── Theme + mobile menu ──
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-in">
+        <span>© 2026 Kenny Huang. All Rights Reserved.</span>
+        <img class="logo" src="global_images/khlogoblk.png" width="20" height="20" alt="">
+      </div>
+    </div>
+  </footer>
 
-        themeToggleBtn.addEventListener('click', function () {
-            if (localStorage.theme === 'dark') {
-                localStorage.theme = 'light';
-                document.documentElement.classList.remove('dark');
-            } else {
-                localStorage.theme = 'dark';
-                document.documentElement.classList.add('dark');
-            }
-        });
-
-        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
-        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
-
-        // ── Lightbox ──
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-
-        function openLightbox(src) {
-            lightboxImg.src = src;
-            lightbox.classList.remove('hidden');
-            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
-            document.body.style.overflow = 'hidden';
-        }
-        function closeLightbox() {
-            lightbox.classList.add('opacity-0');
-            setTimeout(() => { lightbox.classList.add('hidden'); lightboxImg.src = ''; }, 300);
-            document.body.style.overflow = 'auto';
-        }
-        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
-
-        // ── Sticky Section Nav ──
-        const sectionNav = document.getElementById('section-nav');
-        const pitchSentinel = document.getElementById('pitch-sentinel');
-        const secLinks = document.querySelectorAll('.sec-link');
-
-        const sections = [
-            { id: 'section-problem', btn: document.querySelector('[data-target="section-problem"]') },
-            { id: 'section-research', btn: document.querySelector('[data-target="section-research"]') },
-            { id: 'section-synthesis', btn: document.querySelector('[data-target="section-synthesis"]') },
-            { id: 'section-user-testing', btn: document.querySelector('[data-target="section-user-testing"]') },
-            { id: 'section-feedback', btn: document.querySelector('[data-target="section-feedback"]') },
-        ];
-
-        // Show/hide sticky nav based on sentinel visibility
-        const sentinelObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // Show only if not intersecting AND the element has been scrolled past (above viewport)
-                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-                    sectionNav.classList.add('visible');
-                } else {
-                    sectionNav.classList.remove('visible');
-                }
-            });
-        }, { threshold: 0 });
-        sentinelObserver.observe(pitchSentinel);
-
-        // Scroll-spy: light up active section
-        function onScroll() {
-            const scrollY = window.scrollY;
-            const offset = 160; // nav + section-nav height
-            let active = null;
-
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const el = document.getElementById(sections[i].id);
-                if (el && el.getBoundingClientRect().top <= offset) {
-                    active = sections[i].id;
-                    break;
-                }
-            }
-
-            sections.forEach(s => {
-                if (s.btn) s.btn.classList.toggle('active', s.id === active);
-            });
-
-            // Auto-scroll the nav strip so the active button is centred (mobile)
-            if (active) {
-                const activeBtn = document.querySelector('.sec-link.active');
-                const navInner = document.getElementById('section-nav-inner');
-                if (activeBtn && navInner) {
-                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
-                    const navMid = navInner.offsetWidth / 2;
-                    navInner.scrollTo({ left: btnMid - navMid, behavior: 'smooth' });
-                }
-            }
-        }
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        // Click to jump
-        secLinks.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = document.getElementById(btn.dataset.target);
-                if (target) {
-                    const offset = 160;
-                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                }
-            });
-        });
-    </script>
+  <!-- Full-size image viewer -->
+  <dialog class="lb" aria-label="Image viewer">
+    <div class="lb-top">
+      <span class="lb-count"></span>
+      <button class="lb-btn" type="button" data-lb-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="lb-stage"><img alt=""></div>
+    <div class="lb-bottom">
+      <button class="lb-btn" type="button" data-lb-prev aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+      <p class="lb-cap"></p>
+      <button class="lb-btn" type="button" data-lb-next aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+  </dialog>
 </body>
-
-
 </html>
-
-

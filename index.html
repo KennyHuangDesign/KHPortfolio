@@ -1,225 +1,328 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!doctype html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kenny Huang Design</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kenny Huang, Product Designer</title>
+  <meta name="description"
+    content="Portfolio of Kenny Huang, a product designer trained in industrial design at OCAD University, working across physical products, interfaces and services.">
+  <meta name="theme-color" content="#d9d9d8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://kennyhuangdesign.github.io/KHPortfolio/">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        zinc: { 850: '#202022', 950: '#0c0c0e' }
-                    }
-                }
-            }
-        }
-    </script>
+  <!-- Share preview (LinkedIn, iMessage, Slack) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kenny Huang, Product Designer">
+  <meta property="og:description" content="Product design across physical products, interfaces and services.">
+  <meta property="og:url" content="https://kennyhuangdesign.github.io/KHPortfolio/">
+  <meta property="og:image" content="https://kennyhuangdesign.github.io/KHPortfolio/assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <script>
-        // theme initialization
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <!-- Apply the saved or system theme before the page paints, so it never flashes the wrong colors -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      } catch (e) { }
+    })();
+  </script>
+
+  <link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
 </head>
 
-<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+<body>
+  <a class="skip" href="#projects">Skip to projects</a>
 
-    <nav
-        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
-        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="#projects" aria-label="Kenny Huang, home">
+        <img class="logo" src="global_images/khlogoblk.png" width="28" height="28" alt="">
+        <span>KENNY HUANG DESIGN</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Main">
+          <a href="#projects">Projects</a>
+          <a href="#about">About me</a>
+          <a href="#contact">Contact</a>
+          <a href="about.html">More</a>
+        </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode"
+          aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="m4.93 4.93 1.41 1.41" />
+            <path d="m17.66 17.66 1.41 1.41" />
+            <path d="M2 12h2" />
+            <path d="M20 12h2" />
+            <path d="m6.34 17.66-1.41 1.41" />
+            <path d="m19.07 4.93-1.41 1.41" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
-            <a href="index.html" class="flex items-center gap-4 group">
-                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
-                    <img src="global_images/khlogoblk.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
-                </div>
+  <main>
+    <!-- Projects. To swap a still for a video loop, put the clip in assets/video/ and fill in data-video. -->
+    <section id="projects" class="wrap projects" aria-label="Projects">
+      <a class="tile tile-first" href="project3.html" aria-label="NexusBuilds PC Building Service, Digital Service Design">
+        <div class="tile-media" data-video="" data-vt="nexusbuilds">
+          <img src="assets/img/covers/nexusbuilds-1440.webp"
+            srcset="assets/img/covers/nexusbuilds-960.webp 960w, assets/img/covers/nexusbuilds-1440.webp 1440w, assets/img/covers/nexusbuilds-1920.webp 1920w"
+            sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))" width="1920" height="1080"
+            fetchpriority="high" alt="NexusBuilds website shown on a laptop and a phone">
+          <div class="tile-overlay" aria-hidden="true">
+            <span class="tile-overlay-title">NexusBuilds PC Building Service</span>
+            <span class="tile-overlay-sub">Digital Service Design</span>
+          </div>
+        </div>
+        <div class="tile-caption" aria-hidden="true">
+          <h2 class="tile-title">NexusBuilds</h2>
+          <p class="tile-meta">Personal project | 2026</p>
+        </div>
+      </a>
 
-                <span
-                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">
-                    Kenny Huang Design
-                </span>
-            </a>
+      <a class="tile" href="project.html" aria-label="Highline Beta BetaLink, Networking Device and Framework">
+        <div class="tile-media" data-video="" data-vt="betalink" data-reveal="wipe">
+          <img src="assets/img/covers/betalink-1440.webp"
+            srcset="assets/img/covers/betalink-960.webp 960w, assets/img/covers/betalink-1440.webp 1440w, assets/img/covers/betalink-1920.webp 1920w"
+            sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))" width="1920" height="1080"
+            loading="lazy" decoding="async" alt="Red BetaLink networking wristband with a lit display">
+          <div class="tile-overlay" aria-hidden="true">
+            <span class="tile-overlay-title">Highline Beta BetaLink</span>
+            <span class="tile-overlay-sub">Networking Device &amp; Framework</span>
+          </div>
+        </div>
+        <div class="tile-caption" aria-hidden="true">
+          <h2 class="tile-title">Highline Beta BetaLink</h2>
+          <p class="tile-meta">Highline Beta | 2025</p>
+        </div>
+      </a>
 
-            <div class="flex items-center gap-6">
+      <a class="tile" href="project4.html" aria-label="Relay + Switchboard, Call Delegation System">
+        <div class="tile-media" data-video="" data-vt="relay" data-reveal="wipe">
+          <img src="assets/img/covers/relay-1440.webp"
+            srcset="assets/img/covers/relay-960.webp 960w, assets/img/covers/relay-1440.webp 1440w, assets/img/covers/relay-1920.webp 1920w"
+            sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))" width="1920" height="1080"
+            loading="lazy" decoding="async" alt="Hand holding a phone running the Relay call delegation app">
+          <div class="tile-overlay" aria-hidden="true">
+            <span class="tile-overlay-title">Relay + Switchboard</span>
+            <span class="tile-overlay-sub">Call Delegation System</span>
+          </div>
+        </div>
+        <div class="tile-caption" aria-hidden="true">
+          <h2 class="tile-title">Relay + Switchboard</h2>
+          <p class="tile-meta">Thesis project | 2025–26</p>
+        </div>
+      </a>
 
-                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
-                        Me</a>
-                    <a href="experience.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
-                    <a href="contact.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
-                </div>
+      <a class="tile" href="project2.html" aria-label="iEmbrace Stone and Charging Pad, Personal Meditation Device">
+        <div class="tile-media" data-video="" data-vt="iembrace" data-reveal="wipe">
+          <img src="assets/img/covers/iembrace-1440.webp"
+            srcset="assets/img/covers/iembrace-960.webp 960w, assets/img/covers/iembrace-1440.webp 1440w, assets/img/covers/iembrace-1920.webp 1920w"
+            sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))" width="1920" height="1080"
+            loading="lazy" decoding="async" alt="iEmbrace meditation stone resting on its lit charging pad">
+          <div class="tile-overlay" aria-hidden="true">
+            <span class="tile-overlay-title">iEmbrace Stone &amp; Charging Pad</span>
+            <span class="tile-overlay-sub">Personal Meditation Device</span>
+          </div>
+        </div>
+        <div class="tile-caption" aria-hidden="true">
+          <h2 class="tile-title">iEmbrace Stone &amp; Charging Pad</h2>
+          <p class="tile-meta">iEmbrace | 2025</p>
+        </div>
+      </a>
 
-                <button id="theme-toggle"
-                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
-                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                            fill-rule="evenodd" clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
+      <a class="tile" href="project5.html" aria-label="Cadillac Fairview Plus, Seasonal Events and Loyalty Program">
+        <div class="tile-media" data-video="" data-vt="cfplus" data-reveal="wipe">
+          <img src="assets/img/covers/cf-plus-1440.webp"
+            srcset="assets/img/covers/cf-plus-960.webp 960w, assets/img/covers/cf-plus-1440.webp 1440w, assets/img/covers/cf-plus-1920.webp 1920w"
+            sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))" width="1920" height="1080"
+            loading="lazy" decoding="async" alt="Cadillac Fairview Plus wordmark">
+          <div class="tile-overlay" aria-hidden="true">
+            <span class="tile-overlay-title">Cadillac Fairview +</span>
+            <span class="tile-overlay-sub">Seasonal Events &amp; Loyalty Program</span>
+          </div>
+        </div>
+        <div class="tile-caption" aria-hidden="true">
+          <h2 class="tile-title">Cadillac Fairview +</h2>
+          <p class="tile-meta">Cadillac Fairview | 2024</p>
+        </div>
+      </a>
+    </section>
 
-                <button id="mobile-menu-btn"
-                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+    <section id="about" class="about" aria-labelledby="about-title">
+      <div class="wrap">
+        <h2 id="about-title" class="section-title">About me</h2>
+        <div class="about-row">
+          <div class="photo" data-reveal="wipe">
+            <img src="assets/img/portrait-880.webp"
+              srcset="assets/img/portrait-720.webp 720w, assets/img/portrait-880.webp 880w"
+              sizes="(max-width: 720px) calc(100vw - 32px), 440px" width="880" height="1100" loading="lazy"
+              decoding="async" alt="Portrait of Kenny Huang">
+          </div>
+          <div>
+            <p class="bio" data-reveal="rise">I'm a product designer with roots in the arts, formal training in industrial design, and a passion for digital product design.
+              I hold a particular interest in <strong>systems thinking</strong> and <strong>human-centered design</strong>, both of which serve as the foundation in my approach to user experience solutions.
+              Thanks to my background, all of my creative decisions carry depth beyond just data and are further backed by technical knowledge beyond just one niche.</p>
+            <p class="bio" data-reveal="rise" style="--delay: 60ms">Having worked with a range of software like the Adobe Suite and multiple CAD applications since the age of 16, I continue to broaden my digital capabilities through engagement with rapidly advancing AI technologies.
+              With a diverse skillset and a strong ambition to push my creative boundaries, I aim to create user experiences that seamlessly merge functionality, aesthetics, and innovative technology into one.</p>
+            <a class="more-link" href="about.html" data-reveal="rise" style="--delay: 120ms"><span class="ul">More about me</span><svg
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 7h10v10" />
+                <path d="M7 17 17 7" />
+              </svg></a>
+          </div>
+        </div>
+
+        <!-- Mini icons: paste an inline <svg> inside a .skill-mini span and its dashed placeholder disappears.
+             Use stroke="currentColor" or fill="currentColor" so the icon lights up with the text on hover. -->
+        <ul class="skills" aria-label="Skills">
+          <li class="skill" data-reveal="rise">
+            <div class="skill-head">
+            <span class="skill-icon" data-reveal="pop" style="--delay: 120ms"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <circle cx="17.5" cy="17.5" r="3.5" />
+              </svg></span>
+              <h3 class="skill-name">UI/UX & Digital Tools</h3>
             </div>
+            <ul class="skill-list">
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z" /><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z" /><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z" /><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z" /><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z" /></svg></span>Figma</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="4" /><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="600" fill="currentColor" stroke="none">Ps</text></svg></span>Photoshop</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="4" /><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="600" fill="currentColor" stroke="none">Ai</text></svg></span>Illustrator</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="4" /><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="600" fill="currentColor" stroke="none">Id</text></svg></span>InDesign</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 14.94 18.21" fill="currentColor" aria-hidden="true"><path d="M3.63,14.33c-.52,0-.94.4-.94.9,0,.34.2.63.49.79l3.63,1.94c.29.16.61.25.94.25.22,0,.43-.04.63-.11l1.24-.34v-3.43s-5.98,0-5.98,0h0Z"/><path d="M8.29.07C8.12.02,7.95,0,7.77,0,7.47,0,7.18.06,6.91.19c-.05.02-5.9,3.2-5.9,3.2-.08.04-.16.09-.23.14,0,0-.01,0-.03.01-.05.03-.09.07-.13.1-.02.01-.04.03-.06.05-.03.02-.05.05-.07.07-.07.07-.19.23-.19.23C.11,4.29,0,4.64,0,5v8.43C0,13.93.42,14.33.94,14.33c.13,0,.25-.02.36-.07l1.67-.91c.3-.15.54-.39.67-.7.03-.06.05-.14.07-.22,0-.02.01-.04.01-.06,0,0,0-.02,0-.03,0-.03.01-.07.01-.11,0-.03,0-.05,0-.08v-5.89c0-.39.18-.75.45-.99,0,0-.13.12,0,0,.13-.12.3-.22.5-.29.2-.07,4.94-1.73,4.94-1.73V.46l-1.34-.38Z"/><path d="M13.63,1.58L8.37.1c.76.29,1.24.93,1.24,1.72,0,0,0,14.26,0,14.6,0,.78-.51,1.44-1.24,1.69.16-.04,5.26-1.46,5.26-1.46.76-.23,1.3-.91,1.3-1.72V3.3c0-.8-.55-1.49-1.3-1.72h0Z"/></svg></span>Microsoft Office</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4" /><path d="m6 8-4 4 4 4" /><path d="m14.5 4-5 16" /></svg></span>Full-Stack Development (AI-Assisted)</li>
+            </ul>
+          </li>
+          <li class="skill" data-reveal="rise" style="--delay: 80ms">
+            <div class="skill-head">
+            <span class="skill-icon" data-reveal="pop" style="--delay: 200ms"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                <path d="M4.268 21a2 2 0 0 0 1.727 1H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3" />
+                <path d="m9 18-1.5-1.5" />
+                <circle cx="5" cy="14" r="3" />
+              </svg></span>
+              <h3 class="skill-name">User Research</h3>
+            </div>
+            <ul class="skill-list">
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg></span>Quantitative Research</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6H3" /><path d="M21 12H8" /><path d="M21 18H8" /><path d="M3 12v6" /></svg></span>Qualitative Research</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></span>Conceptual Research</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="m16 11 2 2 4-4" /></svg></span>User Testing</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="m9 14 2 2 4-4" /></svg></span>Evaluation Methods</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z" /><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" /></svg></span>Interviewing</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5l-5-5L2 17" /><path d="M16 7h6v6" /></svg></span>Extrapolation</li>
+            </ul>
+          </li>
+          <li class="skill" data-reveal="rise" style="--delay: 160ms">
+            <div class="skill-head">
+            <span class="skill-icon" data-reveal="pop" style="--delay: 280ms"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path
+                  d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                <path d="m3.3 7 8.7 5 8.7-5" />
+                <path d="M12 22V12" />
+              </svg></span>
+              <h3 class="skill-name">3D Design</h3>
+            </div>
+            <ul class="skill-list">
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 18 12.3" fill="currentColor" aria-hidden="true"><path d="M.1,12.3l11.02-6.85h5.72c.18,0,.33.14.33.33,0,.16-.07.23-.16.28l-5.42,3.24c-.35.21-.47.63-.47.95v2.04s6.87,0,6.87,0V.42c0-.23-.18-.42-.44-.42h-6.56L0,6.82v5.48h.1Z"/></svg></span>Fusion 360</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 18 17.43" fill="currentColor" aria-hidden="true"><path d="M18,6.68c-.02.13-.17.21-.9.2-3.56-.03-4,.51-4,.51,0,0-.3.17-.09.57.22.42,2.89,3.54,3.47,4.62.38.7.9,1.9-1.19,2.62-2.05.71-5.89,0-5.92,0-.93-.23-.91-.39-.9-.46.02-.13.17-.2.9-.2,3.38,0,5.01-.24,5.4-.48.24-.15.28-.38.26-.58-.05-.44-1.09-1.72-1.96-2.73-.89-1.04-2.77-2.85-1.5-3.95,1.53-1.32,4.89-.74,5.55-.6.7.15.91.39.89.5ZM6.97.95c1.49,0,2.64.09,3.43.24,1.61.29,1.23,1.1.77,1.88-1.11,1.89-4.11,4.02-4.28,4.14-.23.16-.1.25.1.17,2.43-.9,4.88-2.46,5.87-4.35.84-1.61.24-2.37-1.04-2.73-2.28-.64-4.65-.05-4.85,0-.28.08-.86.24-.81.45.03.13.14.2.81.2ZM8.42,8.61c-2.37-.7-4.95-.09-5.34.01-.6.16-.95.32-.92.5.02.14.17.23.9.21,1.75-.04,3.19.02,4.11.27,1.13.32,1.27.9.71,2.05-.26.53-.64,1.08-1.22,1.66-1.16,1.16-2.61,1.92-3.43,2.33-.79.4-1.08.19-1-.21.11-.49,2.36-4.38,2.36-4.38.17-.3.2-.57,0-.66-.17-.07-.48.17-.8.54C2.48,12.47.06,17.12,0,17.27c-.04.15.07.16.11.17,1.03,0,7.33-1.87,9.36-5.68,1.07-2.01.53-2.67-1.06-3.14Z"/></svg></span>SolidWorks</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 18 14.65" fill="currentColor" aria-hidden="true"><path d="M17.95,8.16c-.11-.74-.36-1.45-.77-2.09-.35-.56-.8-1.07-1.34-1.49h0S10.2.23,10.2.23c0,0,0,0-.01-.01-.19-.14-.44-.22-.71-.22s-.54.08-.74.22c-.22.15-.35.36-.36.58,0,.2.09.4.27.55.36.29.73.58,1.09.87.35.28.71.58,1.08.86H3.9c-.79,0-1.33.37-1.44.99-.05.27.04.57.23.8.2.24.5.38.83.38h.53c.73,0,1.46,0,2.19,0h.7S.66,9.89.66,9.89l-.02.02c-.35.27-.58.65-.63,1.03-.04.29.03.56.2.78.2.26.51.4.88.4s.73-.14,1.03-.38l3.39-2.77c-.01.14-.03.33-.03.48,0,.23.08.69.19,1.06.24.76.64,1.46,1.2,2.08.58.64,1.28,1.15,2.1,1.5.86.38,1.78.57,2.74.57h0c.96,0,1.89-.2,2.75-.58.81-.36,1.52-.87,2.09-1.51.56-.62.96-1.32,1.2-2.08.12-.38.19-.77.23-1.16.03-.38.02-.77-.04-1.15h0ZM11.78,11.82c-2.12,0-3.84-1.54-3.84-3.43s1.72-3.43,3.84-3.43,3.84,1.54,3.84,3.43c0,1.9-1.72,3.43-3.84,3.43ZM13.99,8.08c.03.57-.19,1.09-.59,1.48-.4.4-.98.65-1.62.65s-1.22-.25-1.62-.65c-.4-.39-.62-.91-.59-1.48.03-.55.3-1.03.7-1.38.4-.34.93-.54,1.51-.54s1.12.21,1.51.54c.4.34.67.83.7,1.38h0Z"/></svg></span>Blender</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><polygon points="16.41 8.18 16.41 0 9.96 0 9.96 5.65 16.41 8.18"/><polygon points="8.96 8.76 8.96 0 2.5 0 2.5 11.29 8.96 8.76"/><polygon points="2.5 12.37 2.5 18 8.96 18 8.96 9.84 2.5 12.37"/><polygon points="9.96 6.73 9.96 18 16.41 18 16.41 9.25 9.96 6.73"/></svg></span>3D printing</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 17.89 17.89" fill="currentColor" aria-hidden="true"><mask id="ic-arduino" maskUnits="userSpaceOnUse" x="-1" y="-1" width="19.89" height="19.89"><rect x="-1" y="-1" width="19.89" height="19.89" fill="#fff"/><path d="M12.01,11.81c-.15,0-.31-.01-.46-.03-1.28-.18-2.13-1.1-2.61-1.8-.48.71-1.33,1.62-2.61,1.81-.15.02-.31.03-.46.03-.79,0-1.54-.3-2.1-.83-.57-.54-.88-1.27-.88-2.04s.31-1.5.88-2.04c.56-.54,1.31-.83,2.1-.83.15,0,.31.01.46.03,1.28.18,2.13,1.1,2.61,1.8.48-.71,1.33-1.62,2.61-1.8.15-.02.31-.03.46-.03.79,0,1.54.3,2.1.83.57.54.88,1.27.88,2.04s-.31,1.5-.88,2.04c-.56.54-1.31.83-2.1.83M9.51,8.94c.25.47.99,1.66,2.19,1.83.11.01.21.02.31.02,1.08,0,1.96-.83,1.96-1.86s-.88-1.86-1.96-1.86c-.1,0-.21,0-.31.02-1.2.17-1.94,1.36-2.19,1.83M5.88,7.08c-1.08,0-1.96.83-1.96,1.86s.88,1.86,1.96,1.86c.1,0,.21,0,.31-.02,1.2-.17,1.94-1.36,2.19-1.83-.25-.47-.99-1.66-2.19-1.83-.1-.02-.21-.02-.31-.02" fill="#000"/><path d="M5.06,8.66h1.79v.58h-1.79v-.58ZM12.82,8.66h-.61v-.61h-.58v.61h-.61v.58h.61v.61h.58v-.61h.61v-.58Z" fill="#000"/></mask><g mask="url(#ic-arduino)"><path d="M16.98,8.94c0,4.44-3.6,8.03-8.03,8.03-4.44,0-8.03-3.6-8.03-8.03S4.51.9,8.95.9c4.44,0,8.03,3.6,8.03,8.03h0Z" stroke="currentColor" stroke-width="1.7" stroke-miterlimit="18.21"/><path d="M16.98,8.94c0,4.44-3.6,8.03-8.03,8.03-4.44,0-8.03-3.6-8.03-8.03S4.51.91,8.95.91c4.44,0,8.03,3.6,8.03,8.03h0Z" stroke="currentColor" stroke-width="1.82" stroke-miterlimit="18.21" opacity=".5"/></g></svg></span>Arduino</li>
+            </ul>
+          </li>
+          <li class="skill" data-reveal="rise" style="--delay: 240ms">
+            <div class="skill-head">
+            <span class="skill-icon" data-reveal="pop" style="--delay: 360ms"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <rect width="16" height="16" x="4" y="4" rx="2" />
+                <rect width="6" height="6" x="9" y="9" rx="1" />
+                <path d="M15 2v2" />
+                <path d="M15 20v2" />
+                <path d="M2 15h2" />
+                <path d="M2 9h2" />
+                <path d="M20 15h2" />
+                <path d="M20 9h2" />
+                <path d="M9 2v2" />
+                <path d="M9 20v2" />
+              </svg></span>
+              <h3 class="skill-name">AI Literacy</h3>
+            </div>
+            <ul class="skill-list">
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 17.98 18" fill="currentColor" aria-hidden="true"><path d="M3.53,11.97l3.55-1.98.05-.18-.05-.09h-.18l-.59-.04-2.02-.05-1.76-.09-1.71-.09-.43-.09-.38-.54.04-.27.36-.23.52.04,1.13.09,1.71.11,1.24.07,1.84.22h.29l.04-.13-.09-.07-.07-.07-1.78-1.19-1.91-1.26-1.01-.74-.54-.36-.27-.36-.11-.76.49-.54.67.05.16.04.67.52,1.44,1.1,1.85,1.4.27.22.11-.07.02-.05-.13-.2-.99-1.87-1.08-1.87-.49-.77-.13-.47c-.05-.18-.07-.36-.07-.54l.54-.76.32-.09.76.11.29.25.47,1.08.74,1.67,1.17,2.27.36.68.18.61.05.18h.13v-.09l.09-1.3.18-1.57.18-2.02.05-.58.29-.68.54-.36.47.2.36.52-.05.32-.2,1.39-.47,2.18-.27,1.48h.16l.18-.2.74-.97,1.24-1.55.54-.63.65-.67.41-.32h.77l.56.85-.25.88-.79,1.01-.67.85-.95,1.28-.58,1.03.05.07h.13l2.16-.47,1.15-.2,1.37-.23.63.29.07.29-.25.61-1.48.36-1.73.36-2.57.59-.04.02.04.05,1.15.11.5.04h1.22l2.27.18.59.36.34.49-.05.36-.92.47-1.22-.29-2.88-.68-.97-.23h-.14v.07l.83.81,1.49,1.35,1.91,1.75.09.43-.23.36-.25-.04-1.66-1.26-.65-.54-1.44-1.22h-.09v.13l.32.49,1.76,2.65.09.81-.13.25-.47.18-.49-.11-1.04-1.44-1.08-1.62-.85-1.48-.09.07-.52,5.44-.23.27-.54.22-.45-.36-.25-.54.25-1.12.29-1.44.23-1.15.22-1.42.13-.47v-.04h-.13l-1.08,1.49-1.62,2.21-1.3,1.37-.31.13-.54-.27.05-.5.29-.41,1.8-2.3,1.08-1.42.72-.83-.02-.09h-.05l-4.75,3.1-.85.11-.36-.36.04-.54.18-.18,1.44-.99h-.02Z"/></svg></span>Claude</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 11.1 18" fill="currentColor" aria-hidden="true"><path d="M7.4,0h3.7v18h-3.7V0Z"/><path d="M0,0h3.7v18H0V0Z"/></svg></span>Elevenlabs</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 14.39 18" fill="currentColor" aria-hidden="true"><path d="M12.79,6.28c-.4-.56-1.33-1.71-2.76-3.43-.62-.74-1.15-1.37-1.41-1.68-.14-.17-.27-.32-.37-.43l-.16-.18-.08-.1-.02-.02h0s-.36-.43-.36-.43l-.46.37c-1.17.93-2.12,2.14-2.76,3.48-.39.8-.65,1.58-.78,2.38-.04.18-.07.37-.09.55-.16-.01-.32-.02-.47-.02-.01,0-.03,0-.04,0-.58-.02-1.15.05-1.71.21l-.24.07-.12.21C.37,8.25.05,9.39,0,10.55c-.05,1.51.36,2.97,1.19,4.22.81,1.23,1.96,2.16,3.32,2.71l.18.07.05.02h0c.71.26,1.45.4,2.21.43.09,0,.17,0,.26,0,.95,0,1.88-.19,2.77-.56h0s.23-.11.23-.11c1.19-.55,2.21-1.42,2.95-2.5.76-1.12,1.18-2.43,1.23-3.78.06-1.62-.48-3.23-1.6-4.78h0ZM7.47,11.3c.25.93.2,1.83-.14,2.67-.85-.84-1.48-1.76-1.86-2.75-.41-1.05-.65-2.06-.73-2.98.36.12.69.27.99.47.85.55,1.44,1.43,1.74,2.6h0ZM7.63,15.82c.36.28.74.53,1.13.77-.58.16-1.17.23-1.78.2-.09,0-.19,0-.28-.02.34-.3.65-.62.92-.96h0ZM8.64,10.99c-.39-1.47-1.14-2.58-2.25-3.3-.49-.32-1.04-.56-1.65-.71,0-.1.02-.2.03-.3.01-.08.02-.16.03-.23.1-.52.25-1.03.44-1.52.07-.19.15-.37.24-.56h0c.13-.27.28-.55.46-.83l.07-.11h0c.41-.64.9-1.22,1.46-1.73l.22.26c.5.6.98,1.16,1.41,1.68.97,1.16,2.22,2.69,2.71,3.36.96,1.33,1.42,2.68,1.37,4.03-.04,1.05-.35,2.07-.9,2.95-.52.84-1.25,1.54-2.1,2.03-.48-.24-1.17-.63-1.9-1.2.59-1.18.71-2.46.36-3.8h0ZM6.71,15.04c-.54.7-1.19,1.16-1.57,1.39-.06-.02-.12-.05-.18-.07l-.05-.02c-1.12-.46-2.06-1.24-2.73-2.26-.68-1.04-1.02-2.24-.97-3.49.03-.89.25-1.75.66-2.53.24-.05.48-.09.72-.1h.06c.12,0,.24,0,.36,0,.17,0,.34.03.51.05.05,1.13.33,2.36.83,3.64.48,1.23,1.27,2.37,2.36,3.39h0Z"/></svg></span>Firebase</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 18 17.62" fill="currentColor" aria-hidden="true"><path d="M5.57.1c-.83.33-.54,1.43.38,1.43h.39l-.04,1.7c-.03,1.21-.08,1.79-.17,1.99-.08.15-1.42,2.2-2.98,4.55S.25,14.16.16,14.33c-.23.45-.2,1.46.05,1.99.25.53.81,1.03,1.32,1.18.27.09,2.4.11,7.65.11h7.28l.46-.31c.73-.49,1.03-1.01,1.07-1.8.02-.36,0-.78-.02-.9-.03-.13-1.35-2.17-2.93-4.55-1.57-2.38-2.96-4.5-3.08-4.72-.19-.37-.22-.57-.25-2.12l-.04-1.7h.39c.94,0,1.21-1.11.35-1.44-.34-.12-6.53-.12-6.85,0ZM10.18,3.3c.04,1.36.08,1.84.22,2.25.11.29.69,1.28,1.31,2.22s1.12,1.75,1.1,1.81-.34.2-.72.33c-.83.26-1.78.78-3.43,1.85-2.5,1.63-3.55,1.91-4.41,1.16-.43-.38-.58-.91-.39-1.36.07-.18.83-1.37,1.69-2.65.86-1.29,1.69-2.6,1.83-2.92.34-.72.47-1.57.47-3.19v-1.27l1.15.03,1.14.03.04,1.72Z"/></svg></span>Stitch</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 18.14 16.71" fill="currentColor" aria-hidden="true"><path d="M16.44,16.33c1.01.76,2.53.25,1.14-1.14C13.4,11.14,14.29,0,9.1,0S4.79,11.14.62,15.19c-1.52,1.52.13,1.9,1.14,1.14,3.92-2.66,3.67-7.34,7.34-7.34s3.42,4.68,7.34,7.34Z"/></svg></span>Antigravity</li>
+              <li><span class="skill-mini" aria-hidden="true"><svg viewBox="0 0 18 16.78" fill="currentColor" aria-hidden="true"><path d="M17.83,14.56c.17-.38.18-.81.05-1.19.13-.34.16-.72.06-1.07-.05-.18-.12-.35-.22-.5.02-.07.04-.15.05-.23.07-.52-.1-1.02-.45-1.41-.16-.17-.35-.3-.55-.39.12-.56.19-1.15.19-1.75C16.95,3.6,13.37,0,8.95,0S.95,3.6.95,8.03c0,.61.07,1.21.2,1.79-.17.08-.33.2-.47.35-.35.38-.53.88-.45,1.41.01.08.03.15.05.23-.1.15-.18.32-.22.5-.09.35-.07.73.06,1.07-.14.39-.12.81.05,1.19.3.68,1,1.1,1.95,1.48,1.06.42,2.24.73,3.44.73.97,0,1.81-.24,2.43-.78.32.04.64.06.96.06.35,0,.7-.02,1.05-.07.62.55,1.47.79,2.44.79,1.21,0,2.37-.31,3.44-.73.96-.38,1.65-.8,1.95-1.48ZM15.66,15.49c.94-.38,1.43-.73,1.63-1.17.14-.31.11-.67-.07-.96.24-.37.2-.74.15-.91-.06-.22-.18-.41-.34-.54.08-.13.13-.27.15-.42.05-.33-.06-.65-.3-.92-.08-.08-.17-.15-.27-.2-.18-.09-.39-.13-.59-.11.06-.2.11-.4.16-.6.12-.52.18-1.07.18-1.62,0-4.1-3.31-7.43-7.4-7.43S1.55,3.92,1.55,8.03c0,.56.06,1.11.18,1.63.04.2.1.4.16.59-.2,0-.4.05-.57.16-.07.04-.13.1-.19.16-.24.27-.35.59-.3.92.02.16.07.29.15.42-.16.13-.28.32-.34.54-.05.17-.09.54.15.91-.18.29-.21.65-.07.96.2.44.68.8,1.63,1.17,1.02.41,2.12.69,3.22.69,1,0,1.74-.27,2.22-.82.38.06.77.09,1.17.09.43,0,.85-.04,1.26-.11.48.55,1.23.83,2.23.83,1.11,0,2.2-.28,3.22-.69Z" fill-rule="evenodd"/><path d="M7.31,14.73c.53-.77.49-1.35-.23-2.08-.72-.72-1.14-1.78-1.14-1.78,0,0-.16-.61-.51-.56-.36.06-.62.98.13,1.54.75.56-.15.94-.44.42-.29-.53-1.07-1.88-1.48-2.14-.41-.26-.69-.11-.6.42.1.53,1.8,1.83,1.63,2.11-.17.28-.75-.33-.75-.33,0,0-1.83-1.67-2.23-1.24-.4.44.3.8,1.3,1.41,1,.61,1.08.77.93,1-.14.23-2.34-1.63-2.55-.84-.21.79,2.25,1.02,2.1,1.57-.15.55-1.73-1.03-2.05-.42-.32.62,2.23,1.34,2.25,1.34.82.21,2.91.67,3.64-.41Z"/><path d="M10.69,14.73c-.53-.77-.49-1.35.23-2.08.72-.72,1.14-1.78,1.14-1.78,0,0,.16-.61.51-.56.36.06.62.98-.13,1.54-.75.56.15.94.44.42.29-.53,1.07-1.88,1.48-2.14.41-.26.69-.11.6.42-.1.53-1.8,1.83-1.63,2.11.17.28.75-.33.75-.33,0,0,1.83-1.67,2.23-1.24.4.44-.3.8-1.3,1.41-1,.61-1.08.77-.93,1,.14.23,2.34-1.63,2.55-.84.21.79-2.25,1.02-2.1,1.57.15.55,1.73-1.03,2.05-.42.32.62-2.23,1.34-2.25,1.34-.82.21-2.91.67-3.64-.41Z"/><path d="M7.91,9.91c.06.03.12.06.19.1.25.12.55.19.91.19.4,0,.71-.09.97-.23.07-.04.13-.07.18-.11-.15-.14-.33-.25-.53-.32-.02,0-.05-.02-.07-.02-.08-.03-.17.1-.25.24-.08.13-.17.26-.25.26-.08,0-.16-.13-.24-.26-.08-.14-.16-.27-.24-.24-.26.08-.49.21-.67.4Z"/><path d="M10.47,1.54c-.49-.11-1-.18-1.52-.18-.92,0-1.79.19-2.58.52-1.81.77-3.21,2.32-3.78,4.23-.18.61-.28,1.25-.28,1.91,0,.54.06,1.06.18,1.56,0,0,0,0,0,0,.19-.23.47-.36.78-.36.25,0,.5.08.76.24.17.11.36.3.55.54.18-.25.43-.41.71-.46.05,0,.11-.01.16-.01h0c.65,0,1.04.57,1.19,1.08.07.17.43.96.96,1.49.81.81,1.01,1.65.61,2.55.24.03.48.04.73.04,0,0,.02,0,.03,0h.02c.26,0,.51-.02.77-.05-.39-.89-.19-1.73.62-2.53.53-.53.88-1.32.96-1.49.15-.51.54-1.08,1.19-1.08h0c.05,0,.11,0,.16.01.29.05.53.21.71.46.19-.24.38-.43.55-.54.25-.16.51-.24.76-.24.27,0,.52.1.71.28.11-.48.16-.97.16-1.48,0-.23-.01-.46-.03-.68-.29-2.85-2.36-5.17-5.09-5.81ZM7.57,10.38c-.73-.61-1.05-1.52-1.05-2.1,0-.46.31-.3.81-.05.44.22,1.03.51,1.67.51s1.23-.29,1.67-.51c.5-.25.81-.4.81.05,0,.57-.26,1.48-.97,2.05-.37.29-.87.5-1.51.5-.6,0-1.08-.17-1.44-.44ZM11.5,6.47c-.07-.11-.15-.22-.25-.26-.1-.03-.22.02-.34.06-.15.06-.3.12-.36,0-.25-.47-.07-1.05.39-1.3.47-.25,1.04-.07,1.29.4.25.47.07,1.05-.39,1.3-.14.08-.23-.06-.33-.2ZM6.75,6.21c-.1.04-.18.15-.25.26-.1.14-.19.28-.33.2-.47-.25-.64-.83-.39-1.3.25-.47.83-.65,1.29-.4.47.25.64.83.39,1.3-.07.12-.21.07-.36,0-.12-.05-.25-.1-.34-.06ZM14.06,6.49c0,.34-.28.62-.62.62s-.62-.28-.62-.62.28-.62.62-.62.62.28.62.62ZM4.56,7.12c.34,0,.62-.28.62-.62s-.28-.62-.62-.62-.62.28-.62.62.28.62.62.62Z" fill-rule="evenodd"/></svg></span>Hugging Face</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <h2 id="contact-title" class="section-title">Contact</h2>
+        <a class="email" href="mailto:kenny.huang9292@gmail.com" data-reveal="rise">kenny.huang9292@gmail.com</a>
+        <div class="social">
+          <a href="https://linkedin.com/in/kenny-huang-design" target="_blank" rel="noopener noreferrer"
+            data-reveal="rise"><svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><mask id="ic-linkedin" maskUnits="userSpaceOnUse" x="-1" y="-1" width="20" height="20"><rect x="-1" y="-1" width="20" height="20" fill="#fff"/><path d="M15.5,15.5h-2.67v-4.55c0-1.25-.47-1.94-1.46-1.94-1.07,0-1.64.73-1.64,1.94v4.55h-2.57V6.83h2.57v1.17s.77-1.43,2.61-1.43,3.15,1.12,3.15,3.44v5.49ZM4.09,5.7c-.88,0-1.59-.72-1.59-1.6s.71-1.6,1.59-1.6,1.59.72,1.59,1.6-.71,1.6-1.59,1.6ZM2.76,15.5h2.68V6.83h-2.68v8.67Z" fill-rule="evenodd" fill="#000"/></mask><g mask="url(#ic-linkedin)"><path d="M2,18h14c1.1,0,2-.9,2-2V2c0-1.1-.9-2-2-2H2C.9,0,0,.9,0,2v14c0,1.1.9,2,2,2Z" fill-rule="evenodd"/></g></svg><span class="ul">LinkedIn</span></a>
+          <a href="https://instagram.com/kennyhuang_design" target="_blank" rel="noopener noreferrer" data-reveal="rise"
+            style="--delay: 80ms"><svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.94,16.43C4.92,16.39 4.31,16.28 3.69,16.03C3.11,15.80 2.75,15.55 2.29,15.06C1.93,14.69 1.71,14.35 1.52,13.88C1.14,12.94 1.08,12.24 1.08,8.75C1.08,5.58 1.13,4.83 1.39,4.00C1.79,2.75 2.72,1.81 3.95,1.41C4.81,1.13 5.55,1.08 8.80,1.08C11.62,1.08 12.56,1.13 13.26,1.31C14.07,1.52 14.61,1.82 15.16,2.37C15.85,3.05 16.23,3.90 16.37,5.05C16.43,5.56 16.46,6.78 16.46,8.75C16.46,12.24 16.40,12.94 16.02,13.88C15.81,14.39 15.61,14.69 15.18,15.13C14.66,15.66 14.23,15.93 13.54,16.15C12.95,16.33 12.52,16.39 11.42,16.43C10.50,16.46 6.82,16.46 5.94,16.43ZM11.40,15.05C12.52,15.00 13.00,14.92 13.50,14.68C14.33,14.28 14.84,13.49 14.98,12.41C15.05,11.95 15.08,10.76 15.08,8.77C15.08,6.78 15.05,5.59 14.98,5.13C14.78,3.63 13.91,2.76 12.42,2.55C11.97,2.49 10.69,2.46 8.71,2.46C6.76,2.46 5.59,2.49 5.12,2.55C3.61,2.76 2.74,3.64 2.55,5.16C2.49,5.64 2.46,6.85 2.46,8.77C2.46,10.69 2.49,11.90 2.55,12.38C2.74,13.92 3.63,14.80 5.18,14.99C5.33,15.01 5.74,15.03 6.08,15.04C7.03,15.08 10.54,15.08 11.40,15.05ZM8.11,12.66C6.65,12.42 5.45,11.36 5.00,9.94C4.89,9.58 4.83,9.18 4.83,8.77C4.83,6.94 6.05,5.38 7.84,4.93C8.14,4.85 8.22,4.85 8.77,4.85C9.32,4.85 9.40,4.85 9.70,4.93C11.15,5.30 12.24,6.39 12.61,7.84C12.68,8.14 12.69,8.22 12.69,8.77C12.69,9.29 12.68,9.41 12.62,9.65C12.43,10.42 12.10,11.01 11.55,11.55C10.78,12.33 9.83,12.71 8.74,12.70C8.53,12.70 8.24,12.68 8.11,12.66ZM9.29,11.27C11.06,10.91 11.90,8.85 10.89,7.34C9.89,5.84 7.65,5.84 6.65,7.34C5.75,8.68 6.30,10.51 7.79,11.13C8.24,11.32 8.81,11.37 9.29,11.27ZM12.71,5.57C12.27,5.48 11.97,5.12 11.96,4.68C11.95,4.32 12.14,4.02 12.46,3.85C12.62,3.77 12.68,3.75 12.87,3.75C13.40,3.75 13.78,4.14 13.78,4.67C13.78,4.86 13.77,4.91 13.68,5.08C13.50,5.44 13.10,5.64 12.71,5.57Z"/></svg><span class="ul">Instagram</span></a>
+          <a href="khp_docs/KennyHuang_Resume_2026.pdf" target="_blank" rel="noopener" data-reveal="rise"
+            style="--delay: 160ms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+              <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+              <path d="M12 18v-6" />
+              <path d="m9 15 3 3 3-3" />
+            </svg><span class="ul">Resume (PDF)</span></a>
         </div>
+      </div>
+    </section>
+  </main>
 
-        <div id="mobile-menu"
-            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
-            <a href="about.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
-                Me</a>
-            <a href="experience.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
-            <a href="contact.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
-        </div>
-    </nav>
-
-    <main class="pt-32 pb-24 w-full px-6 sm:px-10">
-        <div class="max-w-screen-2xl mx-auto space-y-12">
-
-            <a href="project3.html" class="block group relative overflow-hidden rounded-lg">
-                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
-                    <img src="nexusbuilds_images/nexusbuildsthumbnail4.png"
-                        alt="Project 3" class="object-cover w-full h-full">
-
-                    <div
-                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
-                        <h2
-                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            NexusBuilds PC Building Service</h2>
-                        <p
-                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                            Digital Service Design</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="project.html" class="block group relative overflow-hidden rounded-lg">
-                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
-                    <img src="betalink_images/betalinkthumbnail.png"
-                        alt="Project 1" class="object-cover w-full h-full">
-
-                    <div
-                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
-                        <h2
-                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            Highline Beta BetaLink</h2>
-                        <p
-                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                            Networking Device & Framework</p>
-                    </div>
-                </div>
-            </a>
-            
-            <a href="project4.html" class="block group relative overflow-hidden rounded-lg">
-                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
-                    <img src="relay_images/relaythumbnail.png"
-                        alt="Project 4" class="object-cover w-full h-full">
-
-                    <div
-                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
-                        <h2
-                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            Relay + Switchboard</h2>
-                        <p
-                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                            Call Delegation System</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="project2.html" class="block group relative overflow-hidden rounded-lg">
-                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
-                    <img src="iembrace_images/embracefinalq1.png"
-                        alt="Project 2" class="object-cover w-full h-full">
-
-                    <div
-                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
-                        <h2
-                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            iEmbrace Stone & Charging Pad</h2>
-                        <p
-                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                            Personal Meditation Device</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="project5.html" class="block group relative overflow-hidden rounded-lg">
-                <div class="w-full aspect-[16/10] sm:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 relative">
-                    <img src="cfplus_images/cfpluscover.png"
-                        alt="Project 5" class="object-cover w-full h-full">
-
-                    <div
-                        class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4">
-                        <h2
-                            class="text-white text-3xl sm:text-5xl font-bold tracking-tight text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            Cadillac Fairview +</h2>
-                        <p
-                            class="text-white/80 text-sm sm:text-lg mt-2 font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                            Seasonal Events & Loyalty Program</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </main>
-
-    <script>
-        // dark mode logic
-        const themeToggleBtn = document.getElementById('theme-toggle');
-
-        themeToggleBtn.addEventListener('click', function () {
-            if (localStorage.theme === 'dark') {
-                localStorage.theme = 'light';
-                document.documentElement.classList.remove('dark');
-            } else {
-                localStorage.theme = 'dark';
-                document.documentElement.classList.add('dark');
-            }
-        });
-
-        // mobile menu logic
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            mobileMenu.classList.toggle('flex');
-        });
-
-        // close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.remove('flex');
-            }
-        });
-    </script>
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-in">
+        <span>© 2026 Kenny Huang. All Rights Reserved.</span>
+        <img class="logo" src="global_images/khlogoblk.png" width="20" height="20" alt="">
+      </div>
+    </div>
+  </footer>
 </body>
 
-
 </html>
-
