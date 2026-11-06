@@ -1,11 +1,17 @@
 /* Kenny Huang portfolio: case study pages (loads after site.css)
    Each project page sets its own accent color on <body>, for example
    <body class="cs" style="--accent: #fac638; --on-accent: #181811">
-   The accent is used for the section bar, the problem panel and small details. */
+   The accent is used for the section bar, the problem panel and small details.
+   A page can also set --hl-a/--hl-b (the key phrase underline) and --mesh-1/2/3 (the soft hues on the
+   problem panel) to suit its accent. The defaults below are the NexusBuilds yellows. */
 
 :root { --secnav-h: 56px; --fig-cap: calc((100svh - var(--nav-h) - var(--secnav-h) - 112px) * 16 / 9); }
 html { scroll-padding-top: calc(var(--nav-h) + var(--secnav-h) + 24px); }
-.cs { --accent: #040707; --on-accent: #ffffff; }
+.cs {
+  --accent: #040707; --on-accent: #ffffff;
+  --hl-a: rgba(250, 198, 56, 1); --hl-b: rgba(253, 224, 110, 1);
+  --mesh-1: rgba(251, 232, 132, 0.6); --mesh-2: rgba(255, 217, 143, 0.8); --mesh-3: rgba(239, 224, 106, 0.75);
+}
 
 /* Hero: the first thing on the page */
 .cs-top { padding-top: 48px; }
@@ -49,7 +55,7 @@ html { scroll-padding-top: calc(var(--nav-h) + var(--secnav-h) + 24px); }
    order (the default box-decoration-break: slice). project.js adds .on and sets --hl-ms. */
 .hl {
   color: inherit;
-  background: linear-gradient(rgba(250, 198, 56, 1), rgba(253, 224, 110, 1)) no-repeat 0 100% / 0% 0.14em;
+  background: linear-gradient(var(--hl-a), var(--hl-b)) no-repeat 0 100% / 0% 0.14em;
   transition: background-size var(--hl-ms, 800ms) linear;
 }
 .hl.on { background-size: 100% 0.14em; }
@@ -98,14 +104,19 @@ html { scroll-padding-top: calc(var(--nav-h) + var(--secnav-h) + 24px); }
 }
 .cs-lede { margin: 0; max-width: 36em; font-size: 20px; line-height: 1.5; color: var(--ink-2); }
 
-/* Figures: slides and diagrams. Wide figures are capped so a 16:9 slide fits on screen. */
+/* Figures: slides and diagrams. Wide figures are capped so a 16:9 slide fits on screen.
+   A figure with another shape sets its width-to-height ratio as --r (for example style="--r: 0.79"),
+   and is sized so it fits the screen the same way. A row can set its own columns with --row. */
 .figs { display: flex; flex-direction: column; gap: 56px; }
-.fig { width: min(100%, max(640px, var(--fig-cap))); margin: 0 auto; }
-.fig-row { display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); gap: 24px; }
+.fig, .fig-fit { width: min(100%, max(var(--fig-min, 640px), var(--fig-cap))); margin-inline: auto; }
+.fig[style*="--r"], .fig-fit { --fig-cap: calc((100svh - var(--nav-h) - var(--secnav-h) - 112px) * var(--r)); --fig-min: 720px; }
+/* .fig-fit: a heading and figure that share the figure's width, so the heading lines up with its left edge */
+.fig-fit .fig { width: 100%; }
+.fig-row { display: grid; grid-template-columns: var(--row, repeat(var(--cols, 2), minmax(0, 1fr))); gap: 24px; align-items: start; }
 .fig-row .fig { width: 100%; }
 .fig-open {
   position: relative; display: block; width: 100%; padding: 0; border: 0;
-  aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius-thumb);
+  aspect-ratio: var(--r, 16 / 9); overflow: hidden; border-radius: var(--radius-thumb);
   background: var(--raise); cursor: zoom-in; color: inherit;
 }
 .fig-open img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; transition: transform 700ms var(--ease); }
@@ -142,26 +153,174 @@ html { scroll-padding-top: calc(var(--nav-h) + var(--secnav-h) + 24px); }
 .stat-label { display: block; margin-top: 10px; font-size: 16px; color: var(--ink-2); }
 
 /* Pull quote */
-.cs-quote { margin: 96px 0 0; align-items: baseline; }
-.cs-quote-label { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 15px; color: var(--ink-2); }
-.cs-quote-label::before { content: ""; width: 24px; height: 3px; border-radius: 2px; background: var(--accent); }
+/* The quote stays above .cs-dim while lit. It drops back only after the dim has faded, so it can't pass over the nav. */
+.cs-quote { position: relative; margin: 176px 0 0; transition: z-index 0s linear 700ms; }
+.cs-quote.is-lit { z-index: 31; transition-delay: 0s; }
 .cs-quote blockquote {
-  margin: 0; max-width: 22em;
-  font-family: var(--font-display); font-size: clamp(28px, 3vw, 44px); line-height: 1.2; letter-spacing: -0.02em;
+  margin: 0 auto; max-width: 19em; text-align: center; text-wrap: balance;
+  font-family: var(--font-display); font-size: clamp(36px, 5.2vw, 84px); line-height: 1.14; letter-spacing: -0.025em;
 }
+/* Darkens everything in view, nav included, while the quote is in the middle of the screen */
+.cs-dim {
+  position: fixed; inset: 0; z-index: 30; pointer-events: none;
+  background: rgba(4, 7, 7, 0.3); opacity: 0;
+  transition: opacity 700ms var(--ease);
+}
+.cs-dim.is-lit { opacity: 1; }
+html.dark .cs-dim { background: rgba(0, 0, 0, 0.5); }
+
+/* Subheadings inside a section */
+.cs-sub { display: flex; align-items: baseline; gap: 14px; margin: 0 0 24px; font-family: var(--font-display); font-size: 28px; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; }
+.cs-sub-tag { font-family: var(--font-text); font-size: 14px; letter-spacing: 0.02em; color: var(--ink-3); }
+.cs-block + .cs-block { margin-top: 96px; }
+
+/* Text link to the pitch after the last figure. project.js adds .is-waiting, then .in to fade it down into place. */
+.pitch-end { margin: 24px 0 0; text-align: center; transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+.pitch-end.is-waiting { opacity: 0; transform: translateY(-12px); }
+.pitch-end.is-waiting.in { opacity: 1; transform: none; }
+.pitch-link {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+  font-size: 16px; color: var(--ink-2); transition: color 160ms ease;
+}
+.pitch-link svg { width: 16px; height: 16px; flex: none; transition: transform 200ms var(--ease); }
+
+/* Document card: a link out to a PDF, such as a pitch deck */
+.doc-card {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 56px;
+  padding: 24px 56px 24px 24px; border: 1px solid var(--line); border-radius: var(--radius-thumb);
+  background: var(--raise); transition: border-color 300ms ease, background-color 300ms ease;
+}
+.doc-card-media { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: #ffffff; }
+.doc-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 700ms var(--ease); }
+.doc-card-type { margin: 0; font-size: 14px; color: var(--ink-3); }
+.doc-card-title { margin: 8px 0 0; font-family: var(--font-display); font-size: clamp(26px, 2.4vw, 36px); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
+.doc-card-text { margin: 14px 0 0; font-size: 17px; line-height: 1.55; color: var(--ink-2); }
+.doc-card-btn {
+  display: inline-flex; align-items: center; gap: 10px; height: 48px; margin-top: 28px; padding: 0 22px; border-radius: 24px;
+  background: var(--accent); color: var(--on-accent); font-size: 16px;
+  transition: transform 200ms var(--ease);
+}
+.doc-card-btn svg { width: 18px; height: 18px; flex: none; transition: transform 200ms var(--ease); }
+
+/* Design space: the two existing types of event wearable, joined to the gap between them.
+   The side cards stretch with the row minus --space-inset, so they always sit a little smaller than BetaLink.
+   Connectors are drawn from each side card; BetaLink sits above them so its hover pop covers their ends. */
+.space {
+  --space-gap: 56px; --space-inset: 24px;
+  list-style: none; margin: 0 0 56px; padding: 0;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--space-gap);
+}
+.space-item { position: relative; display: flex; flex-direction: column; margin-block: var(--space-inset); padding: 22px; border: 1px solid var(--line); border-radius: var(--radius-thumb); transition: border-color 300ms ease; }
+.space-item::before, .space-item::after { position: absolute; background: var(--accent); pointer-events: none; }
+.space-item:not(.is-answer)::before { content: ""; top: calc(50% - 5px); width: 10px; height: 10px; border-radius: 50%; }
+.space-item:not(.is-answer)::after { content: ""; top: calc(50% - 1px); width: calc(var(--space-gap) + 1px); height: 2px; }
+.space-item:first-child::before { right: -6px; }
+.space-item:first-child::after { left: 100%; transform-origin: left; }
+.space-item:last-child::before { left: -6px; }
+.space-item:last-child::after { right: 100%; transform-origin: right; }
+.space-tag { margin: 0; font-size: 13px; color: var(--ink-3); }
+.space-name { margin: 8px 0 0; font-family: var(--font-display); font-size: 24px; font-weight: 400; line-height: 1.15; letter-spacing: -0.01em; }
+.space-text { margin: 10px 0 0; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
+.space-eg { margin: auto 0 0; padding-top: 16px; font-size: 13px; color: var(--ink-3); }
+.space-item.is-answer {
+  z-index: 1; margin-block: 0; padding: 32px; justify-content: center;
+  border-color: transparent; background: var(--accent); color: var(--on-accent);
+  /* scale and translate, not transform: the scroll reveal holds transform once it finishes */
+  transition: scale 280ms cubic-bezier(0.34, 1.56, 0.64, 1), translate 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 280ms var(--ease), opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+.space-item.is-answer .space-tag { font-size: 14px; }
+.space-item.is-answer .space-name { margin-top: 10px; font-size: 36px; }
+.space-item.is-answer .space-text { margin-top: 12px; font-size: 18px; }
+.space-item.is-answer .space-tag,
+.space-item.is-answer .space-text,
+.space-item.is-answer .space-eg { color: inherit; opacity: 0.86; }
+
+/* Numbered steps, each with a tall photo */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.steps .fig { width: 100%; margin: 0; }
+.steps figcaption { display: flex; align-items: baseline; gap: 12px; margin-top: 16px; font-size: 18px; line-height: 1.35; }
+.step-num { font-size: 14px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* Focused steps: project.js adds .is-live and marks one step .is-active, on a loop on wider screens and by
+   scroll position on phones. Without it (no script, reduced motion) .steps stays the plain grid above.
+   Each step is laid out at full size and scaled, so image and caption shrink as one and nothing below moves. */
+.steps.is-live { --step-ms: 900ms; --step-ease: cubic-bezier(0.65, 0, 0.35, 1); }
+.steps.is-live li { transition: scale var(--step-ms) var(--step-ease), translate var(--step-ms) var(--step-ease); }
+.steps.is-live figcaption { font-size: 20px; }
+.steps.is-live .step-num { font-size: 15px; }
+@media (min-width: 721px) {
+  .steps.is-live { --k: 0.78; --g: 24px; container-type: inline-size; grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .steps.is-live li {
+    /* L: the focused width, filling the row but kept short enough to fit on screen. B: a shrunk step's width.
+       O: centres the row when the screen height caps L. x: each step's offset, set per data-active below. */
+    --L: min((100cqw - 2 * var(--g)) / (1 + 2 * var(--k)), (100svh - var(--nav-h) - var(--secnav-h) - 72px) * 3 / 4);
+    --B: calc(var(--L) * var(--k));
+    --O: calc((100cqw - var(--L) - 2 * var(--B) - 2 * var(--g)) / 2);
+    --x: 0px;
+    grid-area: 1 / 1; justify-self: start; width: var(--L);
+    transform-origin: 0 50%; scale: var(--k); translate: calc(var(--O) + var(--x)) 0;
+  }
+  .steps.is-live li.is-active { scale: 1; }
+  .steps.is-live[data-active="0"] li:nth-child(2) { --x: calc(var(--L) + var(--g)); }
+  .steps.is-live[data-active="0"] li:nth-child(3) { --x: calc(var(--L) + var(--B) + 2 * var(--g)); }
+  .steps.is-live[data-active="1"] li:nth-child(2) { --x: calc(var(--B) + var(--g)); }
+  .steps.is-live[data-active="1"] li:nth-child(3) { --x: calc(var(--L) + var(--B) + 2 * var(--g)); }
+  .steps.is-live[data-active="2"] li:nth-child(2) { --x: calc(var(--B) + var(--g)); }
+  .steps.is-live[data-active="2"] li:nth-child(3) { --x: calc(2 * var(--B) + 2 * var(--g)); }
+}
+
+/* Render carousel: panels on a revolving door, one in front with its neighbours angled behind it.
+   project.js adds .is-live and gives each figure a data-slot. Without it the figures stay a plain .fig-row.
+   Sizes are multiples of --w, the front panel's width, so the shape holds at any screen size. */
+.door { position: relative; container-type: inline-size; perspective: 1800px; overflow-x: clip; }
+.door.is-live > * { --w: min(60cqw, (100svh - var(--nav-h) - var(--secnav-h) - 112px) * 16 / 9); }
+/* The stage ignores the pointer because it sits in front of the side panels in 3D and would swallow their clicks */
+.door.is-live .door-stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; transform-style: preserve-3d; touch-action: pan-y; pointer-events: none; }
+.door.is-live .fig {
+  grid-area: 1 / 1; justify-self: center; align-self: center; width: var(--w); margin: 0; pointer-events: auto;
+  transform: translate3d(0, 0, calc(var(--w) * -0.9)) rotateY(0deg); opacity: 0;
+  transition: transform 1000ms cubic-bezier(0.65, 0, 0.35, 1), opacity 1000ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.door.is-live .fig[data-slot="front"] { transform: translate3d(0, 0, 0) rotateY(0deg); opacity: 1; }
+.door.is-live .fig[data-slot="left"] { transform: translate3d(calc(var(--w) * -0.6), 0, calc(var(--w) * -0.32)) rotateY(-30deg); opacity: 0.78; }
+.door.is-live .fig[data-slot="right"] { transform: translate3d(calc(var(--w) * 0.6), 0, calc(var(--w) * -0.32)) rotateY(30deg); opacity: 0.78; }
+.door.is-live .fig[data-slot="back"] { pointer-events: none; }
+.door.is-live .fig:not([data-slot="front"]) .fig-open { cursor: pointer; }
+.door.is-live .fig:not([data-slot="front"]) .fig-expand { display: none; }
+/* Inset only: an outer shadow enlarges the panel in 3D and cuts through the panel in front of it */
+.door.is-live .fig-open::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28); pointer-events: none; }
+.door .fig-open, .door .fig-open > img { animation: none; }
+.door-arrow {
+  position: absolute; top: 50%; z-index: 2;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px; margin-top: -24px; padding: 0; border: 0; border-radius: 24px;
+  background: rgba(10, 10, 10, 0.62); color: #ffffff; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: pointer; opacity: 0;
+  transition: opacity 240ms var(--ease), background-color 160ms ease, scale 120ms ease;
+}
+.door-arrow[hidden] { display: none; }
+.door-arrow svg { width: 22px; height: 22px; }
+.door-arrow.is-prev { left: calc(50% - var(--w) / 2 - 24px); }
+.door-arrow.is-next { right: calc(50% - var(--w) / 2 - 24px); }
+.door-arrow:focus-visible { opacity: 1; }
+.door-arrow:active { scale: 0.94; }
 
 /* Problem statement panel */
 /* A soft mesh of light hues over the accent. Each color has a resting point and leans toward the pointer
-   as --pull rises, so the whole gradient bends instead of a shape following the cursor.
+   as --pull rises, so the whole gradient bends, and the first layer adds a wide, lighter bloom at the pointer.
    project.js sets --pull, --nx/--ny (quick colors) and --fx/--fy (slower colors). */
 .statement {
   --pull: 0; --nx: 0px; --ny: 0px; --fx: 0px; --fy: 0px;
   padding: clamp(40px, 7vw, 112px);
   border-radius: var(--radius-thumb);
   background:
-    radial-gradient(62% 120% at calc(16% + (var(--nx) - 16%) * 0.42 * var(--pull)) calc(22% + (var(--ny) - 22%) * 0.45 * var(--pull)), rgba(251, 232, 132, 0.6), transparent),
-    radial-gradient(66% 130% at calc(86% + (var(--fx) - 86%) * 0.5 * var(--pull)) calc(78% + (var(--fy) - 78%) * 0.5 * var(--pull)), rgba(255, 217, 143, 0.8), transparent),
-    radial-gradient(52% 100% at calc(62% + (var(--nx) - 62%) * 0.3 * var(--pull)) calc(4% + (var(--ny) - 4%) * 0.4 * var(--pull)), rgba(239, 224, 106, 0.75), transparent),
+    radial-gradient(42% 90% at var(--nx) var(--ny), color-mix(in srgb, var(--hl-b) calc(var(--pull) * 58%), transparent), transparent),
+    radial-gradient(62% 120% at calc(16% + (var(--nx) - 16%) * 0.82 * var(--pull)) calc(22% + (var(--ny) - 22%) * 0.85 * var(--pull)), var(--mesh-1), transparent),
+    radial-gradient(66% 130% at calc(86% + (var(--fx) - 86%) * 0.45 * var(--pull)) calc(78% + (var(--fy) - 78%) * 0.45 * var(--pull)), var(--mesh-2), transparent),
+    radial-gradient(52% 100% at calc(62% + (var(--nx) - 62%) * 0.55 * var(--pull)) calc(4% + (var(--ny) - 4%) * 0.7 * var(--pull)), var(--mesh-3), transparent),
     var(--accent);
   color: var(--on-accent);
 }
@@ -261,6 +420,8 @@ html { scroll-padding-top: calc(var(--nav-h) + var(--secnav-h) + 24px); }
 .lb-btn:focus-visible { outline-color: #ffffff; }
 html:has(.lb[open]) { overflow: hidden; }
 
+@keyframes draw-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
 /* Scroll-driven reveals where supported; site.js handles the [data-reveal] fallback elsewhere */
 @supports (animation-timeline: view()) {
   .cs-intro .facts { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
@@ -277,6 +438,14 @@ html:has(.lb[open]) { overflow: hidden; }
   .statement > * { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 30% entry 100%; }
   .cs-quote { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 10% entry 90%; }
   .embed { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 50%; }
+  .doc-card { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  .cs-sub { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .space-item { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+  .space-item:nth-child(2) { animation-range: entry 6% entry 86%; }
+  .space-item:nth-child(3) { animation-range: entry 12% entry 92%; }
+  .space-item:not(.is-answer)::after { animation: draw linear both; animation-timeline: view(); animation-range: entry 100% cover 25%; }
+  .steps li:nth-child(2) .fig-open { animation-range: entry 8% entry 78%; }
+  .steps li:nth-child(3) .fig-open { animation-range: entry 16% entry 86%; }
   .pager-media { animation: wipe var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
   .pager a:nth-child(2) .pager-media { animation-range: entry 8% entry 88%; }
 }
@@ -288,13 +457,22 @@ html:has(.lb[open]) { overflow: hidden; }
   .embed-btn:hover { background: var(--ground); color: var(--ink); }
   .embed-cover:hover span { transform: scale(1.04); }
   .pager a:hover .pager-media img { transform: scale(1.03); }
+  .door:hover .door-arrow { opacity: 1; }
+  .pitch-link:hover { color: var(--ink); }
+  .pitch-link:hover svg { transform: translate(2px, -2px); }
+  .door-arrow:hover { background: rgba(10, 10, 10, 0.82); }
+  .space-item.is-answer:hover { scale: 1.04; translate: 0 -4px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22); }
+  .doc-card:hover .doc-card-media img { transform: scale(1.02); }
+  .doc-card-btn:hover { transform: translateY(-1px); }
+  .doc-card-btn:hover svg { transform: translate(2px, -2px); }
   .pager a:hover .pager-label svg { transform: translateX(3px); }
   .pager a:first-child:hover .pager-label svg { transform: translateX(-3px); }
   .lb-btn:hover { background: rgba(255, 255, 255, 0.2); }
 }
 
-/* Touch screens: show the enlarge button without hover */
+/* Touch screens: show the enlarge button without hover, and swipe the carousel instead of using arrows */
 @media (hover: none) {
+  .door-arrow { display: none; }
   .fig-expand { opacity: 1; transform: none; width: 36px; height: 36px; right: 10px; bottom: 10px; }
   .fig-expand svg { width: 16px; height: 16px; }
 }
@@ -303,6 +481,17 @@ html:has(.lb[open]) { overflow: hidden; }
   .cs-grid { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 48px; }
   .facts { grid-template-columns: minmax(0, 1fr); }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+  .doc-card { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 20px 20px 32px; }
+  /* Stacked: the connectors turn vertical and the side cards are inset from the sides instead */
+  .space { --space-gap: 40px; grid-template-columns: minmax(0, 1fr); }
+  .space-item { margin-block: 0; margin-inline: var(--space-inset); }
+  .space-item.is-answer { margin-inline: 0; }
+  .space-item:not(.is-answer)::before { top: auto; left: calc(50% - 5px); right: auto; }
+  .space-item:not(.is-answer)::after { top: auto; left: calc(50% - 1px); right: auto; width: 2px; height: calc(var(--space-gap) + 1px); animation-name: draw-y; }
+  .space-item:first-child::before { bottom: -6px; }
+  .space-item:first-child::after { top: 100%; transform-origin: top; }
+  .space-item:last-child::before { top: -6px; }
+  .space-item:last-child::after { bottom: 100%; transform-origin: bottom; }
 }
 
 @media (max-width: 720px) {
@@ -326,12 +515,30 @@ html:has(.lb[open]) { overflow: hidden; }
   .cs-sec-title { font-size: 48px; }
   .cs-lede { font-size: 17px; }
   .figs { gap: 36px; }
-  .fig { width: 100%; }
+  .fig, .fig-fit { width: 100%; }
   .fig-row { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .fig[style*="--r"], .fig-fit { --fig-min: 100%; }
+  .cs-sub { font-size: 22px; margin-bottom: 18px; }
+  .cs-block + .cs-block { margin-top: 64px; }
+  .doc-card { padding: 12px 12px 24px; }
+  .doc-card-body { padding: 0 8px; }
+  .doc-card-text { font-size: 16px; }
+  .space { --space-inset: 12px; }
+  .space-item.is-answer { padding: 28px 22px; }
+  .space-item.is-answer .space-name { font-size: 30px; }
+  .space-item.is-answer .space-text { font-size: 17px; }
+  .steps { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .steps.is-live { --step-ms: 480ms; --step-ease: var(--ease); gap: 12px; }
+  .steps.is-live li { scale: 0.84; }
+  .steps.is-live li.is-active { scale: 1; }
+  .steps.is-live figcaption { font-size: 18px; }
   .stats { gap: 24px 20px; margin-bottom: 40px; }
   .stat { padding-top: 14px; }
   .stat-label { font-size: 14px; }
-  .cs-quote { margin-top: 56px; gap: 14px; }
+  .cs-quote { margin-top: 96px; }
+  /* The carousel runs to the screen edges, so the side panels are cut by the screen rather than the page gutter */
+  .door { margin-inline: calc(var(--pad) * -1); perspective: 900px; }
+  .door.is-live > * { --w: 76cqw; }
   .statement-hmw { margin-top: 28px; }
   .embed-bar { gap: 8px; height: 56px; padding: 0 6px 0 14px; }
   .embed-dots { display: none; }
@@ -348,7 +555,10 @@ html:has(.lb[open]) { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .secnav-pill, .fig-open img, .fig-expand, .pager-media img, .pager-label svg, .embed-cover span, .hl { transition: none !important; }
+  .secnav-pill, .fig-open img, .fig-expand, .pager-media img, .pager-label svg, .embed-cover span, .hl,
+  .doc-card-media img, .doc-card-btn, .doc-card-btn svg, .space-item.is-answer { transition: none !important; }
+  .space-item:not(.is-answer)::after { animation: none !important; }
+  .door.is-live .fig, .door-arrow, .cs-dim, .cs-quote, .pitch-end, .pitch-link svg { transition: none !important; }
   .secnav-progress { transform: scaleX(var(--progress, 0)) !important; }
 }
 

@@ -1,874 +1,540 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Highline Beta BetaLink - Kenny Huang Design</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Highline Beta BetaLink, Kenny Huang</title>
+  <meta name="description" content="BetaLink, an NFC wristband that connects people on LinkedIn with one tap, designed for Highline Beta networking events. A product design case study by Kenny Huang.">
+  <meta name="theme-color" content="#d9d9d8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://kennyhuangdesign.github.io/KHPortfolio/project.html">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        zinc: { 850: '#202022', 950: '#0c0c0e' }
-                    }
-                }
-            }
-        }
-    </script>
+  <!-- Share preview (LinkedIn, iMessage, Slack) -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Highline Beta BetaLink, Kenny Huang">
+  <meta property="og:description" content="Networking device and framework: an NFC wristband for one-tap LinkedIn connections at Highline Beta events.">
+  <meta property="og:url" content="https://kennyhuangdesign.github.io/KHPortfolio/project.html">
+  <meta property="og:image" content="https://kennyhuangdesign.github.io/KHPortfolio/assets/img/og/betalink.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-    <style>
-        /* ── Sticky Section Nav ── */
-        #section-nav {
-            position: fixed;
-            top: 80px;
-            /* sits right under the main nav */
-            left: 0;
-            width: 100%;
-            z-index: 40;
-            transform: translateY(-100%);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
-            pointer-events: none;
-        }
+  <!-- Apply the saved or system theme before the page paints, and skip the hero entrance
+       when the page opens through a page transition from the homepage -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      } catch (e) {}
+      window.addEventListener('pagereveal', function (e) {
+        if (e.viewTransition) document.documentElement.classList.add('vt-in');
+      });
+    })();
+  </script>
+  <link rel="expect" href="#hero" blocking="render">
 
-        #section-nav.visible {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: all;
-        }
+  <link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 
-        .sec-link {
-            position: relative;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: #71717a;
-            padding: 0 4px 14px;
-            border-bottom: 2px solid transparent;
-            transition: color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .sec-link:hover {
-            color: #18181b;
-            border-color: #a1a1aa;
-        }
-
-        .dark .sec-link:hover {
-            color: #f4f4f5;
-            border-color: #52525b;
-        }
-
-        .sec-link.active {
-            color: #6366f1;
-            border-color: #6366f1;
-        }
-
-        .dark .sec-link.active {
-            color: #818cf8;
-            border-color: #818cf8;
-        }
-
-        /* ── Nav inner scroll strip ── */
-        #section-nav-inner {
-            overflow-x: auto;
-            scrollbar-width: none;
-            /* Firefox */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #section-nav-inner::-webkit-scrollbar {
-            display: none;
-            /* Chrome/Safari/Edge */
-        }
-
-        /* ── Ideation diagram ── */
-        .ideation-merge-arrow {
-            color: #6366f1;
-        }
-
-        /* ── Process track (unchanged) ── */
-        .process-track {
-            position: absolute;
-            top: 40%;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background-color: #3b82f6;
-            z-index: 0;
-        }
-
-        .signal-container {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-        }
-
-        @keyframes signal-travel {
-            0% {
-                left: 11%;
-                opacity: 0;
-            }
-
-            2% {
-                opacity: 1;
-            }
-
-            38% {
-                opacity: 1;
-                left: 68%;
-            }
-
-            40%,
-            100% {
-                left: 68%;
-                opacity: 0;
-            }
-        }
-
-        .signal-line {
-            position: absolute;
-            top: 40%;
-            left: 11%;
-            width: 20%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #ef4444, #ef4444, transparent);
-            box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
-            animation: signal-travel 4s linear infinite;
-            animation-delay: 3s;
-            animation-fill-mode: backwards;
-            z-index: 5;
-        }
-
-        @keyframes border-flash {
-
-            0%,
-            100% {
-                border-color: #3b82f6;
-                box-shadow: none;
-            }
-
-            50% {
-                border-color: #ef4444;
-                box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-            }
-        }
-
-        .process-card {
-            border: 4px solid #3b82f6;
-            animation: border-flash 4s linear infinite;
-            transition: transform 0.3s ease;
-        }
-
-        .card-1 {
-            animation-delay: 1s;
-        }
-
-        .card-2 {
-            animation-delay: 2s;
-        }
-
-        .card-3 {
-            animation-delay: 3s;
-        }
-
-        @media (max-width:768px) {
-
-            .process-track,
-            .signal-line {
-                display: none;
-            }
-        }
-    </style>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/project.css">
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/project.js" defer></script>
 </head>
+<body class="cs" style="--accent: #d6361f; --on-accent: #ffffff; --hl-a: #d6361f; --hl-b: #f06a45; --mesh-1: rgba(236, 92, 60, 0.36); --mesh-2: rgba(160, 24, 16, 0.65); --mesh-3: rgba(222, 58, 88, 0.45)">
+  <a class="skip" href="#overview">Skip to case study</a>
 
-<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="index.html" aria-label="Back to the homepage">
+        <img class="logo-back logo-back-light" src="assets/img/logo/khlogobacklight-84.png" width="28" height="28" alt="">
+        <img class="logo-back logo-back-dark" src="assets/img/logo/khlogobackdark-84.png" width="28" height="28" alt="">
+        <span>KENNY HUANG DESIGN</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Main">
+          <a href="index.html#projects" aria-current="page">Projects</a>
+          <a href="index.html#about">About me</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="about.html">More</a>
+        </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <!-- ══ Main Nav ══ -->
-    <nav
-        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
-        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
-            <a href="index.html" class="flex items-center gap-4 group">
-                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
-                    <!-- Light mode logo (black) -->
-                    <img src="global_images/khlogobacklight.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain block dark:hidden">
-                    <!-- Dark mode logo (white) -->
-                    <img src="global_images/khlogobackdark.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain hidden dark:block">
-                </div>
-                <span
-                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">Kenny
-                    Huang Design</span>
-            </a>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
-                        Me</a>
-                    <a href="experience.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
-                    <a href="contact.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
-                </div>
-                <button id="theme-toggle"
-                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
-                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                            fill-rule="evenodd" clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
-                <button id="mobile-menu-btn"
-                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
+  <main>
+    <div class="wrap cs-top">
+      <figure class="cs-hero" id="hero" style="view-transition-name: hero-betalink">
+        <img src="assets/img/betalink/hero-1920.webp"
+             srcset="assets/img/betalink/hero-960.webp 960w, assets/img/betalink/hero-1920.webp 1920w"
+             sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+             width="1920" height="1080" fetchpriority="high"
+             alt="Render of a red BetaLink wristband on a wrist, the Highline Beta logo glowing on its screen">
+      </figure>
+
+      <header class="cs-head">
+        <p class="cs-kicker">Networking Device &amp; Framework</p>
+        <h1 class="cs-title">Highline Beta BetaLink</h1>
+      </header>
+
+      <div class="cs-grid cs-intro" id="overview">
+        <dl class="facts" data-reveal="rise">
+          <div class="fact"><dt>Role</dt><dd>Junior Product Designer</dd></div>
+          <div class="fact"><dt>Timeline</dt><dd>Oct to Nov 2025</dd></div>
+          <div class="fact"><dt>Client</dt><dd>Highline Beta</dd></div>
+          <div class="fact"><dt>Tools</dt><dd>Figma, Fusion 360, Blender, PLA and TPU 3D printing</dd></div>
+        </dl>
+        <div class="overview" data-reveal="rise" style="--delay: 100ms">
+          <h2 class="overview-title"><mark class="hl"><span>A sleeker, smarter way to network</span></mark></h2>
+          <p class="overview-lead">BetaLink wristbands are NFC-powered wristbands that allow for <mark class="hl"><span>instant LinkedIn connection with just one tap</span></mark>. Powered by a single NTAG216 NFC tag (no batteries needed), the wristbands are entirely rewritable by the user in case social media URLs change. BetaLink supports both Apple and Android phones. Current prototypes are fully functional and feature a custom-printed PLA shell alongside a TPU wristband.</p>
+          <p class="overview-body">Existing event wearables end up in one of two categories: either they are bulky and aesthetically unappealing networking devices, or they are sleek and simple wearable devices that only get used for attendance and are disposed of right after the event. <mark class="hl"><span>BetaLink disrupts this current binary</span></mark>, offering a wearable device that is <mark class="hl"><span>compact and aesthetically appealing, whilst retaining the functionality of existing networking devices</span></mark>.</p>
+          <p class="credit">The NFC Tools app is required for rewriting the NFC tag, free to download on the App Store and Google Play.</p>
         </div>
-        <div id="mobile-menu"
-            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
-            <a href="about.html"
-                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
-                Me</a>
-            <a href="experience.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
-            <a href="contact.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+      </div>
+    </div>
+
+    <!-- Section bar: one link per section below. It sticks under the nav and highlights the section being read. -->
+    <nav class="secnav" aria-label="Case study sections">
+      <div class="wrap">
+        <div class="secnav-strip">
+          <span class="secnav-pill" aria-hidden="true"></span>
+          <a href="#pitch">Pitch</a>
+          <a href="#problem">Problem</a>
+          <a href="#prototype">Prototype</a>
+          <a href="#ideation">Ideation</a>
+          <a href="#research">Research</a>
+          <a href="#synthesis">Synthesis</a>
         </div>
+      </div>
+      <span class="secnav-progress" aria-hidden="true"></span>
     </nav>
 
-    <!-- ══ Sticky Section Nav (appears after pitch button) ══ -->
-    <div id="section-nav">
-        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
-            <div id="section-nav-inner"
-                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
-                <button class="sec-link" data-target="section-problem">Problem Statement</button>
-                <button class="sec-link" data-target="section-research">Research</button>
-                <button class="sec-link" data-target="section-synthesis">Synthesis</button>
-                <button class="sec-link" data-target="section-ideation">Ideation</button>
-                <button class="sec-link" data-target="section-prototype">Final Prototype</button>
+    <div class="wrap">
+      <section class="cs-sec" id="pitch" aria-labelledby="pitch-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="pitch-title">Pitch</h2>
+        </div>
+        <a class="doc-card" href="khp_docs/Highline%20Beta%20-%20Networking%20Improvement%20Framework.pdf" target="_blank" rel="noopener">
+          <div class="doc-card-media">
+            <img src="assets/img/betalink/pitch-cover-960.webp" srcset="assets/img/betalink/pitch-cover-960.webp 960w, assets/img/betalink/pitch-cover-1440.webp 1440w"
+                 sizes="(max-width: 1100px) calc(100vw - 72px), 820px"
+                 width="1920" height="1080" loading="lazy" decoding="async"
+                 alt="Cover slide: Networking Enhancement Framework, Highline Beta">
+          </div>
+          <div class="doc-card-body">
+            <p class="doc-card-type">PDF presentation, 15 MB</p>
+            <h3 class="doc-card-title">Networking Enhancement Framework</h3>
+            <p class="doc-card-text">The full proposal presented to Highline Beta, from research and strategy to the BetaLink prototype.</p>
+            <span class="doc-card-btn">Open the pitch deck<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+          </div>
+        </a>
+      </section>
+
+      <section class="cs-sec" id="problem" aria-labelledby="problem-title">
+        <div class="statement" data-reveal="wipe">
+          <h2 class="statement-label" id="problem-title">PROBLEM STATEMENT</h2>
+          <p class="statement-text">Investor networking at Highline Beta events requires a tedious, manual exchange of contact information.</p>
+          <p class="statement-hmw">How can networking between attendees and Highline Beta staff be enhanced? How might we identify, understand, and overcome these challenges?</p>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="prototype" aria-labelledby="prototype-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="prototype-title">Prototype</h2>
+        </div>
+        <ul class="stats" aria-label="Prototype at a glance">
+          <li class="stat" data-reveal="rise"><span class="stat-num" data-count="0">0</span><span class="stat-label">Batteries needed</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 80ms"><span class="stat-num" data-count="1">1</span><span class="stat-label">NFC tag per band</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 160ms"><span class="stat-num" data-count="2">2</span><span class="stat-label">Working prototypes</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 240ms"><span class="stat-num" data-count="3">3</span><span class="stat-label">Steps to connect</span></li>
+        </ul>
+        <div class="cs-block">
+          <h3 class="cs-sub"><span class="cs-sub-tag">Prototype A</span>Flatface design</h3>
+          <div class="fig-row" style="--row: 2.362fr 1.333fr">
+            <figure class="fig" style="--r: 2.362">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/flatface-render-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/flatface-render-960.webp"
+                     srcset="assets/img/betalink/flatface-render-960.webp 960w, assets/img/betalink/flatface-render-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 961px"
+                     width="1920" height="813" loading="lazy" decoding="async"
+                     alt="Render of the Flatface prototype, a flat white shell with the BetaLink logo on a black strap">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig" style="--r: 1.333">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/flatface-photo-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/flatface-photo-960.webp"
+                     srcset="assets/img/betalink/flatface-photo-960.webp 960w, assets/img/betalink/flatface-photo-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 543px"
+                     width="4032" height="3024" loading="lazy" decoding="async"
+                     alt="The printed Flatface prototype worn on a wrist">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub"><span class="cs-sub-tag">Prototype B</span>Curvetop design</h3>
+          <div class="fig-row" style="--row: 2.362fr 1.333fr">
+            <figure class="fig" style="--r: 2.362">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/curvetop-render-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/curvetop-render-960.webp"
+                     srcset="assets/img/betalink/curvetop-render-960.webp 960w, assets/img/betalink/curvetop-render-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 961px"
+                     width="1920" height="813" loading="lazy" decoding="async"
+                     alt="Render of the Curvetop prototype with its curved lid lifted">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig" style="--r: 1.333">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/curvetop-photo-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/curvetop-photo-960.webp"
+                     srcset="assets/img/betalink/curvetop-photo-960.webp 960w, assets/img/betalink/curvetop-photo-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 543px"
+                     width="4032" height="3024" loading="lazy" decoding="async"
+                     alt="The printed Curvetop prototype worn on a wrist">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Interaction process</h3>
+          <ol class="steps" data-steps-focus style="--r: 3 / 4">
+            <li>
+              <figure class="fig">
+                <button class="fig-open" type="button" data-full="assets/img/betalink/step-scan-1280.webp" data-reveal="wipe">
+                  <span class="sr">Enlarge: </span>
+                  <img src="assets/img/betalink/step-scan-720.webp"
+                       srcset="assets/img/betalink/step-scan-720.webp 720w, assets/img/betalink/step-scan-1280.webp 1280w"
+                       sizes="(max-width: 720px) calc(100vw - 32px), 580px"
+                       width="3024" height="4032" loading="lazy" decoding="async"
+                       alt="A phone held over the wristband to read its NFC tag">
+                  <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+                </button>
+                <figcaption><span class="step-num">01</span>Scan wristband</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="fig">
+                <button class="fig-open" type="button" data-full="assets/img/betalink/step-notify-1280.webp" data-reveal="wipe">
+                  <span class="sr">Enlarge: </span>
+                  <img src="assets/img/betalink/step-notify-720.webp"
+                       srcset="assets/img/betalink/step-notify-720.webp 720w, assets/img/betalink/step-notify-1280.webp 1280w"
+                       sizes="(max-width: 720px) calc(100vw - 32px), 580px"
+                       width="1284" height="2280" loading="lazy" decoding="async"
+                       alt="The phone showing a notification after scanning the wristband">
+                  <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+                </button>
+                <figcaption><span class="step-num">02</span>Receive notification</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="fig">
+                <button class="fig-open" type="button" data-full="assets/img/betalink/step-connect-1280.webp" data-reveal="wipe">
+                  <span class="sr">Enlarge: </span>
+                  <img src="assets/img/betalink/step-connect-720.webp"
+                       srcset="assets/img/betalink/step-connect-720.webp 720w, assets/img/betalink/step-connect-1280.webp 1280w"
+                       sizes="(max-width: 720px) calc(100vw - 32px), 580px"
+                       width="1284" height="2279" loading="lazy" decoding="async"
+                       alt="The wearer&#39;s LinkedIn profile open on the phone, ready to connect">
+                  <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+                </button>
+                <figcaption><span class="step-num">03</span>Connect on LinkedIn</figcaption>
+              </figure>
+            </li>
+          </ol>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Future conceptual renders</h3>
+          <div class="door" data-door>
+            <div class="fig-row door-stage">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/render-1-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/render-1-960.webp"
+                     srcset="assets/img/betalink/render-1-960.webp 960w, assets/img/betalink/render-1-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Concept render of a future red BetaLink wristband with the Highline Beta logo glowing on its screen">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/render-2-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/render-2-960.webp"
+                     srcset="assets/img/betalink/render-2-960.webp 960w, assets/img/betalink/render-2-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Concept render of the wristband from the side, showing the inner housing">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/render-3-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/render-3-960.webp"
+                     srcset="assets/img/betalink/render-3-960.webp 960w, assets/img/betalink/render-3-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Close-up of the glowing logo on the wristband screen">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/render-4-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/render-4-960.webp"
+                     srcset="assets/img/betalink/render-4-960.webp 960w, assets/img/betalink/render-4-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Close-up of the screen edge where it meets the strap">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
             </div>
+            <button class="door-arrow is-prev" type="button" data-door-prev aria-label="Previous render" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+            <button class="door-arrow is-next" type="button" data-door-next aria-label="Next render" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
         </div>
-    </div>
+      </section>
 
-    <main class="pt-20 pb-24 w-full">
-
-        <!-- Hero image -->
-        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
-            <img src="betalink_images/hlbhero.png"
-                alt="Project Cover" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+      <section class="cs-sec" id="ideation" aria-labelledby="ideation-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="ideation-title">Ideation</h2>
         </div>
-
-        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
-
-            <!-- Project overview -->
-            <section
-                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
-                <div class="md:col-span-5">
-                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">Highline Beta BetaLink</h1>
-                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
-                        <div><span class="block text-zinc-400 mb-1">Role</span><span class="font-medium">Junior Product
-                                Designer</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Timeline</span><span class="font-medium">Oct 2025 -
-                                Nov 2025</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Client</span><span class="font-medium">Highline
-                                Beta</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Tools</span><span class="font-medium">Figma, Fusion
-                                360, Blender, PLA/TPU 3D Printing</span></div>
-                    </div>
-                </div>
-                <div class="md:col-span-7 md:pl-10">
-                    <h3 class="text-2xl font-bold mb-6">A Sleeker, Smarter Way to Network</h3>
-                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                        <p>BetaLink wristbands are NFC-powered wristbands that allow for instant Linkedin connection
-                            with just one tap. Powered by a single NTAG216 NFC tag (no batteries needed), the wristbands
-                            are entirely rewriteable by the user in case social media URLs change. BetaLink supports
-                            both Apple and Android phones. Current prototypes are fully functional and feature a
-                            custom-printed PLA shell alongside a TPU wristband.</p>
-                        <p>Existing event wearables end up in one of two categories: either they are bulky and
-                            aesthetically unappealing networking devices, or they are sleek and simple wearable devices
-                            that only get used for attendance and are disposed of right after the event. BetaLink
-                            disrupts this current binary, offering a wearable device that is compact and aesthetically
-                            appealing, whilst retaining the functionality of existing networking devices.</p>
-                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
-                            <p>(NFC Tools app is required for rewriting the NFC tag; free to download on the App Store
-                                and Google Play)</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Presentation slide + pitch button — scroll trigger sentinel is here -->
-            <section class="py-16 sm:py-24 space-y-16 sm:space-y-32">
-                <div class="space-y-12">
-                    <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-lg overflow-hidden shadow-2xl">
-                        <img src="betalink_images/hlbpitch.png"
-                            alt="Full Presentation" class="w-full h-auto">
-                    </div>
-
-                    <!-- SENTINEL — sticky nav appears when this scrolls out of view -->
-                    <div id="pitch-sentinel" class="flex justify-center pb-12">
-                        <a href="khp_docs/Highline Beta - Networking Improvement Framework.pdf" target="_blank" rel="noopener noreferrer"
-                            class="relative overflow-hidden inline-flex items-center justify-center px-12 py-5 font-bold text-white text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 bg-[length:200%_auto] rounded-3xl hover:scale-105 transition-all duration-300 hover:bg-[position:right_center] shadow-lg hover:shadow-xl">
-                            SEE PRESENTATION PITCH
-                        </a>
-                    </div>
-                </div>
-
-                <!-- ══ PROBLEM STATEMENT ══ -->
-                <section id="section-problem"
-                    class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
-                    style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 20%, #4f46e5 45%, #7c3aed 65%, #db2777 85%, #f43f5e 100%);">
-                    <div class="absolute inset-0 opacity-20"
-                        style="background: radial-gradient(ellipse at 30% 50%, #a5b4fc 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, #f9a8d4 0%, transparent 60%);">
-                    </div>
-                    <div class="relative z-10 max-w-4xl mx-auto space-y-8">
-                        <p class="text-indigo-200 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
-                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
-                            Investor networking at Highline Beta events requires a tedious, manual exchange of contact
-                            information.
-                        </h2>
-                        <p class="text-lg sm:text-xl text-indigo-100/80 max-w-2xl mx-auto leading-relaxed">
-                            How can networking between attendees and Highline Beta staff be enhanced? How might we
-                            identify, understand, and overcome these challenges?
-                        </p>
-                    </div>
-                </section>
-
-                <!-- ══ RESEARCH & MINDMAPS ══ -->
-                <section id="section-research" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Research</h3>
-                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Trends, tools,
-                            and opportunities map. Avoid/consider analysis. Staff/attendee psychological iceberg model.
-                        </p>
-                    </div>
-
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="betalink_images/hlb1.png"
-                            alt="Research Map"
-                            class="w-full h-auto block transition-transform duration-700 group-hover:scale-105">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="betalink_images/hlb2.png"
-                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="betalink_images/hlb3.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                </section>
-
-                <!-- ══ SYNTHESIS ══ -->
-                <section id="section-synthesis" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Synthesis & Ideation</h3>
-                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Existing methods analysis,
-                            timelines, user experience roadmap. <strong>The answer to Highline Beta's networking
-                                improvements was not simply "make a wristband".</strong></p>
-                    </div>
-
-                    <!-- Placeholder images — same style as Research section -->
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="betalink_images/hlbuxmap.png"
-                            alt="Avoid Consider Analysis"
-                            class="w-full h-auto block transition-transform duration-700 group-hover:scale-105">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="betalink_images/hlb4.png"
-                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
-                    </div>
-                </section>
-
-                <!-- ══ IDEATION ══ -->
-                <section id="section-ideation" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">BetaLink Ideation</h3>
-                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Identifying the design
-                            space between two existing binaries for the physical aspect of BetaLink.</p>
-                    </div>
-
-                    <!-- Binary merger diagram -->
-                    <div class="relative flex flex-col md:flex-row items-center justify-center gap-0 md:gap-0">
-
-                        <!-- Binary A -->
-                        <div
-                            class="flex-1 rounded-2xl border-2 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-8 text-center space-y-4 max-w-xs mx-auto md:mx-0">
-                            <div
-                                class="w-14 h-14 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto">
-                                <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                </svg>
-                            </div>
-                            <h4 class="text-xl font-bold text-red-600 dark:text-red-400">Functional</h4>
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Networking wearables
-                                with NFC, QR codes, and digital features. Bulky, industrial, and aesthetically
-                                unappealing.</p>
-                            <div class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">e.g. Bizzabo Klik,
-                                Blendology</div>
-                        </div>
-
-                        <!-- Merge arrows + center solution -->
-                        <div
-                            class="flex flex-col md:flex-row items-center justify-center relative py-8 md:py-0 md:px-6 gap-4 md:gap-0">
-                            <!-- Left arrow -->
-                            <div class="hidden md:flex items-center">
-                                <div class="w-16 h-0.5 bg-gradient-to-r from-red-400 to-indigo-500"></div>
-                                <svg class="w-5 h-5 text-indigo-500 -ml-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="md:hidden flex flex-col items-center gap-1">
-                                <div class="w-0.5 h-8 bg-gradient-to-b from-red-400 to-indigo-500"></div>
-                                <svg class="w-5 h-5 text-indigo-500 -mt-1 rotate-90" fill="currentColor"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-
-                            <!-- Center: Design Solution -->
-                            <div
-                                class="relative z-10 rounded-3xl p-1 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 shadow-2xl shadow-indigo-500/30">
-                                <div
-                                    class="bg-white dark:bg-zinc-900 rounded-[20px] px-8 py-10 text-center space-y-4 w-56">
-                                    <div
-                                        class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/40">
-                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
-                                    </div>
-                                    <h4
-                                        class="text-lg font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                                        BetaLink</h4>
-                                    <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">NFC wristband:
-                                        compact, aesthetic, and fully functional for digital networking.</p>
-                                    <div
-                                        class="inline-block text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
-                                        Design Solution</div>
-                                </div>
-                            </div>
-
-                            <!-- Right arrow -->
-                            <div class="hidden md:flex items-center">
-                                <svg class="w-5 h-5 text-indigo-500 -mr-1 rotate-180" fill="currentColor"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <div class="w-16 h-0.5 bg-gradient-to-l from-sky-400 to-indigo-500"></div>
-                            </div>
-                            <div class="md:hidden flex flex-col items-center gap-1">
-                                <svg class="w-5 h-5 text-indigo-500 -mb-1 rotate-[270deg]" fill="currentColor"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <div class="w-0.5 h-8 bg-gradient-to-t from-sky-400 to-indigo-500"></div>
-                            </div>
-                        </div>
-
-                        <!-- Binary B -->
-                        <div
-                            class="flex-1 rounded-2xl border-2 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-8 text-center space-y-4 max-w-xs mx-auto md:mx-0">
-                            <div
-                                class="w-14 h-14 rounded-xl bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mx-auto">
-                                <svg class="w-7 h-7 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                                </svg>
-                            </div>
-                            <h4 class="text-xl font-bold text-sky-600 dark:text-sky-400">Aesthetic</h4>
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Small and
-                                non-obstructive wearables for events. Often have lights and QR code features but do not
-                                have tap-to-connect capabilities.</p>
-                            <div class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">e.g. Crowdpass,
-                                PixMob wristbands</div>
-                        </div>
-                    </div>
-
-                    <!-- Ideation sketches placeholder row -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-8">
-                        <div
-                            class="bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center aspect-video">
-                            <div class="space-y-3 group cursor-pointer"
-                                onclick="openLightbox(this.querySelector('img').src)">
-                                <div
-                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
-                                    <img src="betalink_images/hlbidea1.png"
-                                        alt="Functional"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center aspect-video">
-                            <div class="space-y-3 group cursor-pointer"
-                                onclick="openLightbox(this.querySelector('img').src)">
-                                <div
-                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
-                                    <img src="betalink_images/hlbidea2.png"
-                                        alt="Aesthetic"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ══ FINAL PROTOTYPE ══ -->
-                <section id="section-prototype" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Final BetaLink Prototype</h3>
-                        <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Two fully functional
-                            prototypes of the BetaLink wristband, user testing, and conceptual renders.</p>
-                    </div>
-
-                    <!-- BetaLink Prototype Divider -->
-                    <div class="relative flex py-8 items-center">
-                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
-                        <span
-                            class="flex-shrink-0 mx-6 text-2xl font-bold text-zinc-600 dark:text-zinc-400 uppercase"></span>
-                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
-                    </div>
-
-                    <!-- Variation 1 -->
-                    <div class="space-y-2">
-                        <h4 class="text-2xl font-bold">Prototype A: Flatface Design</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="space-y-3 group cursor-pointer"
-                                onclick="openLightbox(this.querySelector('img').src)">
-                                <div
-                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
-                                    <img src="betalink_images/hlbflat.png"
-                                        alt="Variation 1 Render"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                                </div>
-                            </div>
-                            <div class="space-y-3 group cursor-pointer"
-                                onclick="openLightbox(this.querySelector('img').src)">
-                                <div
-                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
-                                    <img src="betalink_images/hlbflat2.jpg"
-                                        alt="Variation 1 Physical Model"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Variation 2 -->
-                    <div class="space-y-6 mt-16">
-                        <h4 class="text-2xl font-bold">Prototype B: Curvetop Design</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="space-y-3 group cursor-pointer"
-                                onclick="openLightbox(this.querySelector('img').src)">
-                                <div
-                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
-                                    <img src="betalink_images/hlbcurve.png"
-                                        alt="Variation 2 Render"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                                </div>
-                            </div>
-                            <div class="space-y-3 group cursor-pointer"
-                                onclick="openLightbox(this.querySelector('img').src)">
-                                <div
-                                    class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative">
-                                    <img src="betalink_images/hlbcurve2.jpg"
-                                        alt="Variation 2 Physical Model"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Interaction Process -->
-                    <div class="relative flex py-8 items-center mt-24">
-                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
-                        <span
-                            class="flex-shrink-0 mx-6 text-xl font-bold text-zinc-600 dark:text-zinc-400 uppercase">Interaction
-                            Process</span>
-                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
-                    </div>
-
-                    <div class="pt-4 pb-12 relative overflow-hidden">
-                        <div class="hidden md:block process-track"></div>
-                        <div class="hidden md:block signal-line"></div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
-                            <div class="flex flex-col items-center space-y-6">
-                                <div
-                                    class="w-full aspect-[3/4] rounded-2xl p-1 bg-white dark:bg-zinc-900 process-card card-1 shadow-lg relative overflow-hidden">
-                                    <div class="w-full h-full rounded-xl overflow-hidden">
-                                        <img src="betalink_images/hlbu1.jpg"
-                                            alt="Scan Wristband" class="w-full h-full object-cover">
-                                    </div>
-                                </div>
-                                <h4 class="text-xl font-bold text-center">1. Scan Wristband</h4>
-                            </div>
-                            <div class="flex flex-col items-center space-y-6">
-                                <div
-                                    class="w-full aspect-[3/4] rounded-2xl p-1 bg-white dark:bg-zinc-900 process-card card-2 shadow-lg relative overflow-hidden">
-                                    <div class="w-full h-full rounded-xl overflow-hidden">
-                                        <img src="betalink_images/hlbu2.png"
-                                            alt="Receive Notification" class="w-full h-full object-cover">
-                                    </div>
-                                </div>
-                                <h4 class="text-xl font-bold text-center">2. Receive Notification</h4>
-                            </div>
-                            <div class="flex flex-col items-center space-y-6">
-                                <div
-                                    class="w-full aspect-[3/4] rounded-2xl p-1 bg-white dark:bg-zinc-900 process-card card-3 shadow-lg relative overflow-hidden">
-                                    <div class="w-full h-full rounded-xl overflow-hidden">
-                                        <img src="betalink_images/hlbu3.png"
-                                            alt="Connect on LinkedIn" class="w-full h-full object-cover">
-                                    </div>
-                                </div>
-                                <h4 class="text-xl font-bold text-center">3. Connect on LinkedIn</h4>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Future Conceptual Renders -->
-                    <div class="relative flex py-8 items-center">
-                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
-                        <span
-                            class="flex-shrink-0 mx-6 text-xl font-bold text-zinc-600 dark:text-zinc-400 uppercase">Future
-                            Conceptual Renders</span>
-                        <div class="flex-grow border-t border-zinc-300 dark:border-zinc-700"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="betalink_images/hlbfinal1.png"
-                                alt="Render 1"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        </div>
-                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="betalink_images/hlbfinal2.png"
-                                alt="Render 2"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        </div>
-                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="betalink_images/hlbfinal3.png"
-                                alt="Render 3"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        </div>
-                        <div class="bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden aspect-video shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
-                            onclick="openLightbox(this.querySelector('img').src)">
-                            <img src="betalink_images/hlbfinal4.png"
-                                alt="Render 4"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        </div>
-                    </div>
-
-                    <!-- Phase 4: Client Presentation Pitch button -->
-                    <div class="flex justify-center pt-16 pb-4">
-                        <button
-                            onclick="document.getElementById('pitch-sentinel').scrollIntoView({ behavior: 'smooth', block: 'center' })"
-                            class="w-full max-w-7xl py-6 rounded-2xl font-bold text-xl sm:text-2xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 bg-[length:200%_auto] hover:bg-[position:right_center] hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 shadow-xl hover:shadow-2xl">
-                            <strong>Client Presentation Pitch</strong>
-                        </button>
-                    </div>
-                </section>
-
-            </section>
-
-        </div>
-
-        <div
-            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
-            <a href="index.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
-                Back to Home</a>
-            <a href="project2.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
-                Project &rarr;</a>
-        </div>
-
-        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
-            <div
-                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
-                <div class="h-12 flex items-center justify-center transition-transform">
-                    <img src="global_images/khbannerg.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
-                </div>
-                <div class="text-sm text-zinc-400">
-                    <p>&copy; 2026 Kenny Huang Design.</p>
-                    <p>All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-
-    </main>
-
-    <!-- Lightbox Modal -->
-    <div id="lightbox"
-        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="relative max-w-5xl w-full h-[85vh]">
-            <button onclick="closeLightbox()"
-                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
+        <ul class="space">
+          <li class="space-item" data-reveal="rise">
+            <p class="space-tag">Existing</p>
+            <h3 class="space-name">Functional</h3>
+            <p class="space-text">Networking wearables with NFC, QR codes and digital features. Bulky, industrial and aesthetically unappealing.</p>
+            <p class="space-eg">e.g. Bizzabo Klik, Blendology</p>
+          </li>
+          <li class="space-item is-answer" data-reveal="rise" style="--delay: 80ms">
+            <p class="space-tag">Design solution</p>
+            <h3 class="space-name">BetaLink</h3>
+            <p class="space-text">An NFC wristband: compact, aesthetic and fully functional for digital networking.</p>
+          </li>
+          <li class="space-item" data-reveal="rise" style="--delay: 160ms">
+            <p class="space-tag">Existing</p>
+            <h3 class="space-name">Aesthetic</h3>
+            <p class="space-text">Small, unobtrusive wearables for events. They often have lights and QR codes, but no tap-to-connect.</p>
+            <p class="space-eg">e.g. Crowdpass, PixMob wristbands</p>
+          </li>
+        </ul>
+        <div class="fig-row">
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/betalink/functional-examples-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/betalink/functional-examples-960.webp"
+                   srcset="assets/img/betalink/functional-examples-960.webp 960w, assets/img/betalink/functional-examples-1920.webp 1920w, assets/img/betalink/functional-examples-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                   width="13760" height="8042" loading="lazy" decoding="async"
+                   alt="Existing functional networking wearables, including Bizzabo Klik and Blendology badges">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
             </button>
-            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+          </figure>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/betalink/aesthetic-examples-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/betalink/aesthetic-examples-960.webp"
+                   srcset="assets/img/betalink/aesthetic-examples-960.webp 960w, assets/img/betalink/aesthetic-examples-1920.webp 1920w, assets/img/betalink/aesthetic-examples-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                   width="13760" height="8042" loading="lazy" decoding="async"
+                   alt="Existing aesthetic event wearables, including Crowdpass wristbands and PixMob light-up bands">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
         </div>
+        <div class="cs-quote">
+          <blockquote><mark class="hl" data-hl-ms="1800"><span>The solution to Highline Beta&#39;s networking problem was not simply to &ldquo;make a wristband&rdquo;</span></mark></blockquote>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="research" aria-labelledby="research-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="research-title">Research</h2>
+        </div>
+        <div class="figs">
+          <figure class="fig" style="--r: 1.337">
+            <button class="fig-open" type="button" data-full="assets/img/betalink/trends-map-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/betalink/trends-map-960.webp"
+                   srcset="assets/img/betalink/trends-map-960.webp 960w, assets/img/betalink/trends-map-1920.webp 1920w, assets/img/betalink/trends-map-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="9456" height="7072" loading="lazy" decoding="async"
+                   alt="Research board mapping trends, tools, and strategies and opportunities for networking at Highline Beta events">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <figure class="fig" style="--r: 1.011">
+            <button class="fig-open" type="button" data-full="assets/img/betalink/avoid-consider-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/betalink/avoid-consider-960.webp"
+                   srcset="assets/img/betalink/avoid-consider-960.webp 960w, assets/img/betalink/avoid-consider-1920.webp 1920w, assets/img/betalink/avoid-consider-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="5856" height="5792" loading="lazy" decoding="async"
+                   alt="Two-column analysis of things to avoid and things to consider when planning networking at Highline Beta events">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <figure class="fig" style="--r: 0.791">
+            <button class="fig-open" type="button" data-full="assets/img/betalink/iceberg-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/betalink/iceberg-960.webp"
+                   srcset="assets/img/betalink/iceberg-960.webp 960w, assets/img/betalink/iceberg-1920.webp 1920w, assets/img/betalink/iceberg-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="8271" height="10453" loading="lazy" decoding="async"
+                   alt="Iceberg model comparing attendees and hosts across four levels: observable events, patterns, structures and mental models">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="synthesis" aria-labelledby="synthesis-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="synthesis-title">Synthesis</h2>
+        </div>
+        <div class="cs-block fig-fit" style="--r: 1.716">
+          <h3 class="cs-sub">User experience roadmap</h3>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/betalink/ux-roadmap-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/betalink/ux-roadmap-960.webp"
+                   srcset="assets/img/betalink/ux-roadmap-960.webp 960w, assets/img/betalink/ux-roadmap-1920.webp 1920w, assets/img/betalink/ux-roadmap-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="3648" height="2126" loading="lazy" decoding="async"
+                   alt="Roadmap of UX, execution and feedback goals across the now, next and future stages">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Existing methods analysis</h3>
+          <div class="figs">
+            <figure class="fig" style="--r: 3.021">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/methods-ideas-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/methods-ideas-960.webp"
+                     srcset="assets/img/betalink/methods-ideas-960.webp 960w, assets/img/betalink/methods-ideas-1920.webp 1920w, assets/img/betalink/methods-ideas-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="8520" height="2820" loading="lazy" decoding="async"
+                     alt="Five starting ideas: post-event receptions, NFC wearables, signature closing sessions, AI personalization and enhanced event implementations">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig" style="--r: 0.911">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/methods-luma-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/methods-luma-960.webp"
+                     srcset="assets/img/betalink/methods-luma-960.webp 960w, assets/img/betalink/methods-luma-1920.webp 1920w, assets/img/betalink/methods-luma-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="8520" height="9348" loading="lazy" decoding="async"
+                     alt="Map of what the Luma event platform can already do, across general settings, attendee accessibility, host controls and advanced integration, and which ideas each feature supports">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig" style="--r: 1.749">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/methods-adopt-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/methods-adopt-960.webp"
+                     srcset="assets/img/betalink/methods-adopt-960.webp 960w, assets/img/betalink/methods-adopt-1920.webp 1920w, assets/img/betalink/methods-adopt-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="8520" height="4872" loading="lazy" decoding="async"
+                     alt="What must be newly adopted: Zapier, Bizzabo Klik SmartBadges, back-end planning and frameworks, accompanying technology, and additional services, each linked to the ideas it addresses">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig" style="--r: 0.855">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/methods-process-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/methods-process-960.webp"
+                     srcset="assets/img/betalink/methods-process-960.webp 960w, assets/img/betalink/methods-process-1920.webp 1920w, assets/img/betalink/methods-process-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="8520" height="9960" loading="lazy" decoding="async"
+                     alt="Process plan, from research finalization and the three focused ideas to the four stages of prototype development">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig" style="--r: 1.704">
+              <button class="fig-open" type="button" data-full="assets/img/betalink/methods-final-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/betalink/methods-final-960.webp"
+                     srcset="assets/img/betalink/methods-final-960.webp 960w, assets/img/betalink/methods-final-1920.webp 1920w, assets/img/betalink/methods-final-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="8520" height="5000" loading="lazy" decoding="async"
+                     alt="The final product: a presentation of the framework alongside a physical NFC wristband prototype">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+          <p class="pitch-end" data-pitch-end><a class="pitch-link" href="khp_docs/Highline%20Beta%20-%20Networking%20Improvement%20Framework.pdf" target="_blank" rel="noopener">Open the pitch deck<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></p>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="More projects">
+        <a href="project3.html">
+          <div class="pager-media" data-reveal="wipe">
+            <img src="assets/img/covers/nexusbuilds-960.webp"
+                 srcset="assets/img/covers/nexusbuilds-960.webp 960w, assets/img/covers/nexusbuilds-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Previous project</p>
+          <p class="pager-title">NexusBuilds PC Building Service</p>
+        </a>
+        <a href="project4.html">
+          <div class="pager-media" data-reveal="wipe" style="--delay: 80ms">
+            <img src="assets/img/covers/relay-960.webp"
+                 srcset="assets/img/covers/relay-960.webp 960w, assets/img/covers/relay-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></p>
+          <p class="pager-title">Relay + Switchboard</p>
+        </a>
+      </nav>
     </div>
+  </main>
 
-    <script>
-        // ── Theme + mobile menu ──
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-in">
+        <span>© 2026 Kenny Huang. All Rights Reserved.</span>
+        <img class="logo" src="global_images/khlogoblk.png" width="20" height="20" alt="">
+      </div>
+    </div>
+  </footer>
 
-        themeToggleBtn.addEventListener('click', function () {
-            if (localStorage.theme === 'dark') {
-                localStorage.theme = 'light';
-                document.documentElement.classList.remove('dark');
-            } else {
-                localStorage.theme = 'dark';
-                document.documentElement.classList.add('dark');
-            }
-        });
+  <!-- Full-size image viewer -->
+  <div class="cs-dim" aria-hidden="true"></div>
 
-        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
-        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
-
-        // ── Lightbox ──
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-
-        function openLightbox(src) {
-            lightboxImg.src = src;
-            lightbox.classList.remove('hidden');
-            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
-            document.body.style.overflow = 'hidden';
-        }
-        function closeLightbox() {
-            lightbox.classList.add('opacity-0');
-            setTimeout(() => { lightbox.classList.add('hidden'); lightboxImg.src = ''; }, 300);
-            document.body.style.overflow = 'auto';
-        }
-        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
-
-        // ── Sticky Section Nav ──
-        const sectionNav = document.getElementById('section-nav');
-        const pitchSentinel = document.getElementById('pitch-sentinel');
-        const secLinks = document.querySelectorAll('.sec-link');
-
-        const sections = [
-            { id: 'section-problem', btn: document.querySelector('[data-target="section-problem"]') },
-            { id: 'section-research', btn: document.querySelector('[data-target="section-research"]') },
-            { id: 'section-synthesis', btn: document.querySelector('[data-target="section-synthesis"]') },
-            { id: 'section-ideation', btn: document.querySelector('[data-target="section-ideation"]') },
-            { id: 'section-prototype', btn: document.querySelector('[data-target="section-prototype"]') },
-        ];
-
-        // Show/hide sticky nav based on sentinel visibility
-        const sentinelObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // Show only if not intersecting AND the element has been scrolled past (above viewport)
-                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-                    sectionNav.classList.add('visible');
-                } else {
-                    sectionNav.classList.remove('visible');
-                }
-            });
-        }, { threshold: 0 });
-        sentinelObserver.observe(pitchSentinel);
-
-        // Scroll-spy: light up active section
-        function onScroll() {
-            const scrollY = window.scrollY;
-            const offset = 160; // nav + section-nav height
-            let active = null;
-
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const el = document.getElementById(sections[i].id);
-                if (el && el.getBoundingClientRect().top <= offset) {
-                    active = sections[i].id;
-                    break;
-                }
-            }
-
-            sections.forEach(s => {
-                if (s.btn) s.btn.classList.toggle('active', s.id === active);
-            });
-
-            // Auto-scroll the nav strip so the active button is centred (mobile)
-            if (active) {
-                const activeBtn = document.querySelector('.sec-link.active');
-                const navInner = document.getElementById('section-nav-inner');
-                if (activeBtn && navInner) {
-                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
-                    const navMid = navInner.offsetWidth / 2;
-                    navInner.scrollTo({ left: btnMid - navMid, behavior: 'smooth' });
-                }
-            }
-        }
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        // Click to jump
-        secLinks.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = document.getElementById(btn.dataset.target);
-                if (target) {
-                    const offset = 160;
-                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                }
-            });
-        });
-    </script>
+  <dialog class="lb" aria-label="Image viewer">
+    <div class="lb-top">
+      <span class="lb-count"></span>
+      <button class="lb-btn" type="button" data-lb-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="lb-stage"><img alt=""></div>
+    <div class="lb-bottom">
+      <button class="lb-btn" type="button" data-lb-prev aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+      <p class="lb-cap"></p>
+      <button class="lb-btn" type="button" data-lb-next aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+  </dialog>
 </body>
-
-
 </html>
-
-

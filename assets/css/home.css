@@ -59,8 +59,57 @@
   display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
   gap: 96px; margin-top: 32px; align-items: start;
 }
-.photo { aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius-tile) 0 0 0; background: var(--raise); }
-.photo img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+/* Portrait card. The button itself never moves, so the hover area stays still while the card tilts inside it.
+   home.js drives .card-tilt and .card-flip with springs. The wipe reveal lives on the front face because
+   clip-path and overflow on a parent would flatten the 3D. */
+.photo {
+  position: relative; z-index: 1; display: block; width: 100%; aspect-ratio: 4 / 5;
+  padding: 0; border: 0; border-radius: var(--radius-tile) 0 0 0; background: none; color: inherit; cursor: pointer;
+  perspective: 1400px; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.card-shadow, .card-tilt, .card-flip, .card-face { position: absolute; inset: 0; display: block; pointer-events: none; }
+.card-tilt, .card-flip { transform-style: preserve-3d; will-change: transform; }
+/* A blurred solid, because a box-shadow is hollow and the hole shows once the shadow slides out from under the card */
+.card-shadow {
+  inset: 12% 5% -3%; border-radius: var(--radius-tile);
+  background: rgba(0, 0, 0, 0.42); filter: blur(22px); opacity: 0; will-change: transform, opacity;
+}
+html.dark .card-shadow { background: rgba(0, 0, 0, 0.8); }
+.card-face {
+  overflow: hidden; border-radius: var(--radius-tile) 0 0 0; background: var(--raise);
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+.card-back { transform: rotateY(180deg); }
+.card-face img, .card-face video { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.card-back .card-mark { position: absolute; top: 50%; left: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 0; }
+.card-back .card-video { position: absolute; inset: 0; display: block; }
+.card-glare {
+  position: absolute; inset: -50%; display: block; opacity: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 45%);
+}
+.card-hint {
+  position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 18px; background: var(--scrim); color: #ffffff;
+}
+.card-hint svg { width: 18px; height: 18px; }
+
+/* Title and text that swap with the card: both versions share one grid cell, and the active one types itself out */
+.swap { display: grid; }
+.swap > [data-swap] {
+  grid-area: 1 / 1; min-width: 0; visibility: hidden; opacity: 0;
+  transition: opacity 120ms ease, visibility 0s linear 120ms;
+}
+.swap > [data-swap].is-active { visibility: visible; opacity: 1; transition: none; }
+/* Sized to stay on one line at every width, so the card below it never moves */
+.title-alt { align-self: end; font-size: min(1em, calc((100vw - 2 * var(--pad)) / 10.4)); white-space: nowrap; }
+.typing .ch { visibility: hidden; }
+.typing .ch.on { visibility: visible; }
+.typing .ch.at { position: relative; }
+.typing .ch.at::after {
+  content: ""; position: absolute; left: 100%; top: 0.12em; bottom: 0.08em;
+  width: max(2px, 0.05em); background: currentColor;
+}
+
 .bio { margin: 0; font-family: var(--font-display); font-size: 26px; line-height: 1.32; }
 .bio + .bio { margin-top: 1em; }
 .more-link {
@@ -68,6 +117,36 @@
   font-size: 17px;
 }
 .more-link svg { width: 18px; height: 18px; flex: none; transition: transform 200ms var(--ease); }
+
+/* Experience: the first column lines up with the photo, the rest with the text beside it */
+.exp { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line); transition: border-color 300ms ease; }
+.exp .skill-name { min-height: 0; }
+.exp-list { list-style: none; margin: 12px 0 0; padding: 0; }
+.exp-row {
+  display: grid; grid-template-columns: 512px minmax(0, 1fr) minmax(0, 1fr) 20px; gap: 2px 24px; align-items: center;
+  padding: 12px 0; font-size: 17px; line-height: 1.4; color: var(--ink-2);
+  transition: color 160ms ease;
+}
+.exp-title { font-weight: 500; }
+.exp-where { display: contents; }
+.exp-row svg { width: 20px; height: 20px; transition: transform 200ms var(--ease); }
+.exp-row:focus-visible { color: var(--lit); }
+/* Full-width rows: company sits under the role as a subtitle, with location and dates quieter beside them */
+@media (min-width: 1081px) {
+  .exp-title { grid-column: 1; grid-row: 1; font-weight: 700; }
+  .exp-place { grid-column: 1; grid-row: 2; font-size: 14px; }
+  .exp-loc { grid-column: 2; grid-row: 1 / span 2; font-weight: 300; }
+  .exp-date { grid-column: 3; grid-row: 1 / span 2; font-size: 14px; font-weight: 300; }
+  .exp-row svg { grid-column: 4; grid-row: 1 / span 2; }
+}
+
+/* The Resume link's flash: a pale blue pill behind it, played by home.js. It stays pale in dark mode too,
+   so home.js also darkens the text for the length of the flash. */
+.resume-link { position: relative; isolation: isolate; }
+.resume-link::before {
+  content: ""; position: absolute; z-index: -1; inset: 2px -12px; border-radius: 12px;
+  background: #bfdcff; opacity: 0; pointer-events: none;
+}
 
 .skills { list-style: none; margin: 64px 0 0; padding: 0; display: flex; gap: 48px; }
 .skill {
@@ -134,8 +213,9 @@
 @supports (animation-timeline: view()) {
   .tile:not(.tile-first) .tile-media { animation: wipe var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
   .tile:not(.tile-first) .tile-media > img { animation: settle var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
-  .photo { animation: wipe var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
-  .photo img { animation: settle var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .card-front { animation: wipe var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+  .card-front > img { animation: settle var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .exp-list li { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 10% entry 90%; }
   .bio { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 10% entry 90%; }
   .more-link { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 20% entry 100%; }
   .skill { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
@@ -169,7 +249,14 @@
   .email:hover::after { animation: sweep 600ms var(--ease); }
   .more-link:hover svg { transform: translate(2px, -2px); }
   .social a:hover svg { transform: translateY(-2px); }
-  .skill-list li:hover { color: var(--lit); }
+  .skill-list li:hover,
+  .exp-row:hover { color: var(--lit); }
+  .exp-row:hover svg { transform: translateY(2px); }
+  /* Other skill categories step back from the hovered one. The fade sits on each column's contents because the
+     reveal animation holds opacity on .skill itself. */
+  .skill > * { transition: opacity 220ms ease; }
+  .skills:has(.skill:hover) .skill:not(:hover) > * { opacity: 0.35; }
+  .skills:has(.skill:hover) .skill:not(:hover) { border-top-color: color-mix(in srgb, var(--line) 35%, transparent); }
 }
 
 /* The hovered skill column widens, only where the four columns sit side by side */
@@ -191,9 +278,74 @@
 /* Below this the four columns leave titles too little room, so they fold into two rows of two */
 @media (max-width: 1080px) {
   .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 48px; }
+  .exp-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .exp-where { display: block; grid-column: 1; grid-row: 2; }
+  .exp-place::after { content: " · "; }
+  .exp-date { grid-column: 2; grid-row: 1; }
+  .exp-row svg { grid-column: 2; grid-row: 2; justify-self: end; }
 }
 
+/* Desktop keeps the nav in a row, so the menu button only exists on phones */
+.nav-burger { display: none; }
+
 @media (max-width: 720px) {
+  /* Nav: the name stays beside the logo, everything else lives in a drawer that slides out from the right.
+     overflow-x: clip keeps the parked drawer from widening the page, and unlike hidden it leaves sticky working. */
+  .nav { overflow-x: clip; }
+  .brand span { display: inline; }
+  .nav-burger {
+    position: relative; display: block; flex: none; width: 44px; height: 44px; margin-right: -10px; padding: 0;
+    border: 0; background: transparent; color: var(--ink); cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-burger span {
+    position: absolute; left: 12px; top: 21px; width: 20px; height: 1.5px; border-radius: 1px; background: currentColor;
+    transition: transform 240ms var(--ease), opacity 120ms ease;
+  }
+  .nav-burger span:nth-child(1) { transform: translateY(-6px); }
+  .nav-burger span:nth-child(3) { transform: translateY(6px); }
+  .nav.is-open .nav-burger span:nth-child(1) { transform: rotate(45deg); }
+  .nav.is-open .nav-burger span:nth-child(2) { opacity: 0; }
+  .nav.is-open .nav-burger span:nth-child(3) { transform: rotate(-45deg); }
+
+  .nav-right {
+    position: absolute; z-index: 1; top: 100%; right: 0;
+    flex-direction: column; align-items: stretch; width: min(300px, 82vw);
+    height: calc(100vh - var(--nav-h)); height: calc(100dvh - var(--nav-h));
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+    overflow-y: auto; overscroll-behavior: contain;
+    background: var(--ground); border-left: 1px solid var(--line);
+    transform: translateX(100%); visibility: hidden;
+    transition: transform 240ms var(--ease), visibility 0s linear 240ms, background-color 300ms ease;
+  }
+  .nav.is-open .nav-right { transform: none; visibility: visible; transition: transform 320ms var(--ease), background-color 300ms ease; }
+  .nav::after {
+    content: ""; position: absolute; top: 100%; left: 0; right: 0; height: 100vh; height: 100dvh;
+    background: var(--scrim); opacity: 0; pointer-events: none; transition: opacity 240ms ease;
+  }
+  .nav.is-open::after { opacity: 1; pointer-events: auto; }
+  html.nav-locked { overflow: hidden; }
+
+  .nav-links { flex-direction: column; }
+  .nav-links a {
+    min-height: 52px; padding: 0 24px; font-size: 20px; color: var(--ink);
+    opacity: 0; transform: translateX(12px); transition: opacity 200ms ease, transform 320ms var(--ease), color 160ms ease;
+  }
+  .nav.is-open .nav-links a { opacity: 1; transform: none; transition-delay: calc(40ms + var(--i, 0) * 35ms); }
+  .nav-links a:nth-child(2) { --i: 1; }
+  .nav-links a:nth-child(3) { --i: 2; }
+  .nav-links a:nth-child(4) { --i: 3; }
+
+  /* In the drawer the theme switch gets a full row and a visible label. It sits right under the links,
+     because the bottom of the drawer can end up behind a phone browser's toolbar. */
+  .theme-toggle {
+    flex: none; justify-content: flex-start; width: auto; height: 52px; margin: 0; padding: 0 24px 0 58px;
+    border-radius: 0; color: var(--ink); font-family: var(--font-text); font-size: 17px;
+  }
+  .theme-toggle svg { left: 24px; }
+  .theme-toggle::after { content: "Dark mode"; }
+  html.dark .theme-toggle::after { content: "Light mode"; }
+
   .projects { gap: 40px; padding-top: 24px; padding-bottom: var(--section-space); }
   .tile-media { aspect-ratio: 4 / 3; }
   .about, .contact { padding: var(--section-space) 0; }
@@ -201,11 +353,25 @@
   .about-row { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 24px; }
   .bio { font-family: var(--font-text); font-size: 17px; line-height: 1.45; }
   .more-link { margin-top: 12px; }
+  .exp { margin-top: 32px; }
+  .exp-row { grid-template-columns: minmax(0, 1fr) 20px; font-size: 16px; }
+  .exp-date { grid-column: 1; grid-row: 3; }
+  .exp-row svg { grid-column: 2; grid-row: 1 / span 3; }
   .skills { grid-template-columns: minmax(0, 1fr); margin-top: 32px; }
   .email { margin-top: 16px; padding-top: 8px; padding-bottom: 8px; font-size: 21px; line-height: 28px; }
   .social { gap: 0 24px; margin-top: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tile-overlay-title, .tile-overlay-sub, .more-link svg, .social svg { transform: none !important; transition: none !important; }
+  .tile-overlay-title, .tile-overlay-sub, .more-link svg, .social svg, .exp-row svg { transform: none !important; transition: none !important; }
+  /* The card crossfades in place of flipping, and text swaps with a fade in place of typing */
+  .card-face { -webkit-backface-visibility: visible; backface-visibility: visible; transition: opacity 200ms ease; }
+  .card-back { transform: none; opacity: 0; }
+  .photo.is-flipped .card-back { opacity: 1; }
+  .swap > [data-swap] { transition: opacity 200ms ease, visibility 0s linear 200ms; }
+  .swap > [data-swap].is-active { transition: opacity 200ms ease; }
+  .nav-right, .nav-links a { transform: none !important; }
+  .nav-right { opacity: 0; transition: opacity 200ms ease, visibility 0s linear 200ms; }
+  .nav.is-open .nav-right { opacity: 1; transition: opacity 200ms ease; }
+  .nav-burger span { transition: opacity 120ms ease; }
 }

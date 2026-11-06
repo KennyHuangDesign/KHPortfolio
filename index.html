@@ -53,7 +53,11 @@
         <img class="logo" src="global_images/khlogoblk.png" width="28" height="28" alt="">
         <span>KENNY HUANG DESIGN</span>
       </a>
-      <div class="nav-right">
+      <!-- Phones: everything in .nav-right folds into a drawer behind this button (see home.css and home.js) -->
+      <button class="nav-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-right" id="nav-menu">
         <nav class="nav-links" aria-label="Main">
           <a href="#projects">Projects</a>
           <a href="#about">About me</a>
@@ -174,20 +178,52 @@
 
     <section id="about" class="about" aria-labelledby="about-title">
       <div class="wrap">
-        <h2 id="about-title" class="section-title">About me</h2>
+        <!-- The title and text below swap when the portrait card flips. Each pair shares one grid cell, so the
+             page keeps the height of the taller version and nothing jumps. Copy is edited here as normal. -->
+        <h2 id="about-title" class="section-title swap">
+          <span data-swap="about" class="is-active">About me</span>
+          <span data-swap="philosophy" class="title-alt">My Design Philosophy</span>
+        </h2>
+        <p class="sr" role="status" data-swap-status></p>
         <div class="about-row">
-          <div class="photo" data-reveal="wipe">
-            <img src="assets/img/portrait-880.webp"
-              srcset="assets/img/portrait-720.webp 720w, assets/img/portrait-880.webp 880w"
-              sizes="(max-width: 720px) calc(100vw - 32px), 440px" width="880" height="1100" loading="lazy"
-              decoding="async" alt="Portrait of Kenny Huang">
-          </div>
+          <!-- Back of the card: assets/video/portrait-back.mp4 (from global_images/IMG_3836.mp4, cropped to the card shape) covers the logo once it starts. It plays muted on a loop while the card is flipped. -->
+          <button class="photo" type="button" data-card aria-label="Portrait of Kenny Huang. Flip the card to read my design philosophy">
+            <span class="card-shadow"></span>
+            <span class="card-tilt">
+              <span class="card-flip">
+                <span class="card-face card-front" data-reveal="wipe">
+                  <img src="assets/img/portrait-880.webp"
+                    srcset="assets/img/portrait-720.webp 720w, assets/img/portrait-880.webp 880w"
+                    sizes="(max-width: 720px) calc(100vw - 32px), 440px" width="880" height="1100" loading="lazy"
+                    decoding="async" alt="">
+                  <span class="card-glare"></span>
+                  <span class="card-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" /><path d="M3 21v-5h5" /></svg></span>
+                </span>
+                <span class="card-face card-back">
+                  <img class="card-mark" src="global_images/khlogoblk.png" width="96" height="96" alt="">
+                  <video class="card-video" src="assets/video/portrait-back.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                  <span class="card-glare"></span>
+                  <span class="card-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" /><path d="M3 21v-5h5" /></svg></span>
+                </span>
+              </span>
+            </span>
+          </button>
           <div>
+            <div class="swap">
+              <div data-swap="about" class="is-active">
             <p class="bio" data-reveal="rise">I'm a product designer with roots in the arts, formal training in industrial design, and a passion for digital product design.
               I hold a particular interest in <strong>systems thinking</strong> and <strong>human-centered design</strong>, both of which serve as the foundation in my approach to user experience solutions.
               Thanks to my background, all of my creative decisions carry depth beyond just data and are further backed by technical knowledge beyond just one niche.</p>
             <p class="bio" data-reveal="rise" style="--delay: 60ms">Having worked with a range of software like the Adobe Suite and multiple CAD applications since the age of 16, I continue to broaden my digital capabilities through engagement with rapidly advancing AI technologies.
               With a diverse skillset and a strong ambition to push my creative boundaries, I aim to create user experiences that seamlessly merge functionality, aesthetics, and innovative technology into one.</p>
+              </div>
+              <div data-swap="philosophy">
+            <p class="bio" data-reveal="rise">All design is fundamentally about solving problems. Before anything takes shape, I, as the designer, need to be as familiar with the core problem as the people affected by it. A solution is only as strong as the questions that lead to it, so I never let data, anecdotes, or assumptions tell the full story alone.
+              <strong>I think in systems.</strong> Every product is comprised of moving parts before, during, and after someone interacts with it. To create a truly watertight design solution is to create a product that continues moving with the user even after handoff.</p>
+            <p class="bio" data-reveal="rise" style="--delay: 60ms">I believe that function follows form. In a landscape where everything can be shared across platforms at breakneck speeds, perception of one universal product can often shape individual realities. As such, I stay critical, work fast, and ensure that <strong>reality backs imagination</strong> and not the other way around.
+              Whether the result is something to be held or tapped, the philosophy stays the same. A product must solve a problem, and with ever more importance, it must look like it solves that problem first.</p>
+              </div>
+            </div>
             <a class="more-link" href="about.html" data-reveal="rise" style="--delay: 120ms"><span class="ul">More about me</span><svg
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                 stroke-linejoin="round" aria-hidden="true">
@@ -195,6 +231,74 @@
                 <path d="M7 17 17 7" />
               </svg></a>
           </div>
+        </div>
+
+        <!-- Experience: every row jumps down to the Resume link in Contact, which flashes to show where to click -->
+        <div class="exp">
+          <div class="skill-head">
+            <span class="skill-icon" data-reveal="pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                <rect width="20" height="14" x="2" y="6" rx="2" />
+              </svg></span>
+            <h3 class="skill-name">Experience</h3>
+          </div>
+          <ul class="exp-list">
+            <li data-reveal="rise">
+              <a class="exp-row" href="#resume" data-to-resume>
+                <span class="exp-title">Product Manager & Research Lead</span>
+                <span class="exp-where"><span class="exp-place">cnpt.ca</span><span class="exp-loc">Greater Toronto Area, ON (Remote)</span></span>
+                <span class="exp-date">Sep 2026 – Present</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                <span class="sr">, go to full resume</span>
+              </a>
+            </li>
+            <li data-reveal="rise">
+              <a class="exp-row" href="#resume" data-to-resume>
+                <span class="exp-title">Junior Designer</span>
+                <span class="exp-where"><span class="exp-place">Highline Beta</span><span class="exp-loc">Toronto, ON (Hybrid)</span></span>
+                <span class="exp-date">Oct 2025 – Nov 2025</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                <span class="sr">, go to full resume</span>
+              </a>
+            </li>
+            <li data-reveal="rise" style="--delay: 60ms">
+              <a class="exp-row" href="#resume" data-to-resume>
+                <span class="exp-title">Product Designer</span>
+                <span class="exp-where"><span class="exp-place">iEmbrace</span><span class="exp-loc">Toronto, ON | Chicago, IL | Boston, MA | Beijing, China (Remote)</span></span>
+                <span class="exp-date">Feb 2025 – Sep 2025</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                <span class="sr">, go to full resume</span>
+              </a>
+            </li>
+            <li data-reveal="rise" style="--delay: 120ms">
+              <a class="exp-row" href="#resume" data-to-resume>
+                <span class="exp-title">Student Service Designer</span>
+                <span class="exp-where"><span class="exp-place">Cadillac Fairview</span><span class="exp-loc">Toronto, ON (Co-op)</span></span>
+                <span class="exp-date">Sep 2024 – Jan 2025</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                <span class="sr">, go to full resume</span>
+              </a>
+            </li>
+            <li data-reveal="rise" style="--delay: 180ms">
+              <a class="exp-row" href="#resume" data-to-resume>
+                <span class="exp-title">Storyboarder</span>
+                <span class="exp-where"><span class="exp-place">Blub Creative Studio</span><span class="exp-loc">Markham, ON | Sydney, Australia (Remote)</span></span>
+                <span class="exp-date">Apr 2024 – May 2024</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                <span class="sr">, go to full resume</span>
+              </a>
+            </li>
+            <li data-reveal="rise">
+              <a class="exp-row" href="#resume" data-to-resume>
+                <span class="exp-title">Office Administrator</span>
+                <span class="exp-where"><span class="exp-place">International Music Academy</span><span class="exp-loc">Markham, ON</span></span>
+                <span class="exp-date">Sep 2022 – Dec 2022</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                <span class="sr">, go to full resume</span>
+              </a>
+            </li>
+          </ul>
         </div>
 
         <!-- Mini icons: paste an inline <svg> inside a .skill-mini span and its dashed placeholder disappears.
@@ -302,7 +406,7 @@
             data-reveal="rise"><svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><mask id="ic-linkedin" maskUnits="userSpaceOnUse" x="-1" y="-1" width="20" height="20"><rect x="-1" y="-1" width="20" height="20" fill="#fff"/><path d="M15.5,15.5h-2.67v-4.55c0-1.25-.47-1.94-1.46-1.94-1.07,0-1.64.73-1.64,1.94v4.55h-2.57V6.83h2.57v1.17s.77-1.43,2.61-1.43,3.15,1.12,3.15,3.44v5.49ZM4.09,5.7c-.88,0-1.59-.72-1.59-1.6s.71-1.6,1.59-1.6,1.59.72,1.59,1.6-.71,1.6-1.59,1.6ZM2.76,15.5h2.68V6.83h-2.68v8.67Z" fill-rule="evenodd" fill="#000"/></mask><g mask="url(#ic-linkedin)"><path d="M2,18h14c1.1,0,2-.9,2-2V2c0-1.1-.9-2-2-2H2C.9,0,0,.9,0,2v14c0,1.1.9,2,2,2Z" fill-rule="evenodd"/></g></svg><span class="ul">LinkedIn</span></a>
           <a href="https://instagram.com/kennyhuang_design" target="_blank" rel="noopener noreferrer" data-reveal="rise"
             style="--delay: 80ms"><svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.94,16.43C4.92,16.39 4.31,16.28 3.69,16.03C3.11,15.80 2.75,15.55 2.29,15.06C1.93,14.69 1.71,14.35 1.52,13.88C1.14,12.94 1.08,12.24 1.08,8.75C1.08,5.58 1.13,4.83 1.39,4.00C1.79,2.75 2.72,1.81 3.95,1.41C4.81,1.13 5.55,1.08 8.80,1.08C11.62,1.08 12.56,1.13 13.26,1.31C14.07,1.52 14.61,1.82 15.16,2.37C15.85,3.05 16.23,3.90 16.37,5.05C16.43,5.56 16.46,6.78 16.46,8.75C16.46,12.24 16.40,12.94 16.02,13.88C15.81,14.39 15.61,14.69 15.18,15.13C14.66,15.66 14.23,15.93 13.54,16.15C12.95,16.33 12.52,16.39 11.42,16.43C10.50,16.46 6.82,16.46 5.94,16.43ZM11.40,15.05C12.52,15.00 13.00,14.92 13.50,14.68C14.33,14.28 14.84,13.49 14.98,12.41C15.05,11.95 15.08,10.76 15.08,8.77C15.08,6.78 15.05,5.59 14.98,5.13C14.78,3.63 13.91,2.76 12.42,2.55C11.97,2.49 10.69,2.46 8.71,2.46C6.76,2.46 5.59,2.49 5.12,2.55C3.61,2.76 2.74,3.64 2.55,5.16C2.49,5.64 2.46,6.85 2.46,8.77C2.46,10.69 2.49,11.90 2.55,12.38C2.74,13.92 3.63,14.80 5.18,14.99C5.33,15.01 5.74,15.03 6.08,15.04C7.03,15.08 10.54,15.08 11.40,15.05ZM8.11,12.66C6.65,12.42 5.45,11.36 5.00,9.94C4.89,9.58 4.83,9.18 4.83,8.77C4.83,6.94 6.05,5.38 7.84,4.93C8.14,4.85 8.22,4.85 8.77,4.85C9.32,4.85 9.40,4.85 9.70,4.93C11.15,5.30 12.24,6.39 12.61,7.84C12.68,8.14 12.69,8.22 12.69,8.77C12.69,9.29 12.68,9.41 12.62,9.65C12.43,10.42 12.10,11.01 11.55,11.55C10.78,12.33 9.83,12.71 8.74,12.70C8.53,12.70 8.24,12.68 8.11,12.66ZM9.29,11.27C11.06,10.91 11.90,8.85 10.89,7.34C9.89,5.84 7.65,5.84 6.65,7.34C5.75,8.68 6.30,10.51 7.79,11.13C8.24,11.32 8.81,11.37 9.29,11.27ZM12.71,5.57C12.27,5.48 11.97,5.12 11.96,4.68C11.95,4.32 12.14,4.02 12.46,3.85C12.62,3.77 12.68,3.75 12.87,3.75C13.40,3.75 13.78,4.14 13.78,4.67C13.78,4.86 13.77,4.91 13.68,5.08C13.50,5.44 13.10,5.64 12.71,5.57Z"/></svg><span class="ul">Instagram</span></a>
-          <a href="khp_docs/KennyHuang_Resume_2026.pdf" target="_blank" rel="noopener" data-reveal="rise"
+          <a id="resume" class="resume-link" href="khp_docs/KennyHuang_Resume_2026.pdf" target="_blank" rel="noopener" data-reveal="rise"
             style="--delay: 160ms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
