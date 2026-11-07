@@ -1,787 +1,905 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadillac Fairview Plus - Kenny Huang Design</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadillac Fairview +, Kenny Huang</title>
+  <meta name="description" content="CF+, a seasonal events and loyalty program that turns CF Sherway Gardens into a place for new Canadians to connect, run by CF representatives. A service design case study by Kenny Huang.">
+  <meta name="theme-color" content="#d9d9d8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://kennyhuangdesign.github.io/KHPortfolio/project5.html">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        zinc: { 850: '#202022', 950: '#0c0c0e' }
-                    }
-                }
-            }
-        }
-    </script>
+  <!-- Share preview (LinkedIn, iMessage, Slack) -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Cadillac Fairview +, Kenny Huang">
+  <meta property="og:description" content="Seasonal events and loyalty program: rotating pop-up events celebrating Canadian culture at CF Sherway Gardens.">
+  <meta property="og:url" content="https://kennyhuangdesign.github.io/KHPortfolio/project5.html">
+  <meta property="og:image" content="https://kennyhuangdesign.github.io/KHPortfolio/assets/img/og/cfplus.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-    <style>
-        /* ── Sticky Section Nav ── */
-        #section-nav {
-            position: fixed;
-            top: 80px;
-            /* sits right under the main nav */
-            left: 0;
-            width: 100%;
-            z-index: 40;
-            transform: translateY(-100%);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
-            pointer-events: none;
-        }
+  <!-- Apply the saved or system theme before the page paints, and skip the hero entrance
+       when the page opens through a page transition from the homepage -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      } catch (e) {}
+      window.addEventListener('pagereveal', function (e) {
+        if (e.viewTransition) document.documentElement.classList.add('vt-in');
+      });
+    })();
+  </script>
+  <link rel="expect" href="#hero" blocking="render">
 
-        #section-nav.visible {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: all;
-        }
+  <link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 
-        .sec-link {
-            position: relative;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: #71717a;
-            padding: 0 4px 14px;
-            border-bottom: 2px solid transparent;
-            transition: color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .sec-link:hover {
-            color: #18181b;
-            border-color: #a1a1aa;
-        }
-
-        .dark .sec-link:hover {
-            color: #f4f4f5;
-            border-color: #52525b;
-        }
-
-        .sec-link.active {
-            color: #b9dde9;
-            border-color: #b9dde9;
-        }
-
-        .dark .sec-link.active {
-            color: #b9dde9;
-            border-color: #b9dde9;
-        }
-
-        /* ── Nav inner scroll strip ── */
-        #section-nav-inner {
-            overflow-x: auto;
-            scrollbar-width: none;
-            /* Firefox */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #section-nav-inner::-webkit-scrollbar {
-            display: none;
-            /* Chrome/Safari/Edge */
-        }
-
-        /* ── Ideation diagram ── */
-        .ideation-merge-arrow {
-            color: #6366f1;
-        }
-
-        /* ── Process track (unchanged) ── */
-        .process-track {
-            position: absolute;
-            top: 40%;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background-color: #3b82f6;
-            z-index: 0;
-        }
-
-        .signal-container {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-        }
-
-        @keyframes signal-travel {
-            0% {
-                left: 11%;
-                opacity: 0;
-            }
-
-            2% {
-                opacity: 1;
-            }
-
-            38% {
-                opacity: 1;
-                left: 68%;
-            }
-
-            40%,
-            100% {
-                left: 68%;
-                opacity: 0;
-            }
-        }
-
-        .signal-line {
-            position: absolute;
-            top: 40%;
-            left: 11%;
-            width: 20%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #136398, #136398, transparent);
-            box-shadow: 0 0 10px #136398, 0 0 20px #136398;
-            animation: signal-travel 4s linear infinite;
-            animation-delay: 3s;
-            animation-fill-mode: backwards;
-            z-index: 5;
-        }
-
-        @keyframes border-flash {
-
-            0%,
-            100% {
-                border-color: #3b82f6;
-                box-shadow: none;
-            }
-
-            50% {
-                border-color: #136398;
-                box-shadow: 0 0 15px rgba(19, 99, 152, 0.5);
-            }
-        }
-
-        .process-card {
-            border: 4px solid #3b82f6;
-            animation: border-flash 4s linear infinite;
-            transition: transform 0.3s ease;
-        }
-
-        .card-1 {
-            animation-delay: 1s;
-        }
-
-        .card-2 {
-            animation-delay: 2s;
-        }
-
-        .card-3 {
-            animation-delay: 3s;
-        }
-
-        @media (max-width:768px) {
-
-            .process-track,
-            .signal-line {
-                display: none;
-            }
-        }
-    </style>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/project.css">
+  <link rel="stylesheet" href="assets/css/cfplus.css">
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/project.js" defer></script>
 </head>
+<body class="cs" style="--accent: #1d5fd1; --on-accent: #ffffff; --hl-a: #1d5fd1; --hl-b: #4a86ec; --mesh-1: rgba(74, 134, 236, 0.4); --mesh-2: rgba(14, 44, 128, 0.62); --mesh-3: rgba(112, 84, 214, 0.36)">
+  <a class="skip" href="#overview">Skip to case study</a>
 
-<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="index.html" aria-label="Back to the homepage">
+        <img class="logo-back logo-back-light" src="assets/img/logo/khlogobacklight.svg" width="28" height="28" alt="">
+        <img class="logo-back logo-back-dark" src="assets/img/logo/khlogobackdark.svg" width="28" height="28" alt="">
+        <span>KENNY HUANG DESIGN</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Main">
+          <a href="index.html#projects" aria-current="page">Projects</a>
+          <a href="index.html#about">About me</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="about.html">More</a>
+        </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <!-- ══ Main Nav ══ -->
-    <nav
-        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
-        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
-            <a href="index.html" class="flex items-center gap-4 group">
-                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
-                    <!-- Light mode logo (black) -->
-                    <img src="global_images/khlogobacklight.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain block dark:hidden">
-                    <!-- Dark mode logo (white) -->
-                    <img src="global_images/khlogobackdark.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain hidden dark:block">
-                </div>
-                <span
-                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">Kenny
-                    Huang Design</span>
-            </a>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
-                        Me</a>
-                    <a href="experience.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
-                    <a href="contact.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
-                </div>
-                <button id="theme-toggle"
-                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
-                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                            fill-rule="evenodd" clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
-                <button id="mobile-menu-btn"
-                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
+  <main>
+    <div class="wrap cs-top">
+      <figure class="cs-hero" id="hero" style="view-transition-name: hero-cfplus">
+        <img src="assets/img/cfplus/hero-1920.webp"
+             srcset="assets/img/cfplus/hero-960.webp 960w, assets/img/cfplus/hero-1920.webp 1920w"
+             sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+             width="1920" height="1080" fetchpriority="high"
+             alt="The CF+ wordmark in white on black">
+      </figure>
+
+      <header class="cs-head">
+        <p class="cs-kicker">Seasonal Events &amp; Loyalty Program</p>
+        <h1 class="cs-title">Cadillac Fairview&nbsp;+</h1>
+      </header>
+
+      <div class="cs-grid cs-intro" id="overview">
+        <dl class="facts" data-reveal="rise">
+          <div class="fact"><dt>Role</dt><dd>Service Designer</dd></div>
+          <div class="fact"><dt>Timeline</dt><dd>Sep to Dec 2024</dd></div>
+          <div class="fact"><dt>Client</dt><dd>CF Sherway Gardens</dd></div>
+          <div class="fact"><dt>Tools</dt><dd>Figma, Canva</dd></div>
+        </dl>
+        <div class="overview" data-reveal="rise" style="--delay: 100ms">
+          <h2 class="overview-title"><mark class="hl"><span>A mall worth the trip</span></mark></h2>
+          <p class="overview-lead">CF+ is a seasonal events and loyalty program that turns empty space at CF Sherway Gardens into <mark class="hl"><span>frequently rotating pop-up events celebrating Canadian culture</span></mark>. Every event is run by CF representatives and rewards visitors for taking part, <mark class="hl"><span>making the mall a place to belong, not just a place to buy</span></mark>.</p>
+          <p class="overview-body">The program was designed for the new Canadians moving into the thousands of homes planned around Sherway, and is built to scale to other CF malls. A mobile app was explored early on, but we set it aside for physical Experience Cards and in-person guidance, so the program stays accessible to older visitors and to anyone still finding their way around.</p>
+          <p class="credit">A group project with Brandon Siow, Alex Chang, Shaizaan Prasla and Seong Han Lee.</p>
         </div>
-        <div id="mobile-menu"
-            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
-            <a href="about.html"
-                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
-                Me</a>
-            <a href="experience.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
-            <a href="contact.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
+      </div>
+    </div>
+
+    <!-- Section bar: one link per section below. It sticks under the nav and highlights the section being read. -->
+    <nav class="secnav" aria-label="Case study sections">
+      <div class="wrap">
+        <div class="secnav-strip">
+          <span class="secnav-pill" aria-hidden="true"></span>
+          <a href="#pitch">Pitch</a>
+          <a href="#problem">Problem</a>
+          <a href="#research">Research</a>
+          <a href="#opportunities">Opportunities</a>
+          <a href="#solution">Solution</a>
+          <a href="#representatives">Representatives</a>
+          <a href="#outcome">Outcome</a>
+          <a href="#process">Process</a>
         </div>
+      </div>
+      <span class="secnav-progress" aria-hidden="true"></span>
     </nav>
 
-    <!-- ══ Sticky Section Nav (appears after pitch button) ══ -->
-    <div id="section-nav">
-        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
-            <div id="section-nav-inner"
-                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
-                <button class="sec-link" data-target="section-desk-research">Site Research</button>
-                <button class="sec-link" data-target="section-user-research">User Research</button>
-                <button class="sec-link" data-target="section-synthesis">Synthesis</button>
-                <button class="sec-link" data-target="section-ideation">Ideation</button>
-                <button class="sec-link" data-target="section-final-product">Final Product</button>
-            </div>
+    <div class="wrap">
+      <section class="cs-sec" id="pitch" aria-labelledby="pitch-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="pitch-title">Pitch</h2>
         </div>
-    </div>
+        <a class="doc-card" href="khp_docs/Final%20Pitch%20CF+.pdf" target="_blank" rel="noopener">
+          <div class="doc-card-media">
+            <img src="assets/img/cfplus/pitch-cover-960.webp" srcset="assets/img/cfplus/pitch-cover-960.webp 960w, assets/img/cfplus/pitch-cover-1440.webp 1440w"
+                 sizes="(max-width: 1100px) calc(100vw - 72px), 820px"
+                 width="3840" height="2160" loading="lazy" decoding="async"
+                 alt="Table of contents slide from the CF+ pitch, beside a photo of the Sherway Gardens atrium">
+          </div>
+          <div class="doc-card-body">
+            <p class="doc-card-type">PDF presentation, 21 MB</p>
+            <h3 class="doc-card-title">CF+ Final Pitch</h3>
+            <p class="doc-card-text">The full proposal presented to Cadillac Fairview, from research on the Sherway redevelopment to event storyboards and the service blueprint.</p>
+            <span class="doc-card-btn">Open the pitch deck<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+          </div>
+        </a>
+      </section>
 
-    <main class="pt-20 pb-24 w-full">
-
-        <!-- Hero image -->
-        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
-            <img src="cfplus_images/finalpitchcf3.png"
-                alt="Project Cover" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+      <section class="cs-sec" id="problem" aria-labelledby="problem-title">
+        <div class="statement" data-reveal="wipe">
+          <h2 class="statement-label" id="problem-title">PROBLEM STATEMENT</h2>
+          <p class="statement-text">Thousands of new homes are rising around CF Sherway Gardens, but to the new Canadians moving in, it is just another place to shop.</p>
+          <p class="statement-hmw">How might we transform CF Sherway Gardens into a public realm where new Canadians can connect to their new home?</p>
         </div>
+      </section>
 
-        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
-
-            <!-- Project overview -->
-            <section
-                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
-                <div class="md:col-span-5">
-                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">Cadillac Fairview Plus</h1>
-                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
-                        <div><span class="block text-zinc-400 mb-1">Role</span><span class="font-medium">Service
-                                Designer</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Timeline</span><span class="font-medium">Sep 2024 -
-                                Dec 2024</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Client</span><span class="font-medium">CF Sherway
-                                Gardens</span></div>
-                        <div><span class="block text-zinc-400 mb-1">Tools</span><span class="font-medium">Figma, Canva
-                            </span></div>
-                    </div>
-                </div>
-                <div class="md:col-span-7 md:pl-10">
-                    <h3 class="text-2xl font-bold mb-6">A New Realm for New Canadians</h3>
-                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                        <p>CF Plus is a loyalty program for CF Sherway Gardens (scalable to other CF malls) that rewards
-                            customers for
-                            attending the rotating seasonal events hosted at the mall. It utilizes physical point cards
-                            that allow customers to earn points for every
-                            dollar they spend at the mall during the events, as well as participation in event
-                            activities. The points can be redeemed for rewards such as discounts
-                            on future purchases, free parking, and other perks.</p>
-                        <p>The program is designed to be simple and easy to use, turning the, currently low-traffic,
-                            mall into a go-to destination for events and a future hub for new Canadians moving into its
-                            adjacent planned developments. A mobile app was originally intended for the program, but was
-                            later scrapped in favour of a more accessible solution that accommodates for the older
-                            demographics of the target audience.</p>
-                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
-                            <p></p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Presentation slide + pitch button — scroll trigger sentinel is here -->
-            <section class="py-16 sm:py-24 space-y-16 sm:space-y-32">
-                <div class="space-y-12">
-                    <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-lg overflow-hidden shadow-2xl">
-                        <img src="cfplus_images/cfpluscover.png"
-                            alt="Full Presentation" class="w-full h-auto">
-                    </div>
-
-                    <!-- SENTINEL — sticky nav appears when this scrolls out of view -->
-                    <div id="pitch-sentinel" class="flex justify-center pb-12">
-                        <a href="khp_docs/Final Pitch CF+.pdf" target="_blank" rel="noopener noreferrer"
-                            class="relative overflow-hidden inline-flex items-center justify-center px-12 py-5 font-bold text-white text-xl bg-[linear-gradient(to_right,#b9dde9,#136398,#053c5b,#0b223e,#053c5b,#136398,#b9dde9)] bg-[length:200%_auto] rounded-3xl hover:scale-105 transition-all duration-300 hover:bg-[position:right_center] shadow-lg hover:shadow-xl">
-                            SEE PRESENTATION PITCH
-                        </a>
-                    </div>
-                </div>
-
-                <!-- ══ PROBLEM STATEMENT ══ -->
-                <section id="section-problem"
-                    class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
-                    style="background: linear-gradient(135deg, #b9dde9 0%, #136398 33%, #053c5b 66%, #0b223e 100%);">
-                    <div class="absolute inset-0 opacity-20"
-                        style="background: radial-gradient(ellipse at 30% 50%, #b9dde9 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, #136398 0%, transparent 60%);">
-                    </div>
-                    <div class="relative z-10 max-w-4xl mx-auto space-y-8">
-                        <p class="text-indigo-200 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
-                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
-                            A public realm in which new Canadians can connect to their new home!
-                        </h2>
-                        <p class="text-lg sm:text-xl text-indigo-100/80 max-w-2xl mx-auto leading-relaxed">
-                            How can we transform CF Sherway Gardens into a central social hub for new Canadians?
-                        </p>
-                    </div>
-                </section>
-
-                <!-- ══ DESK RESEARCH ══ -->
-                <section id="section-desk-research"
-                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Site Research</h3>
-                    </div>
-
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf.png"
-                            alt="Research Map" class="w-full h-auto block transition-transform ">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf1.png"
-                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf2.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf3.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf4.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf5.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf6.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf7.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/researchcf8.png"
-                            alt="Staff Attendee Psychological Iceberg Model"
-                            class="w-full h-auto block transition-transform">
-                    </div>
-                </section>
-
-
-                <!-- ══ USER RESEARCH ══ -->
-                <section id="section-user-research"
-                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">User Research</h3>
-                    </div>
-
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch2.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch2.5.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch3.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch4.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch5.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch6.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch7.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch8.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/uresearch9.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-
-                </section>
-
-                <!-- ══ SYNTHESIS ══ -->
-                <section id="section-synthesis" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Synthesis</h3>
-                    </div>
-
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/synthesiscf1.png"
-                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/synthesiscf2.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/journeymapcf.png"
-                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="synthesiscf4.png"
-                            alt="Avoid Consider Analysis" class="w-full h-auto block transition-transform">
-                    </div>
-                </section>
-
-                <!-- ══ IDEATION ══ -->
-                <section id="section-ideation" class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Ideation</h3>
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf1.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf2.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf3.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/servicediagramcf.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf5.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf6.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf7.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf8.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf9.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf10.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf11.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf11.5.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf12.png"
-                            alt="Placeholder" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf13.png"
-                            alt="" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf14.png"
-                            alt="" class="w-full h-auto block transition-transform">
-                    </div>
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/ideationcf15.png"
-                            alt="" class="w-full h-auto block transition-transform">
-                    </div>
-                </section>
-
-                <!-- ══ FINAL PRODUCT ══ -->
-                <section id="section-final-product"
-                    class="py-16 space-y-16 border-t border-zinc-100 dark:border-zinc-800">
-                    <div class="text-center space-y-4">
-                        <h3 class="text-3xl sm:text-4xl font-bold">Final Product</h3>
-                    </div>
-
-                    <div class="w-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm group cursor-pointer"
-                        onclick="openLightbox(this.querySelector('img').src)">
-                        <img src="cfplus_images/finalpitchcf2.png"
-                            alt="Placeholder"
-                            class="w-full h-auto block transition-transform duration-700 group-hover:scale-105">
-                    </div>
-
-                    <!-- Phase 4: Client Presentation Pitch button -->
-                    <div class="flex justify-center pt-16 pb-4">
-                        <button
-                            onclick="document.getElementById('pitch-sentinel').scrollIntoView({ behavior: 'smooth', block: 'center' })"
-                            class="w-full max-w-7xl py-6 rounded-2xl font-bold text-xl sm:text-2xl text-white bg-[linear-gradient(to_right,#b9dde9,#136398,#053c5b,#0b223e,#053c5b,#136398,#b9dde9)] bg-[length:200%_auto] hover:bg-[position:right_center] hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 shadow-xl hover:shadow-2xl">
-                            <strong>Client Presentation Pitch</strong>
-                        </button>
-                    </div>
-                </section>
-
-            </section>
-
+      <section class="cs-sec" id="research" aria-labelledby="research-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="research-title">Research &amp; findings</h2>
+          <div class="cs-ledes">
+            <p class="cs-lede"><span class="cs-lede-key">I was a service designer on a team of five.</span> We shared site research, interviews and synthesis, and I focused on the in-person side of CF+: the rotating event program, how a visitor moves through each event, and the CF representatives who run it.</p>
+            <p class="cs-lede">We studied the site, the redevelopment plans around it and the people moving in. Interviews with new Canadians, most of them students new to the GTA, were coded by how often each concern came up. <mark class="hl"><span>Three themes stood out</span></mark>.</p>
+          </div>
         </div>
-
-        <div
-            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
-            <a href="index.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
-                Back to Home</a>
-            <a href="project.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
-                Project &rarr;</a>
+        <ul class="stats" aria-label="Interview results">
+          <li class="stat" data-reveal="rise"><span class="stat-num"><span data-count="100">100</span>%</span><span class="stat-label">Rely on transit or walking</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 80ms"><span class="stat-num"><span data-count="75">75</span>%</span><span class="stat-label">Live 30 minutes or more from the nearest mall</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 160ms"><span class="stat-num"><span data-count="63">63</span>%</span><span class="stat-label">Feel uneasy in public spaces</span></li>
+          <li class="stat" data-reveal="rise" style="--delay: 240ms"><span class="stat-num"><span data-count="38">38</span>%</span><span class="stat-label">Face language barriers when out</span></li>
+        </ul>
+        <ol class="points" aria-label="Research findings">
+          <li class="point">
+            <span class="point-num">01</span>
+            <p class="point-stat">34.8%<small>of concerns raised</small></p>
+            <h3 class="point-title">The purpose gap</h3>
+            <p class="point-text">Lack of purpose came up more than any other concern. Malls back home often double as places for community and recreation. Here, interviewees described the mall as a &ldquo;last ditch effort to kill time&rdquo;.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">02</span>
+            <p class="point-stat">17.4%<small>of concerns raised</small></p>
+            <h3 class="point-title">The impersonal mall</h3>
+            <p class="point-text">Canadian malls tend to blur into one another. Interviewees wanted a space that felt safe, clean and park-like, with an identity worth remembering.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">03</span>
+            <p class="point-stat">14.5%<small>of concerns raised</small></p>
+            <h3 class="point-title">The cost of the commute</h3>
+            <p class="point-text">Every interviewee relied on transit or walking, while Sherway is built around the car. Transit is out of CF&#39;s hands, so the visit itself has to make the trip worth it.</p>
+          </li>
+        </ol>
+        <div class="cs-block">
+          <h3 class="cs-sub">Interviews</h3>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/interview-stats-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/interview-stats-960.webp"
+                     srcset="assets/img/cfplus/interview-stats-960.webp 960w, assets/img/cfplus/interview-stats-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Interview statistics: 38% face language difficulty, 50% have faced discrimination, 75% live 30 minutes or more from a mall, 63% feel uneasy in public spaces, 89% came for education, 100% use transit or walk">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/concerns-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/concerns-960.webp"
+                     srcset="assets/img/cfplus/concerns-960.webp 960w, assets/img/cfplus/concerns-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Donut chart of main concerns: lack of purpose 34.8%, need for comfortable atmosphere 17.4%, transportation 14.5%, interactivity 11.6%, sense of belonging 11.6%, cultural differences 10.1%">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+          <div class="figs" style="margin-top: 56px">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/big-three-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/big-three-960.webp"
+                     srcset="assets/img/cfplus/big-three-960.webp 960w, assets/img/cfplus/big-three-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Main concerns analysis: lack of purpose, need for comfortable atmosphere and aesthetics, and getting to the mall">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
         </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Site research</h3>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/site-state-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/site-state-960.webp"
+                     srcset="assets/img/cfplus/site-state-960.webp 960w, assets/img/cfplus/site-state-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Current state of Sherway Gardens: layout, observations and statistics, with photos of the mall interior">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/site-transit-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/site-transit-960.webp"
+                     srcset="assets/img/cfplus/site-transit-960.webp 960w, assets/img/cfplus/site-transit-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Getting to Sherway Gardens: highways, TTC and MiWay routes, with a map and a photo of the bus stop">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/site-plans-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/site-plans-960.webp"
+                     srcset="assets/img/cfplus/site-plans-960.webp 960w, assets/img/cfplus/site-plans-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Plans for Sherway Gardens: the three-phase redevelopment adding about 6,000 residential units">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/site-phases-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/site-phases-960.webp"
+                     srcset="assets/img/cfplus/site-phases-960.webp 960w, assets/img/cfplus/site-phases-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Site plans for each redevelopment phase, a 3D model of the plan and maps of transit routes and nearby competitors">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Who we designed for</h3>
+          <div class="fig-row" style="--cols: 3">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/persona-jeff-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/persona-jeff-960.webp"
+                     srcset="assets/img/cfplus/persona-jeff-960.webp 960w, assets/img/cfplus/persona-jeff-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 485px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Persona: Jeff Chen, 24, engineering student in Mississauga, in Canada for four years, on a tight schedule and budget">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/persona-cathy-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/persona-cathy-960.webp"
+                     srcset="assets/img/cfplus/persona-cathy-960.webp 960w, assets/img/cfplus/persona-cathy-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 485px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Persona: Cathy Kim, 20, business student and waitress in North York, in Canada for two years, still learning to get around">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/persona-jasmine-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/persona-jasmine-960.webp"
+                     srcset="assets/img/cfplus/persona-jasmine-960.webp 960w, assets/img/cfplus/persona-jasmine-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 485px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Persona: Jasmine Kaur, 23, university student downtown, in Canada for three years, finds her surroundings uninteresting and often feels homesick">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+      </section>
 
-        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
-            <div
-                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
-                <div class="h-12 flex items-center justify-center transition-transform">
-                    <img src="global_images/khbannerg.png"
-                        alt="Kenny Huang Design Logo" class="h-full w-auto object-contain">
-                </div>
-                <div class="text-sm text-zinc-400">
-                    <p>&copy; 2026 Kenny Huang Design.</p>
-                    <p>All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
+      <section class="cs-sec" id="opportunities" aria-labelledby="opportunities-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="opportunities-title">Main opportunities</h2>
+        </div>
+        <ol class="points" aria-label="Opportunities">
+          <li class="point">
+            <span class="point-num">01</span>
+            <h3 class="point-title">Make the mall a community hub</h3>
+            <p class="point-text">Host cultural events, workshops and recreation, so there is a reason to visit beyond shopping.</p>
+            <p class="point-eg">Precedents: Lunar Festival at Kingsway Mall, Today at Apple</p>
+          </li>
+          <li class="point">
+            <span class="point-num">02</span>
+            <h3 class="point-title">Make the trip worth taking</h3>
+            <p class="point-text">Reward the people who travel furthest and stay longest, through incentives, amenities and offers they can only get on site.</p>
+            <p class="point-eg">Precedents: IKEA Family, &ldquo;Stay Longer, Save More&rdquo; offers</p>
+          </li>
+          <li class="point">
+            <span class="point-num">03</span>
+            <h3 class="point-title">Make the space feel welcoming</h3>
+            <p class="point-text">Bring in greenery, seating and cultural design, so the mall feels like a place to spend time and not only money.</p>
+            <p class="point-eg">Precedents: Devonian Gardens, Jewel Changi Airport</p>
+          </li>
+        </ol>
+          <div class="fig-row" style="--cols: 3">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/opp-hub-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/opp-hub-960.webp"
+                     srcset="assets/img/cfplus/opp-hub-960.webp 960w, assets/img/cfplus/opp-hub-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 485px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Opportunity slide: reimagine the mall as a multi-functional community hub, with photos of the Lunar Festival at Kingsway Mall, a WeWork space and Today at Apple">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/opp-value-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/opp-value-960.webp"
+                     srcset="assets/img/cfplus/opp-value-960.webp 960w, assets/img/cfplus/opp-value-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 485px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Opportunity slide: enhance the value of a mall visit for non-drivers, with photos of IKEA Family, a cafe co-working space and a mall app concept">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/opp-atmosphere-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/opp-atmosphere-960.webp"
+                     srcset="assets/img/cfplus/opp-atmosphere-960.webp 960w, assets/img/cfplus/opp-atmosphere-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 485px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Opportunity slide: create a comfortable, relaxing and inclusive atmosphere, with photos of green mall fixtures, Jewel Changi Airport and the Devonian Gardens playground">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+      </section>
 
-    </main>
-
-    <!-- Lightbox Modal -->
-    <div id="lightbox"
-        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="relative max-w-5xl w-full h-[85vh]">
-            <button onclick="closeLightbox()"
-                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
+      <section class="cs-sec" id="solution" aria-labelledby="solution-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="solution-title">Solution</h2>
+          <p class="cs-lede">CF+ turns the former Nordstrom storefront and other empty spaces into a rotating program of pop-up events, each celebrating a part of Canadian culture or a key holiday. Visitors are rewarded for taking part and for shopping during the event.</p>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Rotating seasonal events</h3>
+          <p class="cs-note">Each season brings a new theme, such as Canada Day, Canadian Cuisine and Canadian Winter. The decor, stations and collectibles change every time, while the format stays the same, so there is always a new reason to come back.</p>
+          <div class="figs">
+            <figure class="fig" style="--r: 2.440">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/posters-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/posters-960.webp"
+                     srcset="assets/img/cfplus/posters-960.webp 960w, assets/img/cfplus/posters-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="1920" height="787" loading="lazy" decoding="async"
+                     alt="Three CF+ event posters: Canada Day with fireworks over the CN Tower, Canadian Cuisine with a roast dinner, and Canadian Winter with a snowy Santa">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">How an event works</h3>
+          <ol class="flow" aria-label="Stages of a CF+ event">
+          <li class="flow-step">
+            <span class="flow-num">01</span>
+            <h4 class="flow-title">Discover</h4>
+            <p class="flow-text">Posters, in-mall screens and CF social channels announce each event in the weeks before it opens.</p>
+          </li>
+          <li class="flow-step is-rep">
+            <span class="flow-num">02</span>
+            <h4 class="flow-title">Welcome</h4>
+            <span class="flow-tag">CF representative</span>
+            <p class="flow-text">A CF representative greets each visitor, explains the event and hands over that event&#39;s Experience Card.</p>
+          </li>
+          <li class="flow-step">
+            <span class="flow-num">03</span>
+            <h4 class="flow-title">Explore</h4>
+            <p class="flow-text">Six stations around the mall each add a marker to the card: workshops, tastings, performances and games.</p>
+          </li>
+          <li class="flow-step is-rep">
+            <span class="flow-num">04</span>
+            <h4 class="flow-title">Redeem</h4>
+            <span class="flow-tag">CF representative</span>
+            <p class="flow-text">A full card goes back to a representative for a collectible. Spending during the event also earns points toward discounts and free parking.</p>
+          </li>
+          <li class="flow-step is-rep">
+            <span class="flow-num">05</span>
+            <h4 class="flow-title">Reflect</h4>
+            <span class="flow-tag">CF representative</span>
+            <p class="flow-text">Representatives check in on the visit, and a five-question survey feeds into planning the next event.</p>
+          </li>
+          </ol>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/cfplus/cards-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/cfplus/cards-960.webp"
+                   srcset="assets/img/cfplus/cards-960.webp 960w, assets/img/cfplus/cards-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="3840" height="2160" loading="lazy" decoding="async"
+                   alt="CF+ Experience Cards: one design per event, and a black card with six circles for collecting station markers">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
             </button>
-            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+          </figure>
         </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Event storyboards</h3>
+          <div class="door" data-door>
+            <div class="fig-row door-stage">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/story-winter-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/story-winter-960.webp"
+                     srcset="assets/img/cfplus/story-winter-960.webp 960w, assets/img/cfplus/story-winter-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="3840" height="2160" loading="lazy" decoding="async"
+                     alt="Canadian Winter storyboard: visitors plan their trip, are welcomed by a CF attendant with an Experience Card, explore winter sports displays and a Christmas market, join craft workshops, claim a prize and share feedback">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/story-cuisine-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/story-cuisine-960.webp"
+                     srcset="assets/img/cfplus/story-cuisine-960.webp 960w, assets/img/cfplus/story-cuisine-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="3840" height="2160" loading="lazy" decoding="async"
+                     alt="Canadian Cuisine storyboard: a warm welcome, tastings of poutine, BeaverTails and butter tarts, live cooking workshops with local chefs, a prize for a full card and a feedback email at home">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/story-canada-day-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/story-canada-day-960.webp"
+                     srcset="assets/img/cfplus/story-canada-day-960.webp 960w, assets/img/cfplus/story-canada-day-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="3840" height="2160" loading="lazy" decoding="async"
+                     alt="Canada Day storyboard: themed decorations, live performances and games, an evening fireworks display, a prize for a full card and photos shared online afterwards">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            </div>
+            <button class="door-arrow is-prev" type="button" data-door-prev aria-label="Previous storyboard" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+            <button class="door-arrow is-next" type="button" data-door-next aria-label="Next storyboard" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">The event space</h3>
+          <p class="cs-note">The former Nordstrom storefront, left mostly empty since the store closed, becomes the main event area. Smaller stations spread into the central hub, the hallways and the spaces in front of anchor stores, so the event pulls people through the whole mall.</p>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/cfplus/model-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/cfplus/model-960.webp"
+                   srcset="assets/img/cfplus/model-960.webp 960w, assets/img/cfplus/model-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="3840" height="2160" loading="lazy" decoding="async"
+                   alt="Wooden scale model of the event space in the former Nordstrom storefront, with station tables, kiosk screens and a centrepiece">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+          <div style="margin-top: 24px">
+            <div class="fig-row">
+              <figure class="fig">
+                <button class="fig-open" type="button" data-full="assets/img/cfplus/area-main-1920.webp" data-reveal="wipe">
+                  <span class="sr">Enlarge: </span>
+                  <img src="assets/img/cfplus/area-main-960.webp"
+                       srcset="assets/img/cfplus/area-main-960.webp 960w, assets/img/cfplus/area-main-1920.webp 1920w"
+                       sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                       width="1920" height="1080" loading="lazy" decoding="async"
+                       alt="Main event area: the former Nordstrom storefront, with photos and its location on the mall map">
+                  <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+                </button>
+              </figure>
+              <figure class="fig">
+                <button class="fig-open" type="button" data-full="assets/img/cfplus/area-central-1920.webp" data-reveal="wipe">
+                  <span class="sr">Enlarge: </span>
+                  <img src="assets/img/cfplus/area-central-960.webp"
+                       srcset="assets/img/cfplus/area-central-960.webp 960w, assets/img/cfplus/area-central-1920.webp 1920w"
+                       sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                       width="1920" height="1080" loading="lazy" decoding="async"
+                       alt="Central hub: the open centre of the mall, for a stage or main attraction">
+                  <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+                </button>
+              </figure>
+              <figure class="fig">
+                <button class="fig-open" type="button" data-full="assets/img/cfplus/area-secondary-1920.webp" data-reveal="wipe">
+                  <span class="sr">Enlarge: </span>
+                  <img src="assets/img/cfplus/area-secondary-960.webp"
+                       srcset="assets/img/cfplus/area-secondary-960.webp 960w, assets/img/cfplus/area-secondary-1920.webp 1920w"
+                       sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                       width="1920" height="1080" loading="lazy" decoding="async"
+                       alt="Secondary areas in front of Saks Fifth Avenue and Hudson&#39;s Bay, for workshops and lounge seating">
+                  <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+                </button>
+              </figure>
+              <figure class="fig">
+                <button class="fig-open" type="button" data-full="assets/img/cfplus/area-halls-1920.webp" data-reveal="wipe">
+                  <span class="sr">Enlarge: </span>
+                  <img src="assets/img/cfplus/area-halls-960.webp"
+                       srcset="assets/img/cfplus/area-halls-960.webp 960w, assets/img/cfplus/area-halls-1920.webp 1920w"
+                       sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                       width="1920" height="1080" loading="lazy" decoding="async"
+                       alt="Tertiary areas: hallways and small open spaces for information booths and quieter pop-ups">
+                  <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+                </button>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="representatives" aria-labelledby="representatives-title">
+        <div class="cs-grid reps-intro">
+          <h2 class="cs-sec-title" id="representatives-title" data-reveal="rise">CF representatives</h2>
+          <div data-reveal="rise" style="--delay: 100ms">
+            <p class="reps-why">CF+ is more than an event and a card. Every event is run by <mark class="hl"><span>CF representatives</span></mark>, called CF Guides in our service blueprint, who turn an unfamiliar mall into a place where someone is expecting you.</p>
+            <p class="reps-why">For interviewees facing language barriers or feeling uneasy in public, a friendly, easy-to-spot person lowers the barrier to joining in. Representatives wear a recognisable CF uniform and are trained in cultural sensitivity and several languages.</p>
+          </div>
+        </div>
+        <ol class="points" aria-label="What CF representatives do" style="--cols: 4">
+          <li class="point">
+            <span class="point-num">01</span>
+            <h3 class="point-title">Welcome and explain</h3>
+            <p class="point-text">Greet every visitor at the event entrance, explain what is on and hand out the Experience Card.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">02</span>
+            <h3 class="point-title">Guide in more than one language</h3>
+            <p class="point-text">Approach visitors who seem lost, offer maps and directions, and speak several languages, so no one has to ask a stranger for help.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">03</span>
+            <h3 class="point-title">Reward and listen</h3>
+            <p class="point-text">Check completed cards, hand out collectibles and ask how the visit went, then follow up with a short feedback survey.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">04</span>
+            <h3 class="point-title">Read the room</h3>
+            <p class="point-text">Keep an eye on which areas are busy, manage crowds gently, and pass on what should change for the next event.</p>
+          </li>
+        </ol>
+        <div class="cs-block">
+          <h3 class="cs-sub">On the floor</h3>
+          <p class="cs-note">Staged demonstrations of a CF+ event, and a storyboard of a visit showing where guides step in to help.</p>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/staff-greet-960.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/staff-greet-960.webp"
+                     srcset="assets/img/cfplus/staff-greet-960.webp 960w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="960" height="542" loading="lazy" decoding="async"
+                     alt="A visitor in black chatting with a CF+ representative in blue at an event table">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/staff-stall-960.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/staff-stall-960.webp"
+                     srcset="assets/img/cfplus/staff-stall-960.webp 960w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="960" height="542" loading="lazy" decoding="async"
+                     alt="A CF+ representative in blue at an event stall, a whiteboard behind him reading &ldquo;CF+ Welcome to Canada!&rdquo;">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+          <div class="figs" style="margin-top: 56px">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/guide-story-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/guide-story-960.webp"
+                     srcset="assets/img/cfplus/guide-story-960.webp 960w, assets/img/cfplus/guide-story-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Storyboard of a visit: arrival, navigation, help from CF service guides, the event, quieter spaces and feedback">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Service blueprint</h3>
+          <p class="cs-note">The blueprint maps each stage of a visit against the people, touchpoints and behind-the-scenes work it depends on. CF Guides lead the two moments where visitors are most likely to give up: finding the event and understanding how it works.</p>
+          <figure class="fig" style="--r: 1.744">
+            <button class="fig-open" type="button" data-full="assets/img/cfplus/blueprint-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/cfplus/blueprint-960.webp"
+                   srcset="assets/img/cfplus/blueprint-960.webp 960w, assets/img/cfplus/blueprint-1920.webp 1920w, assets/img/cfplus/blueprint-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="3070" height="1760" loading="lazy" decoding="async"
+                   alt="Service blueprint of nine stages, from arriving at the mall to the feedback email, showing where CF Guides step in and what each stage needs behind the scenes">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Service system</h3>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/cfplus/service-map-2880.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/cfplus/service-map-960.webp"
+                   srcset="assets/img/cfplus/service-map-960.webp 960w, assets/img/cfplus/service-map-1920.webp 1920w, assets/img/cfplus/service-map-2880.webp 2880w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="5801" height="3246" loading="lazy" decoding="async"
+                   alt="System diagram: CF events drive new Canadian participation, which builds public interest, quality events, anticipation and feedback, supported by on-ground staff, vendors and advertising">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+        <div class="cs-quote">
+          <blockquote><mark class="hl" data-hl-ms="1800"><span>Every event starts with a person, not a poster.</span></mark></blockquote>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="outcome" aria-labelledby="outcome-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="outcome-title">Outcome</h2>
+        </div>
+        <ol class="points" aria-label="Outcomes">
+          <li class="point">
+            <span class="point-num">01</span>
+            <h3 class="point-title">A reason to come back</h3>
+            <p class="point-text">A new theme every season, with time-limited merchandise and collectibles, gives visitors a reason to return. Feedback from each event shapes the next one.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">02</span>
+            <h3 class="point-title">Value on every side</h3>
+            <p class="point-text">New Canadians get a warm introduction to Canadian culture and retail. Retailers and local vendors gain foot traffic and exposure. CF fills empty space and builds loyalty.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">03</span>
+            <h3 class="point-title">A framework that scales</h3>
+            <p class="point-text">Standard event zones, reusable decor and permanent kiosks and screens keep each event simple to run. The same structure can roll out to other CF malls as Sherway&#39;s neighbourhood grows.</p>
+          </li>
+        </ol>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/benefits-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/benefits-960.webp"
+                     srcset="assets/img/cfplus/benefits-960.webp 960w, assets/img/cfplus/benefits-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Benefits of CF+: the new Canadian experience, customer engagement, and community and loyalty building">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/future-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/future-960.webp"
+                     srcset="assets/img/cfplus/future-960.webp 960w, assets/img/cfplus/future-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="3840" height="2160" loading="lazy" decoding="async"
+                     alt="Future of CF+: expansion to other CF malls, a growing community around Sherway, and a sustainable event framework">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+      </section>
+
+      <section class="cs-sec" id="process" aria-labelledby="process-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="process-title">Process</h2>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Mapping the problem</h3>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/target-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/target-960.webp"
+                     srcset="assets/img/cfplus/target-960.webp 960w, assets/img/cfplus/target-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Mind map of issues new Canadians face, from housing and jobs to culture shock and transportation">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/mind-map-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/mind-map-960.webp"
+                     srcset="assets/img/cfplus/mind-map-960.webp 960w, assets/img/cfplus/mind-map-1920.webp 1920w, assets/img/cfplus/mind-map-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="3840" height="2160" loading="lazy" decoding="async"
+                     alt="Exploration map linking how might we questions to early ideas, ending at CF+ pop-up events">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/stakeholders-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/stakeholders-960.webp"
+                     srcset="assets/img/cfplus/stakeholders-960.webp 960w, assets/img/cfplus/stakeholders-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Stakeholder chart showing the level of influence and interest of CF, new Canadians, investors, retailers and others">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/stakeholder-needs-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/stakeholder-needs-960.webp"
+                     srcset="assets/img/cfplus/stakeholder-needs-960.webp 960w, assets/img/cfplus/stakeholder-needs-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Needs of each stakeholder: Cadillac Fairview, investors, developers, retail stores, transit companies, maintenance workers, locals and retail workers">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/pain-points-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/pain-points-960.webp"
+                     srcset="assets/img/cfplus/pain-points-960.webp 960w, assets/img/cfplus/pain-points-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Main pain points: ambiguity of the Canadian mall, impersonal atmosphere, lack of social and recreation, and the inconvenience of public transportation">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/questions-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/questions-960.webp"
+                     srcset="assets/img/cfplus/questions-960.webp 960w, assets/img/cfplus/questions-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Six how might we questions on connection, flexible event spaces, affordable amenities, rewarding visits, incentives for non-drivers and park-like zones">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Journey mapping</h3>
+          <div class="figs">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/journey-map-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/journey-map-960.webp"
+                     srcset="assets/img/cfplus/journey-map-960.webp 960w, assets/img/cfplus/journey-map-1920.webp 1920w, assets/img/cfplus/journey-map-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="6890" height="3878" loading="lazy" decoding="async"
+                     alt="Journey map of a current mall visit from before arrival to departure, with frustrations at transit and departure and opportunities at each stage">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/event-journey-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/event-journey-960.webp"
+                     srcset="assets/img/cfplus/event-journey-960.webp 960w, assets/img/cfplus/event-journey-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="CF events journey map: discovering the event, attending, the experience, post-event sentiment and awareness of future events">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Storyboards and layout</h3>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/story-cf-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/story-cf-960.webp"
+                     srcset="assets/img/cfplus/story-cf-960.webp 960w, assets/img/cfplus/story-cf-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="CF storyboard: repurposing empty spaces, contacting stakeholders, advertising, extra seating, keeping things open and reviewing feedback">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/story-external-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/story-external-960.webp"
+                     srcset="assets/img/cfplus/story-external-960.webp 960w, assets/img/cfplus/story-external-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="External stakeholders storyboard: retailer awareness, sign-up, investor information, long-term changes and an event becoming tradition">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/layout-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/layout-960.webp"
+                     srcset="assets/img/cfplus/layout-960.webp 960w, assets/img/cfplus/layout-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Digital layout: renders of a possible event layout inside the empty storefront">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/cfplus/sketches-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/cfplus/sketches-960.webp"
+                     srcset="assets/img/cfplus/sketches-960.webp 960w, assets/img/cfplus/sketches-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="1920" height="1080" loading="lazy" decoding="async"
+                     alt="Sketches of a portable play area, pop-up shops, an information booth and a stage">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+          <p class="pitch-end" data-pitch-end><a class="pitch-link" href="khp_docs/Final%20Pitch%20CF+.pdf" target="_blank" rel="noopener">Open the pitch deck<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></p>
+      </section>
+      <nav class="pager" aria-label="More projects">
+        <a href="project.html">
+          <div class="pager-media" data-reveal="wipe">
+            <img src="assets/img/covers/betalink-960.webp"
+                 srcset="assets/img/covers/betalink-960.webp 960w, assets/img/covers/betalink-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Previous project</p>
+          <p class="pager-title">Highline Beta BetaLink</p>
+        </a>
+        <a href="project2.html">
+          <div class="pager-media" data-reveal="wipe" style="--delay: 80ms">
+            <img src="assets/img/covers/iembrace-960.webp"
+                 srcset="assets/img/covers/iembrace-960.webp 960w, assets/img/covers/iembrace-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></p>
+          <p class="pager-title">iEmbrace Stone &amp; Charging Pad</p>
+        </a>
+      </nav>
     </div>
+  </main>
 
-    <script>
-        // ── Theme + mobile menu ──
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-in">
+        <span>© 2026 Kenny Huang. All Rights Reserved.</span>
+        <img class="logo" src="global_images/khlogoblk.png" width="20" height="20" alt="">
+      </div>
+    </div>
+  </footer>
 
-        themeToggleBtn.addEventListener('click', function () {
-            if (localStorage.theme === 'dark') {
-                localStorage.theme = 'light';
-                document.documentElement.classList.remove('dark');
-            } else {
-                localStorage.theme = 'dark';
-                document.documentElement.classList.add('dark');
-            }
-        });
+  <!-- Full-size image viewer -->
+  <div class="cs-dim" aria-hidden="true"></div>
 
-        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
-        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
-
-        // ── Lightbox ──
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-
-        function openLightbox(src) {
-            lightboxImg.src = src;
-            lightbox.classList.remove('hidden');
-            setTimeout(() => { lightbox.classList.remove('opacity-0'); }, 10);
-            document.body.style.overflow = 'hidden';
-        }
-        function closeLightbox() {
-            lightbox.classList.add('opacity-0');
-            setTimeout(() => { lightbox.classList.add('hidden'); lightboxImg.src = ''; }, 300);
-            document.body.style.overflow = 'auto';
-        }
-        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
-
-        // ── Sticky Section Nav ──
-        const sectionNav = document.getElementById('section-nav');
-        const pitchSentinel = document.getElementById('pitch-sentinel');
-        const secLinks = document.querySelectorAll('.sec-link');
-
-        const sections = [
-            { id: 'section-desk-research', btn: document.querySelector('[data-target="section-desk-research"]') },
-            { id: 'section-user-research', btn: document.querySelector('[data-target="section-user-research"]') },
-            { id: 'section-synthesis', btn: document.querySelector('[data-target="section-synthesis"]') },
-            { id: 'section-ideation', btn: document.querySelector('[data-target="section-ideation"]') },
-            { id: 'section-final-product', btn: document.querySelector('[data-target="section-final-product"]') },
-        ];
-
-        // Show/hide sticky nav based on sentinel visibility
-        const sentinelObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // Show only if not intersecting AND the element has been scrolled past (above viewport)
-                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-                    sectionNav.classList.add('visible');
-                } else {
-                    sectionNav.classList.remove('visible');
-                }
-            });
-        }, { threshold: 0 });
-        sentinelObserver.observe(pitchSentinel);
-
-        // Scroll-spy: light up active section
-        function onScroll() {
-            const scrollY = window.scrollY;
-            const offset = 160; // nav + section-nav height
-            let active = null;
-
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const el = document.getElementById(sections[i].id);
-                if (el && el.getBoundingClientRect().top <= offset) {
-                    active = sections[i].id;
-                    break;
-                }
-            }
-
-            sections.forEach(s => {
-                if (s.btn) s.btn.classList.toggle('active', s.id === active);
-            });
-
-            // Auto-scroll the nav strip so the active button is centred (mobile)
-            if (active) {
-                const activeBtn = document.querySelector('.sec-link.active');
-                const navInner = document.getElementById('section-nav-inner');
-                if (activeBtn && navInner) {
-                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
-                    const navMid = navInner.offsetWidth / 2;
-                    navInner.scrollTo({ left: btnMid - navMid, behavior: 'smooth' });
-                }
-            }
-        }
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        // Click to jump
-        secLinks.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = document.getElementById(btn.dataset.target);
-                if (target) {
-                    const offset = 160;
-                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                }
-            });
-        });
-    </script>
+  <dialog class="lb" aria-label="Image viewer">
+    <div class="lb-top">
+      <span class="lb-count"></span>
+      <button class="lb-btn" type="button" data-lb-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="lb-stage"><img alt=""></div>
+    <div class="lb-bottom">
+      <button class="lb-btn" type="button" data-lb-prev aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+      <p class="lb-cap"></p>
+      <button class="lb-btn" type="button" data-lb-next aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+  </dialog>
 </body>
-
-
 </html>
-
-
-

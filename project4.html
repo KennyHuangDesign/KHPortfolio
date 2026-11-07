@@ -1,818 +1,700 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<!--Reminder to incorporate design process as a menu alongside the journey through how i designed this-->
-
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relay & Switchboard - Kenny Huang Design</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relay + Switchboard, Kenny Huang</title>
+  <meta name="description" content="Relay + Switchboard, a thesis on the future of phone calls: an OS-level layer that hands calls to AI agents, and the protocol that lets people control them. A product design case study by Kenny Huang.">
+  <meta name="theme-color" content="#d9d9d8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://kennyhuangdesign.github.io/KHPortfolio/project4.html">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        zinc: { 850: '#202022', 950: '#0c0c0e' }
-                    }
-                }
-            }
-        }
-    </script>
+  <!-- Share preview (LinkedIn, iMessage, Slack) -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Relay + Switchboard, Kenny Huang">
+  <meta property="og:description" content="The future of phone calls: AI calling as infrastructure, with a live two-phone prototype.">
+  <meta property="og:url" content="https://kennyhuangdesign.github.io/KHPortfolio/project4.html">
+  <meta property="og:image" content="https://kennyhuangdesign.github.io/KHPortfolio/assets/img/og/relay.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-    <style>
-        /* ── Sticky Section Nav ── */
-        #section-nav {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            width: 100%;
-            z-index: 40;
-            transform: translateY(-100%);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
-            pointer-events: none;
-        }
+  <!-- Apply the saved or system theme before the page paints, and skip the hero entrance
+       when the page opens through a page transition from the homepage -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      } catch (e) {}
+      window.addEventListener('pagereveal', function (e) {
+        if (e.viewTransition) document.documentElement.classList.add('vt-in');
+      });
+    })();
+  </script>
+  <link rel="expect" href="#hero" blocking="render">
 
-        #section-nav.visible {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: all;
-        }
+  <link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 
-        .sec-link {
-            position: relative;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: #71717a;
-            padding: 0 4px 14px;
-            border-bottom: 2px solid transparent;
-            transition: color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .sec-link:hover {
-            color: #18181b;
-            border-color: #a1a1aa;
-        }
-
-        .dark .sec-link:hover {
-            color: #f4f4f5;
-            border-color: #52525b;
-        }
-
-        .sec-link.active {
-            color: #fde047;
-            border-color: #fde047;
-        }
-
-        .dark .sec-link.active {
-            color: #fde047;
-            border-color: #fde047;
-        }
-
-        /* Per-section active highlight colors — higher specificity than .dark .sec-link.active */
-        .sec-link[data-target="section-problem"].active {
-            color: #fde047 !important;
-            border-color: #fde047 !important;
-        }
-
-        .sec-link[data-target="section-core"].active {
-            color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
-        }
-
-        .sec-link[data-target="section-background"].active {
-            color: #84cc16 !important;
-            border-color: #84cc16 !important;
-        }
-
-        .sec-link[data-target="section-initial-idea"].active {
-            color: #06b6d4 !important;
-            border-color: #06b6d4 !important;
-        }
-
-        .sec-link[data-target="section-refined-idea"].active {
-            color: #F59714 !important;
-            border-color: #F59714 !important;
-        }
-
-        .sec-link[data-target="section-relay"].active {
-            color: #4AD496 !important;
-            border-color: #4AD496 !important;
-        }
-
-        .sec-link[data-target="section-switchboard"].active {
-            color: #E03E1A !important;
-            border-color: #E03E1A !important;
-        }
-
-        .sec-link[data-target="section-prototype"].active {
-            background: linear-gradient(90deg, #4AD496, #E03E1A) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-            border-image: linear-gradient(90deg, #4AD496, #E03E1A) 1 !important;
-            border-color: transparent !important;
-        }
-
-        /* Animated gradient button */
-        @keyframes gradient-slide {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            100% {
-                background-position: 100% 50%;
-            }
-        }
-
-        .btn-gradient {
-            background: linear-gradient(135deg, #4AD496, #F3C11B, #E03E1A, #4AD496);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Per-section button gradients */
-        .btn-gradient-problem {
-            background: linear-gradient(135deg, #fef9c3, #fde047, #ca8a04, #fde047);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient-problem:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-gradient-core {
-            background: linear-gradient(135deg, #93c5fd, #3b82f6, #1d4ed8, #3b82f6);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient-core:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-gradient-background {
-            background: linear-gradient(135deg, #d9f99d, #84cc16, #3f6212, #84cc16);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient-background:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-gradient-initial {
-            background: linear-gradient(135deg, #a5f3fc, #06b6d4, #0e7490, #06b6d4);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient-initial:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-gradient-relay {
-            background: linear-gradient(135deg, #a7f3d0, #4AD496, #059669, #4AD496);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient-relay:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-gradient-switchboard {
-            background: linear-gradient(135deg, #fca5a5, #E03E1A, #991b1b, #E03E1A);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient-switchboard:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-gradient-prototype {
-            background: linear-gradient(135deg, #4AD496, #a3e635, #E03E1A, #4AD496);
-            background-size: 300% 300%;
-            background-position: 0% 50%;
-            transition: background-position 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient-prototype:hover {
-            background-position: 100% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        #section-nav-inner {
-            overflow-x: auto;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #section-nav-inner::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/project.css">
+  <link rel="stylesheet" href="assets/css/relay.css">
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/project.js" defer></script>
+  <script src="assets/js/relay.js" defer></script>
 </head>
+<body class="cs relay-page" style="--accent: #4ad496; --on-accent: #121311; --hl-a: #4ad496; --hl-b: #e03e1a">
+  <a class="skip" href="#overview">Skip to case study</a>
 
-<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="index.html" aria-label="Back to the homepage">
+        <img class="logo-back logo-back-light" src="assets/img/logo/khlogobacklight.svg" width="28" height="28" alt="">
+        <img class="logo-back logo-back-dark" src="assets/img/logo/khlogobackdark.svg" width="28" height="28" alt="">
+        <span>KENNY HUANG DESIGN</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Main">
+          <a href="index.html#projects" aria-current="page">Projects</a>
+          <a href="index.html#about">About me</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="about.html">More</a>
+        </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <!-- ══ Sticky Section Nav ══ -->
-    <div id="section-nav">
-        <div class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
-            <div id="section-nav-inner"
-                class="max-w-screen-2xl mx-auto px-6 sm:px-10 flex items-end gap-6 sm:gap-10 pb-0 pt-3">
-                <button class="sec-link" data-target="section-problem">Problem Statement</button>
-                <button class="sec-link" data-target="section-core">Core</button>
-                <button class="sec-link" data-target="section-background">Background</button>
-                <button class="sec-link" data-target="section-initial-idea">Initial Idea</button>
-                <button class="sec-link" data-target="section-refined-idea">Refined Idea</button>
-                <button class="sec-link" data-target="section-relay">Relay v.1</button>
-                <button class="sec-link" data-target="section-switchboard">Relay v.1.5 & Switchboard v.1</button>
-                <button class="sec-link" data-target="section-prototype">Prototype</button>
-            </div>
+  <main>
+    <div class="wrap cs-top">
+      <figure class="cs-hero" id="hero" style="view-transition-name: hero-relay">
+        <img src="assets/img/relay/hero-1920.webp"
+             srcset="assets/img/relay/hero-960.webp 960w, assets/img/relay/hero-1920.webp 1920w"
+             sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+             width="1920" height="1080" fetchpriority="high"
+             alt="Hand holding a phone running the Relay call delegation app">
+      </figure>
+
+      <header class="cs-head">
+        <p class="cs-kicker">AI Calling as Infrastructure</p>
+        <h1 class="cs-title">Relay + Switchboard</h1>
+      </header>
+
+      <div class="cs-grid cs-intro" id="overview">
+        <dl class="facts" data-reveal="rise">
+          <div class="fact"><dt>Role</dt><dd>Product Designer &amp; Developer</dd></div>
+          <div class="fact"><dt>Timeline</dt><dd>Sep 2025 to Apr 2026</dd></div>
+          <div class="fact"><dt>Context</dt><dd>OCAD University thesis</dd></div>
+          <div class="fact"><dt>Tools</dt><dd>Figma, Node.js, Anthropic API, Kokoro TTS</dd></div>
+        </dl>
+        <div class="overview" data-reveal="rise" style="--delay: 100ms">
+          <h2 class="overview-title"><mark class="hl"><span>The future of phone calls</span></mark></h2>
+          <p class="overview-lead">Relay is an OS-level layer that lets you <mark class="hl"><span>hand your phone calls to the AI agent of your choice</span></mark>. It makes and takes the menial calls, keeps live and post-call transcripts, learns your context over time, and <mark class="hl"><span>relays anything complex or sensitive back to you</span></mark>.</p>
+          <p class="overview-body">Switchboard is the universal protocol underneath. It lets any AI agent, from any developer, plug into Relay and be controlled from one set of settings. Together they imagine generative AI after the hype: not a novelty you open, but infrastructure you stop noticing, like a dial tone.</p>
+          <p class="credit">The calls you don&#39;t want to make, made.</p>
         </div>
+      </div>
     </div>
 
-    <nav
-        class="fixed w-full z-50 top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
-        <div class="w-full px-6 sm:px-10 h-20 flex justify-between items-center relative">
-            <a href="index.html" class="flex items-center gap-4 group">
-                <div class="h-8 flex items-center justify-center transition-transform group-hover:scale-105">
-                    <!-- Light mode logo (black) -->
-                    <img src="global_images/khlogobacklight.png" alt="Kenny Huang Design Logo"
-                        class="h-full w-auto object-contain block dark:hidden">
-                    <!-- Dark mode logo (white) -->
-                    <img src="global_images/khlogobackdark.png" alt="Kenny Huang Design Logo"
-                        class="h-full w-auto object-contain hidden dark:block">
-                </div>
-                <span
-                    class="text-sm font-bold tracking-wide uppercase hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors">
-                    Kenny Huang Design
-                </span>
-            </a>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex gap-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <a href="about.html" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">About
-                        Me</a>
-                    <a href="experience.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Experience</a>
-                    <a href="contact.html"
-                        class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Contact</a>
-                </div>
-                <button id="theme-toggle"
-                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none text-zinc-500 dark:text-zinc-400">
-                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                            fill-rule="evenodd" clip-rule="evenodd"></path>
-                    </svg>
-                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 block dark:hidden" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
-                <button id="mobile-menu-btn"
-                    class="md:hidden p-2 -mr-2 text-zinc-600 dark:text-zinc-400 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
+    <!-- Section bar: one link per section below. It sticks under the nav and highlights the section being read. -->
+    <nav class="secnav" aria-label="Case study sections">
+      <div class="wrap">
+        <div class="secnav-strip">
+          <span class="secnav-pill" aria-hidden="true"></span>
+          <a href="#pitch">Presentation</a>
+          <a href="#problem">Problem</a>
+          <a href="#demo">Demo</a>
+          <a href="#vision">Vision</a>
+          <a href="#relay">Relay</a>
+          <a href="#switchboard">Switchboard</a>
+          <a href="#process">Process</a>
+          <a href="#prototype">Prototype</a>
         </div>
-        <div id="mobile-menu"
-            class="hidden absolute top-20 right-6 w-48 bg-white dark:bg-zinc-900 shadow-xl rounded-xl border border-zinc-100 dark:border-zinc-800 p-2 flex-col space-y-1 md:hidden">
-            <a href="about.html"
-                class="block px-4 py-3 text-sm font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">About
-                Me</a>
-            <a href="experience.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Experience</a>
-            <a href="contact.html"
-                class="block px-4 py-3 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg">Contact</a>
-        </div>
+      </div>
+      <span class="secnav-progress" aria-hidden="true"></span>
     </nav>
 
-    <main class="pt-20 pb-24 w-full">
-
-        <div class="w-full h-[50vh] sm:h-[80vh] bg-zinc-100 dark:bg-zinc-900 relative">
-            <img src="relay_images/relayheroimage.png" alt="Project Cover" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+    <div class="wrap">
+      <section class="cs-sec" id="pitch" aria-labelledby="pitch-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="pitch-title">Presentation</h2>
         </div>
-
-        <div class="max-w-screen-2xl mx-auto px-6 sm:px-10">
-
-            <section
-                class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 sm:py-24 border-b border-zinc-100 dark:border-zinc-800">
-
-                <div class="md:col-span-5">
-                    <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6">Relay + Switchboard</h1>
-
-                    <div class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm mt-8">
-                        <div>
-                            <span class="block text-zinc-400 mb-1">Role</span>
-                            <span class="font-medium">Product Designer</span>
-                        </div>
-                        <div>
-                            <span class="block text-zinc-400 mb-1">Timeline</span>
-                            <span class="font-medium">Sep 2025 - May 2026</span>
-                        </div>
-                        <div>
-                            <span class="block text-zinc-400 mb-1">Client</span>
-                            <span class="font-medium">Thesis Project</span>
-                        </div>
-                        <div>
-                            <span class="block text-zinc-400 mb-1">Tools</span>
-                            <span class="font-medium">Figma, Claude, Gemini, Ngrok, Python, HTML, CSS, Javascript,
-                                Node.js, Antigravity, Firebase,
-                                Fusion 360, Blender</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="md:col-span-7 md:pl-10">
-                    <h3 class="text-2xl font-bold mb-6">AI as Infrastructure</h3>
-                    <div class="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                        <p>
-                            Relay is an OS-level system that allows users to delegate their phone calls and voicemails
-                            to AI agents of their choice.
-                            Relay keeps track of real-time and post-call transcripts, as well as context learning,
-                            memory, and the ability to
-                            autonomously execute social tasks for the user. It also acts as a call screening tool with
-                            the autonomy to relay complex/sensitive calls to the user.
-                            Switchboard is the universal protocol that allows for AI agents, regardless of developer, to
-                            be integratable and controllable via Relay settings.
-                        </p>
-                        <p>
-                            With the Gartner Hype Cycle predicting that Generative AI will inevitably reach its peak in
-                            the near future,
-                            Relay explores how Generative AI will look and function after it reaches a
-                            fully integrated state of mainstream adoption.
-                            At its core, Relay and Switchboard represent AI as digital infrastructure.
-
-                        </p>
-                        <div class="space-y-6 text-sm text-zinc-600 dark:text-zinc-400 italic leading-relaxed">
-                            <p>
-                                (Two-part prototype is available on Firebase to try, but is only available upon request
-                                as it runs on my home Node.js server)
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SENTINEL: triggers sticky nav -->
-            <div id="pitch-sentinel" class="h-1 w-full pointer-events-none text-transparent">-</div>
-
-            <!-- Sections: Problem Statement, Core, Background, Initial Idea, Refined Idea, Relay, Switchboard -->
-
-            <!-- Problem Statement -->
-            <section id="section-problem"
-                class="relative w-full rounded-3xl overflow-hidden py-28 px-6 sm:px-12 flex flex-col items-center justify-center text-center"
-                style="background: linear-gradient(135deg, #4AD496 0%, #F3C11B 50%, #E03E1A 100%);">
-                <div class="absolute inset-0 opacity-40 mix-blend-overlay"
-                    style="background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.8) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.8) 0%, transparent 60%);">
-                </div>
-                <div class="relative z-10 max-w-4xl mx-auto space-y-8">
-                    <p class="text-zinc-800 text-sm font-semibold uppercase tracking-widest">Problem Statement</p>
-                    <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-zinc-900 leading-tight">
-                        Menial phone calls are a chore nobody wants but everybody needs.
-                    </h2>
-                    <p class="text-lg sm:text-xl text-zinc-800 max-w-2xl mx-auto leading-relaxed">
-                        How might we integrate AI into the phone call, without making the human disappear from it?
-                    </p>
-                </div>
-            </section>
-
-            <!-- Core -->
-            <section id="section-core" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Where it all Started</h2>
-                <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
-                    <img src="relay_images/gate1cover.png" alt="Project Thumbnail" class="w-full h-auto">
-                </div>
-                <div class="flex justify-center">
-                    <a href="khp_docs/Kenny Huang - GATE 1.pdf"
-                        class="btn-gradient-core inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
-                        SEE PRESENTATION PITCH
-                    </a>
-                </div>
-                </a>
+        <a class="doc-card" href="khp_docs/Kenny%20Huang%20-%20GATE%206.pdf" target="_blank" rel="noopener">
+          <div class="doc-card-media">
+            <img src="assets/img/relay/pitch-cover-960.webp" srcset="assets/img/relay/pitch-cover-960.webp 960w, assets/img/relay/pitch-cover-1440.webp 1440w"
+                 sizes="(max-width: 1100px) calc(100vw - 72px), 820px"
+                 width="1920" height="1080" loading="lazy" decoding="async"
+                 alt="Cover slide: Relay + Switchboard, AI as infrastructure, delegation as a tool">
+          </div>
+          <div class="doc-card-body">
+            <p class="doc-card-type">PDF presentation, 10 MB</p>
+            <h3 class="doc-card-title">Thesis Final: Relay v1.5 + Switchboard v1</h3>
+            <p class="doc-card-text">My final thesis presentation: where AI is headed after the hype, what Relay looks like, and why Switchboard is needed to control it.</p>
+            <span class="doc-card-btn">Open the presentation<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+          </div>
+        </a>
+        <div class="doc-note" data-reveal="rise">
+          <p class="doc-note-num"><b>84</b><span>page research<br>document</span></p>
+          <p>Relay is grounded in an 84-page research document I put together over the course of the thesis. If you are interested in seeing it, <a href="index.html#contact"><mark class="hl"><span>please reach out to me for a 1-on-1 meeting</span></mark></a>.</p>
         </div>
-        </section>
+      </section>
 
-        <!-- Background -->
-        <section id="section-background" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Personal Background & Initial Research</h2>
-            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
-                <img src="relay_images/gate2cover.png" alt="Project Thumbnail 2" class="w-full h-auto">
-            </div>
-            <div class="flex justify-center">
-                <a href="khp_docs/Kenny Huang - GATE 2.pdf"
-                    class="btn-gradient-background inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
-                    SEE PRESENTATION PITCH
-                </a>
-            </div>
-        </section>
-
-        <!-- Initial Idea -->
-        <section id="section-initial-idea" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Initial Idea: Relay Beta</h2>
-            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
-                <img src="relay_images/gate3cover.png" alt="Project Thumbnail 3" class="w-full h-auto">
-            </div>
-            <div class="flex justify-center">
-                <a href="khp_docs/GATE 3.pdf"
-                    class="btn-gradient-initial inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
-                    SEE PRESENTATION PITCH
-                </a>
-            </div>
-        </section>
-
-        <!-- Refined Idea -->
-        <section id="section-refined-idea" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Refined Idea: Relay v.0 & Switchboard v.0</h2>
-            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
-                <img src="relay_images/gate4cover.png" alt="Project Thumbnail 4" class="w-full h-auto">
-            </div>
-            <div class="flex justify-center">
-                <a href="khp_docs/Kenny Huang - GATE 4.pdf"
-                    class="btn-gradient inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
-                    SEE PRESENTATION PITCH
-                </a>
-            </div>
-        </section>
-
-        <!-- Relay -->
-        <section id="section-relay" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Refined Focus: Relay v.1</h2>
-            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
-                <img src="relay_images/gate5cover.png" alt="Project Thumbnail" class="w-full h-auto">
-            </div>
-            <div class="flex justify-center">
-                <a href="khp_docs/Kenny Huang - GATE 5.pdf"
-                    class="btn-gradient-relay inline-flex items-center justify-center px-12 py-5 font-bold text-black text-xl rounded-3xl shadow-lg">
-                    SEE PRESENTATION PITCH
-                </a>
-            </div>
-        </section>
-
-        <!-- Switchboard -->
-        <section id="section-switchboard" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Thesis Final: Relay v.1.5 & Switchboard v.1
-            </h2>
-            <div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl mb-10">
-                <img src="relay_images/gate6cover.png" alt="Project Thumbnail" class="w-full h-auto">
-            </div>
-            <div class="flex justify-center">
-                <a href="khp_docs/Kenny Huang - GATE 6.pdf"
-                    class="btn-gradient-switchboard inline-flex items-center justify-center px-12 py-5 font-bold text-white text-xl rounded-3xl shadow-lg">
-                    SEE PRESENTATION PITCH
-                </a>
-            </div>
-        </section>
-
-        <!-- Relay + Switchboard Prototype -->
-        <section id="section-prototype" class="py-20 sm:py-32 border-t border-zinc-100 dark:border-zinc-800">
-
-            <!-- Video Demo -->
-            <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center">Prototype Video Demo</h2>
-            <div class="w-full bg-zinc-950 rounded-2xl overflow-hidden shadow-2xl mb-16">
-                <video id="prototype-video" class="w-full h-auto block" controls preload="metadata">
-                    <source src="https://pub-e8fc42fb4acb4423a347ee8b0cdc1bca.r2.dev/gate6_relayvideo.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-
-            <!-- Two-column prototype layout -->
-            <div class="flex flex-col lg:flex-row gap-10 items-start justify-center">
-
-                <!-- ── User End ── -->
-                <div class="flex-1 flex flex-col items-center min-w-0">
-                    <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center" style="color: #49d495;">User End</h2>
-                    <div class="space-y-4 w-full flex flex-col items-center">
-                        <div class="flex items-center justify-center gap-3 px-2 w-full" style="max-width: 375px;">
-                            <a href="https://relay-16835.web.app" target="_blank" rel="noopener noreferrer"
-                                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
-                                    </path>
-                                </svg>
-                                Open in New Tab
-                            </a>
-                            <button onclick="document.getElementById('relay-prototype-frame').requestFullscreen()"
-                                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
-                                    </path>
-                                </svg>
-                                Full Screen
-                            </button>
-                        </div>
-                        <div id="relay-prototype-frame"
-                            class="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-[6px] border-zinc-600 dark:border-zinc-400 bg-zinc-950"
-                            style="width: 375px; height: 812px; max-width: 100%;">
-
-                            <!-- Floating Exit Full Screen Button (only visible in full screen) -->
-                            <button id="relay-exit-fullscreen-btn" onclick="document.exitFullscreen()"
-                                class="hidden absolute top-6 left-1/2 transform -translate-x-1/2 z-50 items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-zinc-900/95 hover:bg-black backdrop-blur-md border border-zinc-700/50 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                                Exit Full Screen
-                            </button>
-
-                            <iframe id="relay-iframe" src="https://relay-16835.web.app"
-                                class="w-full h-full border-none bg-white dark:bg-zinc-950"
-                                title="Relay + Switchboard Interactive Prototype – User End"></iframe>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── Receiver End ── -->
-                <div class="flex-1 flex flex-col items-center min-w-0">
-                    <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center" style="color: #df3d1a;">Receiver End
-                    </h2>
-                    <div class="space-y-4 w-full flex flex-col items-center">
-                        <div class="flex items-center justify-center gap-3 px-2 w-full" style="max-width: 375px;">
-                            <a href="https://relay-16835.web.app/?role=receiver" target="_blank"
-                                rel="noopener noreferrer"
-                                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
-                                    </path>
-                                </svg>
-                                Open in New Tab
-                            </a>
-                            <button onclick="document.getElementById('receiver-prototype-frame').requestFullscreen()"
-                                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
-                                    </path>
-                                </svg>
-                                Full Screen
-                            </button>
-                        </div>
-                        <div id="receiver-prototype-frame"
-                            class="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-[6px] border-zinc-800 dark:border-zinc-600 bg-zinc-950"
-                            style="width: 375px; height: 812px; max-width: 100%;">
-
-                            <!-- Floating Exit Full Screen Button (only visible in full screen) -->
-                            <button id="receiver-exit-fullscreen-btn" onclick="document.exitFullscreen()"
-                                class="hidden absolute top-6 left-1/2 transform -translate-x-1/2 z-50 items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-zinc-900/95 hover:bg-black backdrop-blur-md border border-zinc-700/50 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                                Exit Full Screen
-                            </button>
-
-                            <iframe id="receiver-iframe" src="https://relay-16835.web.app/?role=receiver"
-                                class="w-full h-full border-none bg-white dark:bg-zinc-950"
-                                title="Relay + Switchboard Interactive Prototype – Receiver End"></iframe>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <script>
-            document.addEventListener('fullscreenchange', () => {
-                const userExitBtn = document.getElementById('relay-exit-fullscreen-btn');
-                if (userExitBtn) {
-                    if (document.fullscreenElement && document.fullscreenElement.id === 'relay-prototype-frame') {
-                        userExitBtn.classList.remove('hidden');
-                        userExitBtn.classList.add('flex');
-                    } else {
-                        userExitBtn.classList.add('hidden');
-                        userExitBtn.classList.remove('flex');
-                    }
-                }
-                const receiverExitBtn = document.getElementById('receiver-exit-fullscreen-btn');
-                if (receiverExitBtn) {
-                    if (document.fullscreenElement && document.fullscreenElement.id === 'receiver-prototype-frame') {
-                        receiverExitBtn.classList.remove('hidden');
-                        receiverExitBtn.classList.add('flex');
-                    } else {
-                        receiverExitBtn.classList.add('hidden');
-                        receiverExitBtn.classList.remove('flex');
-                    }
-                }
-            });
-        </script>
-
+      <section class="cs-sec" id="problem" aria-labelledby="problem-title">
+        <div class="statement" data-reveal="wipe">
+          <h2 class="statement-label" id="problem-title">PROBLEM STATEMENT</h2>
+          <p class="statement-text">Menial phone calls are a chore nobody wants but everybody needs.</p>
+          <p class="statement-hmw">How might we integrate AI into the phone call, without making the human disappear from it?</p>
         </div>
+      </section>
 
-        <div
-            class="flex justify-between items-center px-6 sm:px-10 py-12 border-t border-zinc-100 dark:border-zinc-800">
-            <a href="index.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">&larr;
-                Back to Home</a>
-            <a href="project5.html"
-                class="text-sm font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors">Next
-                Project &rarr;</a>
+      <section class="cs-sec" id="demo" aria-labelledby="demo-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="demo-title">Demo</h2>
         </div>
-
+        <div class="video" data-reveal="wipe">
+          <video controls playsinline preload="metadata" poster="assets/img/relay/poster-1920.webp" aria-label="Relay prototype demo video">
+            <source src="https://pub-e8fc42fb4acb4423a347ee8b0cdc1bca.r2.dev/gate6_relayvideo.mp4" type="video/mp4">
+          </video>
         </div>
+      </section>
 
-        <footer class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 py-16 mt-12">
-            <div
-                class="max-w-screen-xl mx-auto px-6 sm:px-10 flex flex-col items-center justify-center text-center space-y-6">
+      <section class="cs-sec" id="vision" aria-labelledby="vision-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="vision-title">AI as infrastructure</h2>
+          <p class="cs-lede">AI is here to stay, but it won&#39;t always be exciting. Relay looks past the peak of the hype, to the point where personal AI agents become another digital tool we live with but never think about.</p>
+        </div>
+        <div class="cs-block">
+        <figure class="hype" data-reveal="draw" aria-labelledby="hype-desc">
+          <svg viewBox="0 0 1200 520" aria-hidden="true" focusable="false">
+            <path class="hype-path" pathLength="1" d="M40 480 C170 470 235 92 330 92 C425 92 470 440 600 440 C730 440 830 300 1000 270 C1080 256 1120 252 1160 252"/>
+            <circle class="hype-dot is-now" cx="330" cy="92" r="12"/>
+            <circle class="hype-dot is-relay" cx="387" cy="135" r="12"/>
+            <circle class="hype-dot is-switch" cx="831" cy="338" r="12"/>
+          </svg>
+          <span class="hype-label" style="left: 27.50%; top: 6.54%" aria-hidden="true">Peak hype</span>
+          <span class="hype-label" style="left: 8.33%; top: 57.69%" aria-hidden="true">Popularity<br>rise</span>
+          <span class="hype-label" style="left: 50.00%; top: 94.62%" aria-hidden="true">The falloff</span>
+          <span class="hype-label" style="left: 57.50%; top: 57.69%" aria-hidden="true">Sustainable<br>regrowth</span>
+          <span class="hype-label" style="left: 92.50%; top: 39.42%" aria-hidden="true">True<br>productivity</span>
+          <span class="hype-mark is-now" style="left: 15.83%; top: 19.23%" aria-hidden="true">AI is right here<small>2026</small></span>
+          <span class="hype-mark is-relay" style="left: 41.67%; top: 26.92%" aria-hidden="true">Relay<small>What it will look like</small></span>
+          <span class="hype-mark is-switch" style="left: 73.33%; top: 77.88%" aria-hidden="true">Switchboard<small>How we control it</small></span>
+          <figcaption class="sr" id="hype-desc">A hype cycle curve rising to peak hype, falling into the falloff, then climbing through sustainable regrowth to true productivity. AI sits at the peak in 2026. Relay sits just past the peak, and Switchboard on the climb toward true productivity.</figcaption>
+        </figure>
+          <p class="cs-note">Relay is what that future looks like, and it is already on the horizon. Switchboard is how we will control it. If it works, it will feel like nothing ever happened.</p>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">The phone call, reinvented</h3>
+        <ol class="points is-history" aria-label="The phone call over time">
+          <li class="point">
+            <span class="point-num">01</span>
+            <p class="point-stat">1994</p>
+            <h3 class="point-title">Make and take calls</h3>
+            <p class="point-text">IBM Simon, the first smartphone, put calls in your pocket. It was bulky, and static could drown you out.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">02</span>
+            <p class="point-stat">2007</p>
+            <h3 class="point-title">One button to call</h3>
+            <p class="point-text">The first iPhone let anyone be heard clearly and instantly, at the touch of a button.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">03</span>
+            <p class="point-stat">Next</p>
+            <h3 class="point-title">A third option</h3>
+            <p class="point-text">People want to be heard without their voices being heard. Beside Call and End Call sits a third choice: relay it.</p>
+          </li>
+        </ol>
+        </div>
+        <div class="cs-block">
+          <p class="motto" data-reveal="rise"><mark class="hl" data-hl-ms="1400"><span>Make AI boring.</span></mark></p>
+          <p class="motto-sub" data-reveal="rise">The most successful technology disappears into everyday language: we google things, we text people. Relay is designed the same way, so that one day you simply relay a call.</p>
+        </div>
+        <div class="cs-block">
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/relay-infra-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/relay-infra-960.webp"
+                     srcset="assets/img/relay/relay-infra-960.webp 960w, assets/img/relay/relay-infra-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="AI as integrated infrastructure: a phone running Relay&#39;s call delegation screen">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/relay-generic-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/relay-generic-960.webp"
+                     srcset="assets/img/relay/relay-generic-960.webp 960w, assets/img/relay/relay-generic-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Genericization: the Relay logo, this is Relay, beside the Switchboard symbol, this is to relay">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+      </section>
 
-                <div class="h-12 flex items-center justify-center transition-transform">
-                    <img src="global_images/khbannerg.png" alt="Kenny Huang Design Logo"
-                        class="h-full w-auto object-contain">
-                </div>
-
-                <div class="text-sm text-zinc-400">
-                    <p>&copy; 2026 Kenny Huang Design.</p>
-                    <p>All rights reserved.</p>
-                </div>
+      <section class="cs-sec" id="relay" aria-labelledby="relay-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="relay-title">Relay</h2>
+          <p class="cs-lede">A personal social task agent built into your phone. Not an app, a chatbot or another assistant, but an integrated service layer that makes annoying phone calls disappear.</p>
+        </div>
+        <ol class="points is-four" aria-label="What Relay does" data-progress>
+          <li class="point">
+            <span class="point-num">01</span>
+            <h3 class="point-title">Makes calls, takes calls</h3>
+            <p class="point-text">Appointments, reservations, RSVPs, rescheduling, deliveries and simple inquiries, handed off with one button.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">02</span>
+            <h3 class="point-title">Text or voice, your choice</h3>
+            <p class="point-text">Tell Relay what you need by typing or speaking, and it carries the conversation for you.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">03</span>
+            <h3 class="point-title">Live and post-call transcripts</h3>
+            <p class="point-text">Follow the call as it happens, step in mid-call, or read the full transcript afterwards.</p>
+          </li>
+          <li class="point">
+            <span class="point-num">04</span>
+            <h3 class="point-title">Knows when to hand back</h3>
+            <p class="point-text">Payments and complex or emotional calls are relayed back to you. It&#39;s in the name.</p>
+          </li>
+        </ol>
+        <div class="cs-block">
+          <h3 class="cs-sub">Relay in use</h3>
+          <div class="door" data-door>
+            <div class="fig-row door-stage">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/relay-hassle-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/relay-hassle-960.webp"
+                     srcset="assets/img/relay/relay-hassle-960.webp 960w, assets/img/relay/relay-hassle-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Save the hassle, relay it: a phone showing Relay taking a call on the user&#39;s behalf">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/relay-busy-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/relay-busy-960.webp"
+                     srcset="assets/img/relay/relay-busy-960.webp 960w, assets/img/relay/relay-busy-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Busy driving, working, studying or relaxing, or just can&#39;t take the call? Relay handles it">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/relay-choice-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/relay-choice-960.webp"
+                     srcset="assets/img/relay/relay-choice-960.webp 960w, assets/img/relay/relay-choice-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Relay your text message or your spoken word: your choice">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/relay-handback-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/relay-handback-960.webp"
+                     srcset="assets/img/relay/relay-handback-960.webp 960w, assets/img/relay/relay-handback-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Relay can&#39;t handle calls involving payment or complex, emotional calls, so it relays them back, with the option to intercept mid-call or follow up from the transcript">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/relay-agent-1920.webp">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/relay-agent-960.webp"
+                     srcset="assets/img/relay/relay-agent-960.webp 960w, assets/img/relay/relay-agent-1920.webp 1920w"
+                     sizes="(max-width: 720px) 80vw, 900px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Relay is a personal social task agent built into your phone: it makes and takes calls, talks by text or voice, keeps transcripts and is activated with one button">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
             </div>
-        </footer>
-
-    </main>
-
-    <!-- Lightbox Modal -->
-    <div id="lightbox"
-        class="fixed inset-0 z-[60] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="relative max-w-5xl w-full max-h-screen">
-            <button onclick="closeLightbox()"
-                class="absolute -top-12 right-0 text-white hover:text-zinc-300 focus:outline-none">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
+            <button class="door-arrow is-prev" type="button" data-door-prev aria-label="Previous slide" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+            <button class="door-arrow is-next" type="button" data-door-next aria-label="Next slide" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Who it&#39;s for</h3>
+          <p class="cs-note">Anyone who can&#39;t take or make a call at a given moment, especially people with social anxiety or telephobia, people who dislike menial tasks, people with little free time, and people with speech impairments.</p>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/relay/relay-who-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/relay/relay-who-960.webp"
+                   srcset="assets/img/relay/relay-who-960.webp 960w, assets/img/relay/relay-who-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="2880" height="1620" loading="lazy" decoding="async"
+                   alt="Who Relay is for: people with social anxiety and telephobia, a dislike of menial tasks, limited free time or speech impairments, meaning anyone who simply cannot take or make a phone call at any time">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
             </button>
-            <img id="lightbox-img" src="" alt="Full View" class="w-full h-full object-contain rounded-lg shadow-2xl">
+          </figure>
         </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Built-in limits</h3>
+          <p class="cs-note">Relay handles menial calls on its own, but it will never be authorized to disclose payment information, access personal data you haven&#39;t permitted, or clone voices.</p>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/relay/relay-limits-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/relay/relay-limits-960.webp"
+                   srcset="assets/img/relay/relay-limits-960.webp 960w, assets/img/relay/relay-limits-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="2880" height="1620" loading="lazy" decoding="async"
+                   alt="Relay handles menial task calls entirely autonomously, but will never be authorized to disclose payment info, access unpermitted personal data or clone voices">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="switchboard" aria-labelledby="switchboard-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="switchboard-title">Switchboard</h2>
+          <p class="cs-lede">If Relay is the faucet, Switchboard is the plumbing behind it: a universal protocol that lets AI voice agents from any developer take on calls through Relay, under one set of controls.</p>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">The plumbing</h3>
+          <p class="cs-note">Relay and Switchboard are not two separate products. Relay is the consumer product, and Switchboard is the disruptor behind it, built from an API bridge, an agent SDK, a consent registry, a privacy ledger and a handshake between agents.</p>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/sb-plumbing-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/sb-plumbing-960.webp"
+                     srcset="assets/img/relay/sb-plumbing-960.webp 960w, assets/img/relay/sb-plumbing-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="A sink faucet cannot exist without plumbing: Relay is the faucet, Switchboard is the plumbing behind it">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/sb-layers-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/sb-layers-960.webp"
+                     srcset="assets/img/relay/sb-layers-960.webp 960w, assets/img/relay/sb-layers-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Diagram of Relay sitting on Switchboard, which is made of an API bridge, an agent SDK, a consent registry, a privacy ledger and a handshake">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">Why now</h3>
+          <p class="cs-note">Companies are starting to notice that people no longer want to make phone calls. As of April 2026, Google Duplex, OpenAI&#39;s Realtime API and a wave of startups offer AI agents that can call for you, and high-fidelity agents are expected by 2027. None of them treat AI as infrastructure, or plan for how people will control it.</p>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/market-now-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/market-now-960.webp"
+                     srcset="assets/img/relay/market-now-960.webp 960w, assets/img/relay/market-now-1920.webp 1920w, assets/img/relay/market-now-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Map of current call delegation options in April 2026, by fidelity of service and business or individual use, including Google Duplex, OpenAI Realtime, Bland AI, Vocode, CallPod and Voyp">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/market-next-2880.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/market-next-960.webp"
+                     srcset="assets/img/relay/market-next-960.webp 960w, assets/img/relay/market-next-1920.webp 1920w, assets/img/relay/market-next-2880.webp 2880w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Relay v2 expected impact: Relay at high fidelity for individual use, ahead of Some1, Google Duplex, Synthflow, TalkVia AI, Voyp and Bland AI">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-block">
+          <h3 class="cs-sub">The trust gap</h3>
+          <p class="cs-note">The people who stand to gain the most from AI calling are skeptical of it, because no way of controlling it exists yet. Switchboard solves this, and Relay is the proof of concept. So how do we control something designed to be universal?</p>
+          <figure class="fig">
+            <button class="fig-open" type="button" data-full="assets/img/relay/sb-solves-1920.webp" data-reveal="wipe">
+              <span class="sr">Enlarge: </span>
+              <img src="assets/img/relay/sb-solves-960.webp"
+                   srcset="assets/img/relay/sb-solves-960.webp 960w, assets/img/relay/sb-solves-1920.webp 1920w"
+                   sizes="(max-width: 720px) calc(100vw - 32px), min(1504px, calc(100vw - 96px))"
+                   width="2880" height="1620" loading="lazy" decoding="async"
+                   alt="Switchboard solves this, Relay is the proof of concept, beside Relay&#39;s dial pad and call delegation screens">
+              <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+            </button>
+          </figure>
+        </div>
+        <div class="cs-quote">
+          <blockquote><mark class="hl" data-hl-ms="1800"><span>By doing what we&#39;re best at: pressing buttons and flipping switches.</span></mark></blockquote>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="process" aria-labelledby="process-title">
+        <div class="cs-grid cs-sec-head" data-reveal="rise">
+          <h2 class="cs-sec-title" id="process-title">Process</h2>
+        </div>
+        <ol class="gates" aria-label="Thesis presentations">
+          <li class="gate" data-reveal="rise">
+            <a href="khp_docs/Kenny%20Huang%20-%20GATE%201.pdf" target="_blank" rel="noopener">
+              <div class="gate-media"><img src="assets/img/relay/gate-1-960.webp" width="1920" height="1080" loading="lazy" decoding="async" alt=""></div>
+              <p class="gate-meta">Gate One &middot; Sep 2025</p>
+              <h3 class="gate-title">Where it all started</h3>
+              <p class="gate-text">Defining evolving social landscapes: isolation, weakening bonds, less free time and declining trust.</p>
+              <span class="gate-open">Open the presentation, 8 MB<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+            </a>
+          </li>
+          <li class="gate" data-reveal="rise" style="--delay: 80ms">
+            <a href="khp_docs/Kenny%20Huang%20-%20GATE%202.pdf" target="_blank" rel="noopener">
+              <div class="gate-media"><img src="assets/img/relay/gate-2-960.webp" width="1920" height="1080" loading="lazy" decoding="async" alt=""></div>
+              <p class="gate-meta">Gate Two &middot; Oct 2025</p>
+              <h3 class="gate-title">Personal background and initial research</h3>
+              <p class="gate-text">Testing the premise, and narrowing in on people who would rather not speak on the phone.</p>
+              <span class="gate-open">Open the presentation, 8 MB<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+            </a>
+          </li>
+          <li class="gate" data-reveal="rise" style="--delay: 160ms">
+            <a href="khp_docs/Kenny%20Huang%20-%20GATE%203.pdf" target="_blank" rel="noopener">
+              <div class="gate-media"><img src="assets/img/relay/gate-3-960.webp" width="1920" height="1080" loading="lazy" decoding="async" alt=""></div>
+              <p class="gate-meta">Gate Three &middot; Dec 2025</p>
+              <h3 class="gate-title">Initial idea: Relay Beta</h3>
+              <p class="gate-text">A semi-autonomous agent for everyday calls, and a third option between answering and declining.</p>
+              <span class="gate-open">Open the presentation, 5 MB<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+            </a>
+          </li>
+          <li class="gate" data-reveal="rise">
+            <a href="khp_docs/Kenny%20Huang%20-%20GATE%204.pdf" target="_blank" rel="noopener">
+              <div class="gate-media"><img src="assets/img/relay/gate-4-960.webp" width="1920" height="1080" loading="lazy" decoding="async" alt=""></div>
+              <p class="gate-meta">Gate Four &middot; Jan 2026</p>
+              <h3 class="gate-title">Refined idea: Relay v0 and Switchboard v0</h3>
+              <p class="gate-text">Switchboard appears, turning call delegation from a product into a utility.</p>
+              <span class="gate-open">Open the presentation, 11 MB<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+            </a>
+          </li>
+          <li class="gate" data-reveal="rise" style="--delay: 80ms">
+            <a href="khp_docs/Kenny%20Huang%20-%20GATE%205.pdf" target="_blank" rel="noopener">
+              <div class="gate-media"><img src="assets/img/relay/gate-5-960.webp" width="1920" height="1080" loading="lazy" decoding="async" alt=""></div>
+              <p class="gate-meta">Gate Five &middot; Mar 2026</p>
+              <h3 class="gate-title">Refined focus: Relay v1</h3>
+              <p class="gate-text">The philosophy behind Relay, its limits, and the plan for a working prototype.</p>
+              <span class="gate-open">Open the presentation, 3 MB<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+            </a>
+          </li>
+          <li class="gate" data-reveal="rise" style="--delay: 160ms">
+            <a href="khp_docs/Kenny%20Huang%20-%20GATE%206.pdf" target="_blank" rel="noopener">
+              <div class="gate-media"><img src="assets/img/relay/gate-6-960.webp" width="1920" height="1080" loading="lazy" decoding="async" alt=""></div>
+              <p class="gate-meta">Gate Six &middot; Apr 2026</p>
+              <h3 class="gate-title">Thesis final: Relay v1.5 and Switchboard v1</h3>
+              <p class="gate-text">AI as infrastructure, delegation as a tool.</p>
+              <span class="gate-open">Open the presentation, 10 MB<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+            </a>
+          </li>
+        </ol>
+        <div class="cs-block">
+          <h3 class="cs-sub">Building the prototype</h3>
+          <p class="cs-note">A Node.js backend with Kokoro text-to-speech and the Anthropic API runs on my home desktop, reached through a tunnel, with the interface hosted online so anyone can try it.</p>
+          <div class="fig-row">
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/proto-build-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/proto-build-960.webp"
+                     srcset="assets/img/relay/proto-build-960.webp 960w, assets/img/relay/proto-build-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="The functional prototype: a home desktop hosting the Node.js backend, Kokoro text-to-speech, the Anthropic API and an ngrok tunnel, a laptop showing the video and presentation, an iPhone 8 running Relay, and the interface hosted online">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+            <figure class="fig">
+              <button class="fig-open" type="button" data-full="assets/img/relay/proto-flow-1920.webp" data-reveal="wipe">
+                <span class="sr">Enlarge: </span>
+                <img src="assets/img/relay/proto-flow-960.webp"
+                     srcset="assets/img/relay/proto-flow-960.webp 960w, assets/img/relay/proto-flow-1920.webp 1920w"
+                     sizes="(max-width: 720px) calc(100vw - 32px), 740px"
+                     width="2880" height="1620" loading="lazy" decoding="async"
+                     alt="Prototype interaction process: open the prototype, say or type what Relay should say, play the receiver, watch the live transcript, end the call and read the transcript">
+                <span class="fig-expand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></span>
+              </button>
+            </figure>
+          </div>
+        </div>
+        <p class="pitch-end" data-pitch-end><a class="pitch-link" href="khp_docs/Kenny%20Huang%20-%20GATE%206.pdf" target="_blank" rel="noopener">Open the thesis presentation<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></p>
+      </section>
+
+      <section class="cs-sec proto" id="prototype" aria-labelledby="prototype-title" data-proto>
+        <div class="proto-glow" aria-hidden="true"><span class="is-user"></span><span class="is-receiver"></span></div>
+        <div class="cs-grid cs-sec-head is-centered" data-reveal="rise">
+          <h2 class="cs-sec-title" id="prototype-title">Try the prototype</h2>
+          <p class="cs-lede">Two phones, two sides of one call. On the left, tell Relay what you need by text or voice. On the right, play the person receiving the call. The transcript builds in real time, and you decide when the call ends.</p>
+        </div>
+        <div class="proto-pair">
+        <div class="device" data-device="user" style="--tone: 74, 212, 150">
+          <div class="device-head">
+            <h3 class="device-title">User end</h3>
+            <p class="device-text">Hand off a call and follow it live.</p>
+            <div class="device-tools">
+              <a class="device-tool" href="https://relay-16835.web.app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open in new tab</a>
+              <button class="device-tool" type="button" data-device-full><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg>Full screen</button>
+            </div>
+          </div>
+          <div class="device-stage">
+            <span class="phone-shadow" aria-hidden="true"></span>
+            <div class="phone">
+              <span class="phone-slab" aria-hidden="true">
+                <i style="--i: 1; --l: 56"></i>
+                <i style="--i: 2; --l: 66"></i>
+                <i style="--i: 3; --l: 74"></i>
+                <i style="--i: 4; --l: 84"></i>
+                <i style="--i: 5; --l: 92"></i>
+                <i style="--i: 6; --l: 102"></i>
+                <i style="--i: 7; --l: 110"></i>
+                <i style="--i: 8; --l: 120"></i>
+                <i style="--i: 9; --l: 120"></i>
+                <i style="--i: 10; --l: 110"></i>
+                <i style="--i: 11; --l: 102"></i>
+                <i style="--i: 12; --l: 92"></i>
+                <i style="--i: 13; --l: 84"></i>
+                <i style="--i: 14; --l: 74"></i>
+                <i style="--i: 15; --l: 66"></i>
+                <i style="--i: 16; --l: 56"></i>
+              </span>
+              <span class="phone-key is-left is-action" aria-hidden="true"></span>
+              <span class="phone-key is-left is-up" aria-hidden="true"></span>
+              <span class="phone-key is-left is-down" aria-hidden="true"></span>
+              <span class="phone-key is-right is-power" aria-hidden="true"></span>
+              <div class="phone-body">
+                <div class="phone-bezel">
+                  <div class="phone-screen">
+                    <iframe src="https://relay-16835.web.app" title="Relay + Switchboard interactive prototype, user end" loading="lazy" allow="microphone; autoplay; clipboard-write"></iframe>
+                    <button class="phone-glass" type="button" aria-label="Use the user end prototype">
+                      <span class="phone-sheen" aria-hidden="true"></span>
+                      <span class="phone-cta" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10"/><path d="M12 10V8.5a1.5 1.5 0 0 1 3 0V11"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.6 15a1.5 1.5 0 0 1 2.5-1.7L8 15.5V11"/></svg><span class="on-mouse">Click to try it</span><span class="on-touch">Tap to try it</span></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device" data-device="receiver" style="--tone: 224, 62, 26">
+          <div class="device-head">
+            <h3 class="device-title">Receiver end</h3>
+            <p class="device-text">Answer as the person Relay is calling.</p>
+            <div class="device-tools">
+              <a class="device-tool" href="https://relay-16835.web.app/?role=receiver" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open in new tab</a>
+              <button class="device-tool" type="button" data-device-full><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg>Full screen</button>
+            </div>
+          </div>
+          <div class="device-stage">
+            <span class="phone-shadow" aria-hidden="true"></span>
+            <div class="phone">
+              <span class="phone-slab" aria-hidden="true">
+                <i style="--i: 1; --l: 56"></i>
+                <i style="--i: 2; --l: 66"></i>
+                <i style="--i: 3; --l: 74"></i>
+                <i style="--i: 4; --l: 84"></i>
+                <i style="--i: 5; --l: 92"></i>
+                <i style="--i: 6; --l: 102"></i>
+                <i style="--i: 7; --l: 110"></i>
+                <i style="--i: 8; --l: 120"></i>
+                <i style="--i: 9; --l: 120"></i>
+                <i style="--i: 10; --l: 110"></i>
+                <i style="--i: 11; --l: 102"></i>
+                <i style="--i: 12; --l: 92"></i>
+                <i style="--i: 13; --l: 84"></i>
+                <i style="--i: 14; --l: 74"></i>
+                <i style="--i: 15; --l: 66"></i>
+                <i style="--i: 16; --l: 56"></i>
+              </span>
+              <span class="phone-key is-left is-action" aria-hidden="true"></span>
+              <span class="phone-key is-left is-up" aria-hidden="true"></span>
+              <span class="phone-key is-left is-down" aria-hidden="true"></span>
+              <span class="phone-key is-right is-power" aria-hidden="true"></span>
+              <div class="phone-body">
+                <div class="phone-bezel">
+                  <div class="phone-screen">
+                    <iframe src="https://relay-16835.web.app/?role=receiver" title="Relay + Switchboard interactive prototype, receiver end" loading="lazy" allow="microphone; autoplay; clipboard-write"></iframe>
+                    <button class="phone-glass" type="button" aria-label="Use the receiver end prototype">
+                      <span class="phone-sheen" aria-hidden="true"></span>
+                      <span class="phone-cta" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10"/><path d="M12 10V8.5a1.5 1.5 0 0 1 3 0V11"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.6 15a1.5 1.5 0 0 1 2.5-1.7L8 15.5V11"/></svg><span class="on-mouse">Click to try it</span><span class="on-touch">Tap to try it</span></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <p class="proto-note">The AI behind the prototype runs on a server I host at home, so live calls are available on request. <a href="index.html#contact">Get in touch</a> to try a call.</p>
+      </section>
+      <nav class="pager" aria-label="More projects">
+        <a href="project3.html">
+          <div class="pager-media" data-reveal="wipe">
+            <img src="assets/img/covers/nexusbuilds-960.webp"
+                 srcset="assets/img/covers/nexusbuilds-960.webp 960w, assets/img/covers/nexusbuilds-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Previous project</p>
+          <p class="pager-title">NexusBuilds PC Building Service</p>
+        </a>
+        <a href="project.html">
+          <div class="pager-media" data-reveal="wipe" style="--delay: 80ms">
+            <img src="assets/img/covers/betalink-960.webp"
+                 srcset="assets/img/covers/betalink-960.webp 960w, assets/img/covers/betalink-1440.webp 1440w"
+                 sizes="(max-width: 720px) calc(50vw - 24px), 420px"
+                 width="1920" height="1080" loading="lazy" decoding="async" alt="">
+          </div>
+          <p class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></p>
+          <p class="pager-title">Highline Beta BetaLink</p>
+        </a>
+      </nav>
     </div>
+  </main>
 
-    <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-in">
+        <span>© 2026 Kenny Huang. All Rights Reserved.</span>
+        <img class="logo" src="global_images/khlogoblk.png" width="20" height="20" alt="">
+      </div>
+    </div>
+  </footer>
 
-        themeToggleBtn.addEventListener('click', function () {
-            if (localStorage.theme === 'dark') {
-                localStorage.theme = 'light';
-                document.documentElement.classList.remove('dark');
-            } else {
-                localStorage.theme = 'dark';
-                document.documentElement.classList.add('dark');
-            }
-        });
+  <!-- Full-size image viewer -->
+  <div class="cs-dim" aria-hidden="true"></div>
 
-        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
-        document.addEventListener('click', (e) => { if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); } });
-
-        // ── Sticky Section Nav ──
-        const sectionNav = document.getElementById('section-nav');
-        const pitchSentinel = document.getElementById('pitch-sentinel');
-        const secLinks = document.querySelectorAll('.sec-link');
-
-        const sections = [
-            { id: 'section-problem', btn: document.querySelector('[data-target="section-problem"]') },
-            { id: 'section-core', btn: document.querySelector('[data-target="section-core"]') },
-            { id: 'section-background', btn: document.querySelector('[data-target="section-background"]') },
-            { id: 'section-initial-idea', btn: document.querySelector('[data-target="section-initial-idea"]') },
-            { id: 'section-refined-idea', btn: document.querySelector('[data-target="section-refined-idea"]') },
-            { id: 'section-relay', btn: document.querySelector('[data-target="section-relay"]') },
-            { id: 'section-switchboard', btn: document.querySelector('[data-target="section-switchboard"]') },
-            { id: 'section-prototype', btn: document.querySelector('[data-target="section-prototype"]') },
-        ];
-
-        const sentinelObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-                    sectionNav.classList.add('visible');
-                } else {
-                    sectionNav.classList.remove('visible');
-                }
-            });
-        }, { threshold: 0 });
-        sentinelObserver.observe(pitchSentinel);
-
-        function onScroll() {
-            const offset = 160;
-            let active = null;
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const el = document.getElementById(sections[i].id);
-                if (el && el.getBoundingClientRect().top <= offset) {
-                    active = sections[i].id;
-                    break;
-                }
-            }
-            sections.forEach(s => {
-                if (s.btn) s.btn.classList.toggle('active', s.id === active);
-            });
-            if (active) {
-                const activeBtn = document.querySelector('.sec-link.active');
-                const navInner = document.getElementById('section-nav-inner');
-                if (activeBtn && navInner) {
-                    const btnMid = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
-                    navInner.scrollTo({ left: btnMid - navInner.offsetWidth / 2, behavior: 'smooth' });
-                }
-            }
-        }
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        secLinks.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = document.getElementById(btn.dataset.target);
-                if (target) {
-                    const top = target.getBoundingClientRect().top + window.scrollY - 160;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                }
-            });
-        });
-
-        // Lightbox Logic
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-
-        function openLightbox(src) {
-            lightboxImg.src = src;
-            lightbox.classList.remove('hidden');
-            // Small delay to allow display:flex to apply before opacity transition
-            setTimeout(() => {
-                lightbox.classList.remove('opacity-0');
-            }, 10);
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
-        }
-
-        function closeLightbox() {
-            lightbox.classList.add('opacity-0');
-            setTimeout(() => {
-                lightbox.classList.add('hidden');
-                lightboxImg.src = '';
-            }, 300); // Wait for transition
-            document.body.style.overflow = 'auto'; // Restore scrolling
-        }
-
-        // Close on background click
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-                closeLightbox();
-            }
-        });
-    </script>
+  <dialog class="lb" aria-label="Image viewer">
+    <div class="lb-top">
+      <span class="lb-count"></span>
+      <button class="lb-btn" type="button" data-lb-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="lb-stage"><img alt=""></div>
+    <div class="lb-bottom">
+      <button class="lb-btn" type="button" data-lb-prev aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+      <p class="lb-cap"></p>
+      <button class="lb-btn" type="button" data-lb-next aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+  </dialog>
 </body>
-
 </html>

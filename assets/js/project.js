@@ -8,7 +8,9 @@
    7. Focused steps: one step at a time takes precedence, on a loop on wider screens and by scrolling on phones.
    8. Render carousel: panels revolve on their own, with arrows, swipe and clicking a side panel to take over.
    9. Quote: everything else darkens while the quote is in the middle of the screen.
-   10. Pitch link: fades down into place once the visitor reaches the end of the case study. */
+   10. Pitch link: fades down into place once the visitor reaches the end of the case study.
+   11. Interests wheel: the scroll wheel, arrow keys or a click turns it, and the front item shows its photo if it has one.
+   12. Cursor bubble: a label replaces the mouse cursor while it is over a [data-cursor-bubble] element. */
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -330,7 +332,16 @@
   if (door) {
     const stage = door.querySelector('.door-stage');
     const panels = Array.from(stage.querySelectorAll('.fig'));
-    const slots = ['front', 'right', 'back', 'left'];
+    // Each panel's place around the ring, counted from the front: the next one waits on the right, the previous
+    // one on the left, and the rest queue behind those sides, so every turn moves each panel one place around.
+    const slotFor = (offset, n) => {
+      if (offset === 0) return 'front';
+      if (offset === 1) return 'right';
+      if (offset === n - 1) return 'left';
+      if (n > 4 && offset === 2) return 'back-right';
+      if (n > 4 && offset === n - 2) return 'back-left';
+      return 'back';
+    };
     let front = 0;
     let timer = 0;
     let inView = false;
@@ -342,7 +353,7 @@
     const showPanel = (i) => {
       front = (i + panels.length) % panels.length;
       panels.forEach((panel, j) => {
-        panel.dataset.slot = slots[(j - front + panels.length) % panels.length];
+        panel.dataset.slot = slotFor((j - front + panels.length) % panels.length, panels.length);
         panel.querySelector('.fig-open').tabIndex = j === front ? 0 : -1;
       });
     };
@@ -412,5 +423,74 @@
       pitchEnd.classList.add('in');
     }, { rootMargin: '0px 0px -6% 0px', threshold: 1 });
     pitchWatcher.observe(pitchEnd);
+  }
+
+  // 11. Interests wheel. It has ends rather than looping: past the first or last item the scroll goes back to
+  // the page, so someone scrolling down the page with the mouse over the wheel can't get stuck in it.
+  const interestWheel = document.querySelector('.interest-wheel');
+  if (interestWheel) {
+    const items = Array.from(interestWheel.querySelectorAll('.interest'));
+    const cards = items.map((item) => item.querySelector('.interest-card'));
+    const photos = Array.from(document.querySelectorAll('[data-interest-photo]'));
+    const SCROLL_STEP = 40;   // how much scrolling turns the wheel one item. One mouse wheel notch is about 100.
+    const TURN_MS = 320;      // minimum time between turns, so a trackpad's long glide doesn't spin through everything
+    let front = items.findIndex((item) => item.dataset.slot === '0');
+    let scrolled = 0;
+    let scrollReset = 0;
+    let turnedAt = -TURN_MS;
+
+    const turnTo = (i) => {
+      front = i;
+      items.forEach((item, n) => {
+        item.dataset.slot = String(Math.max(-2, Math.min(2, n - front)));
+        if (n === front) cards[n].setAttribute('aria-current', 'true');
+        else cards[n].removeAttribute('aria-current');
+      });
+      const photoId = items[front].dataset.interest;
+      if (!photoId) return;
+      photos.forEach((photo) => photo.classList.toggle('is-active', photo.dataset.interestPhoto === photoId));
+    };
+
+    cards.forEach((card, n) => card.addEventListener('click', () => turnTo(n)));
+
+    interestWheel.addEventListener('keydown', (e) => {
+      const direction = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+      if (!direction) return;
+      e.preventDefault();
+      const next = Math.max(0, Math.min(items.length - 1, front + direction));
+      turnTo(next);
+      cards[next].focus({ preventScroll: true });
+    });
+
+    interestWheel.addEventListener('wheel', (e) => {
+      if (!e.deltaY || e.ctrlKey) return; // ctrl + wheel is the browser's zoom
+      const box = interestWheel.getBoundingClientRect();
+      const middle = (box.top + box.bottom) / 2 / window.innerHeight;
+      if (middle < 0.2 || middle > 0.8) return; // mostly off screen: keep scrolling the page
+      const now = performance.now();
+      const turning = now - turnedAt < TURN_MS;
+      const next = front + Math.sign(e.deltaY);
+      if (!turning && (next < 0 || next >= items.length)) return;
+      e.preventDefault();
+      if (turning) return;
+      scrolled += e.deltaY * (e.deltaMode === 1 ? 33 : 1); // Firefox can report lines instead of pixels
+      clearTimeout(scrollReset);
+      scrollReset = setTimeout(() => { scrolled = 0; }, 200);
+      if (Math.abs(scrolled) < SCROLL_STEP) return;
+      scrolled = 0;
+      turnedAt = now;
+      turnTo(next);
+    }, { passive: false });
+  }
+
+  // 12. Cursor bubble. Only with a mouse, and the cursor is hidden only here so it can't vanish without the bubble.
+  const bubble = document.querySelector('.cursor-bubble');
+  const bubbleTarget = document.querySelector('[data-cursor-bubble]');
+  if (bubble && bubbleTarget && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const follow = (e) => { bubble.style.translate = e.clientX + 'px ' + e.clientY + 'px'; };
+    bubbleTarget.classList.add('no-cursor');
+    bubbleTarget.addEventListener('pointerenter', (e) => { follow(e); bubble.classList.add('is-on'); });
+    bubbleTarget.addEventListener('pointermove', follow);
+    bubbleTarget.addEventListener('pointerleave', () => bubble.classList.remove('is-on'));
   }
 })();

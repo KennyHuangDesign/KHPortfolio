@@ -1,0 +1,165 @@
+/* Kenny Huang portfolio: More about me page
+   Loads after site.css and project.css, and reuses their header, figure and viewer styles. */
+
+/* Header: no hero image on this page, so the title sits closer to the nav */
+.about-page .cs-head { padding-top: 32px; }
+/* The page title doubles as the first section's title, so it sits a step below the case study titles */
+.about-page .cs-title { max-width: none; font-size: clamp(44px, 5.4vw, 84px); text-wrap: balance; }
+
+/* Currently working on: role details on the left, in line with the cnpt card on the right */
+.now-grid { margin-top: 56px; }
+/* The link stays still and .now-box inside it does the moving, so the box can't slide out from under the mouse at
+   its left edge and flicker. The link stretches to the height of the role details beside it.
+   The gradient fades in on a layer of its own, because gradients themselves can't transition. */
+.now-card { display: grid; min-height: 176px; }
+.now-card.no-cursor { cursor: none; }
+.now-box {
+  position: relative; isolation: isolate; display: grid; place-items: center; overflow: hidden;
+  border-radius: var(--radius-thumb); background: var(--raise); color: var(--ink);
+  transition: transform 320ms var(--ease), color 240ms ease, background-color 300ms ease;
+}
+.now-box::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(120deg, #8e1409, var(--hl-a) 55%, var(--hl-b));
+  opacity: 0; transition: opacity 320ms ease;
+}
+.now-lockup { display: flex; align-items: center; gap: 16px; }
+.now-logo { height: 64px; width: auto; flex: none; }
+.now-name { font-family: var(--font-display); font-size: 26px; line-height: 1.2; letter-spacing: -0.014em; white-space: nowrap; text-align: left; }
+.now-arrow {
+  position: absolute; top: 50%; right: 32px; width: 32px; height: 32px; margin-top: -16px;
+  opacity: 0; transform: translateX(-14px);
+  transition: opacity 240ms var(--ease), transform 320ms var(--ease);
+}
+.now-hint { display: none; }
+.now-card:focus-visible .now-box { color: #ffffff; transform: translateX(6px); }
+.now-card:focus-visible .now-box::before { opacity: 1; }
+.now-card:focus-visible .now-arrow { opacity: 1; transform: none; }
+
+/* translate follows the mouse (set by project.js) and transform only handles the pop, so the two never fight */
+.cursor-bubble {
+  position: fixed; top: 0; left: 0; z-index: 40; padding: 10px 16px; border-radius: 22px;
+  background: #ffffff; color: #040707; font-size: 15px; line-height: 1.4; white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28); pointer-events: none;
+  opacity: 0; transform: translate(-50%, -50%) scale(0.7);
+  transition: opacity 160ms ease, transform 240ms var(--ease);
+}
+.cursor-bubble.is-on { opacity: 1; transform: translate(-50%, -50%); }
+
+/* Design philosophy: the two paragraphs read as one statement, with the key lines picked out */
+.philosophy p { margin: 0; font-family: var(--font-display); font-size: 26px; line-height: 1.32; }
+.philosophy p + p { margin-top: 1em; }
+.philosophy strong { font-weight: 600; }
+
+/* Personal interests: the title and photo share the left column, and the wheel sits beside the photo.
+   Photos stack in the same spot so the crossfade never moves the page. */
+.interests {
+  display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); column-gap: 96px; row-gap: 32px;
+  grid-template-areas: "title ." "stage wheel"; align-items: center;
+}
+.interests-title { grid-area: title; white-space: nowrap; }
+.interest-stage { grid-area: stage; display: grid; width: 100%; }
+.interest-photo {
+  grid-area: 1 / 1; width: 100%; margin: 0; opacity: 0; visibility: hidden;
+  transition: opacity 320ms ease, visibility 0s linear 320ms;
+}
+.interest-photo.is-active { opacity: 1; visibility: visible; transition-delay: 0s; }
+/* The painting is portrait: show all of it rather than cropping it to the landscape frame */
+.interest-photo-tall .fig-open img { object-fit: contain; }
+
+/* Interests wheel: a simpler take on the homepage's process wheel. project.js only changes each item's data-slot
+   and CSS does the rest. The padding leaves room for the neighbours above and below the front item. */
+.interest-wheel { grid-area: wheel; padding-block: 104px; perspective: 1000px; }
+.interest-list { display: grid; margin: 0; padding: 0; list-style: none; transform-style: preserve-3d; }
+.interest {
+  grid-area: 1 / 1; display: grid; opacity: 1;
+  transition: transform 560ms var(--ease), opacity 320ms ease, visibility 0s;
+}
+.interest[data-slot="-1"] { opacity: 0.78; transform: translate3d(0, -68%, -64px) rotateX(28deg); }
+.interest[data-slot="1"] { opacity: 0.78; transform: translate3d(0, 68%, -64px) rotateX(-28deg); }
+.interest[data-slot="-2"] { opacity: 0; visibility: hidden; transform: translate3d(0, -100%, -180px) rotateX(56deg); transition-delay: 0s, 0s, 320ms; }
+.interest[data-slot="2"] { opacity: 0; visibility: hidden; transform: translate3d(0, 100%, -180px) rotateX(-56deg); transition-delay: 0s, 0s, 320ms; }
+.interest-card {
+  display: flex; flex-direction: column; justify-content: center; gap: 10px; width: 100%; min-height: 176px; padding: 24px 32px;
+  border: 0; border-radius: var(--radius-thumb); background: var(--raise); color: var(--ink);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 10px 28px rgba(0, 0, 0, 0.14);
+  font: inherit; text-align: left; cursor: pointer;
+  transition: background-color 300ms ease;
+}
+html.dark .interest-card { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 10px 28px rgba(0, 0, 0, 0.5); }
+.interest[data-slot="0"] .interest-card { cursor: default; }
+.interest-name {
+  font-family: var(--font-display); font-size: 30px; font-weight: 500; line-height: 1.12; letter-spacing: -0.02em;
+  transition: transform 560ms var(--ease);
+}
+.interest-desc { font-size: 17px; line-height: 1.45; color: var(--ink-2); opacity: 0; transition: opacity 200ms ease; }
+.interest[data-slot="0"] .interest-desc { opacity: 1; transition-delay: 160ms; }
+/* Each neighbour's name slides to the edge that peeks out from behind the front item */
+.interest[data-slot="-1"] .interest-name { transform: translateY(-30px); }
+.interest[data-slot="1"] .interest-name { transform: translateY(44px); }
+
+/* Closing call to contact */
+.about-cta {
+  display: flex; flex-direction: column; align-items: center; gap: 28px;
+  margin-top: calc(var(--section-space) * 2); padding: 96px 24px;
+  border-top: 1px solid var(--line); text-align: center; transition: border-color 300ms ease;
+}
+.about-cta-title {
+  margin: 0; max-width: 14em; text-wrap: balance;
+  font-family: var(--font-display); font-size: clamp(36px, 4.4vw, 68px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em;
+}
+.about-cta-btn {
+  display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 26px; border-radius: 26px;
+  background: var(--ink); color: var(--ground); font-size: 17px;
+  transition: transform 200ms var(--ease), background-color 300ms ease, color 300ms ease;
+}
+.about-cta-btn svg { width: 18px; height: 18px; flex: none; transition: transform 200ms var(--ease); }
+
+@supports (animation-timeline: view()) {
+  .now-card, .now-facts, .philosophy p, .interests-title, .interest-wheel { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 10% entry 90%; }
+  .about-cta > * { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .now-card:hover .now-box { color: #ffffff; transform: translateX(6px); }
+  .now-card:hover .now-box::before { opacity: 1; }
+  .now-card:hover .now-arrow { opacity: 1; transform: none; }
+  .about-cta-btn:hover { transform: translateY(-2px); }
+  .about-cta-btn:hover svg { transform: translateX(3px); }
+}
+
+/* No hover on touch screens, so the card says what it does up front and goes red on press */
+@media (hover: none) {
+  .now-arrow { top: auto; right: 16px; bottom: 16px; width: 22px; height: 22px; margin: 0; opacity: 1; transform: none; }
+  .now-hint { position: absolute; left: 16px; bottom: 16px; display: block; font-size: 15px; line-height: 22px; }
+  .now-card:active .now-box { color: #ffffff; }
+  .now-card:active .now-box::before { opacity: 1; }
+}
+
+/* Too narrow for the wheel to sit beside the photo */
+@media (max-width: 1080px) {
+  .interests { grid-template-columns: minmax(0, 560px); grid-template-areas: "title" "stage" "wheel"; }
+}
+
+@media (max-width: 720px) {
+  .about-page .cs-head { padding-top: 16px; }
+  .about-page .cs-title { font-size: 40px; }
+  /* Section titles stay smaller than the page title on phones */
+  .about-page .cs-sec-title { font-size: 34px; }
+  .philosophy p { font-family: var(--font-text); font-size: 17px; line-height: 1.5; }
+  .now-grid { margin-top: 32px; }
+  .now-logo { height: 56px; }
+  .now-name { font-size: 22px; }
+  .interests { row-gap: 20px; }
+  .interest-wheel { padding-block: 96px; perspective: 640px; }
+  .interest-card { min-height: 164px; padding: 20px; }
+  .interest-name { font-size: 24px; }
+  .interest-desc { font-size: 16px; line-height: 1.4; }
+  .about-cta { padding: 64px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-cta-btn, .about-cta-btn svg, .now-box, .now-box::before, .now-arrow, .cursor-bubble,
+  .interest-photo, .interest, .interest-name, .interest-desc { transition: none !important; }
+  .about-cta-btn, .about-cta-btn svg, .now-box, .now-arrow { transform: none !important; }
+}

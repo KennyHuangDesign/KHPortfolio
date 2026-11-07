@@ -1,0 +1,101 @@
+/* Kenny Huang portfolio: Cadillac Fairview + case study
+   Loads after site.css and project.css. This page carries more writing than the other case studies,
+   so it adds three text layouts: numbered points, the event flow and the CF representatives section. */
+
+/* Two paragraphs beside a section title, the first opening on a sentence in the primary text color */
+.cs-ledes .cs-lede + .cs-lede { margin-top: 20px; }
+.cs-lede-key { color: var(--ink); }
+
+/* Blue underline on the pitch link at the end of the page */
+.pitch-link { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+
+/* Short paragraph that introduces a block, under its subheading */
+.cs-note { margin: -8px 0 32px; max-width: 46em; font-size: 18px; line-height: 1.6; color: var(--ink-2); }
+
+/* Numbered points: research findings, opportunities and outcomes, three across */
+.points {
+  list-style: none; margin: 0 0 72px; padding: 0;
+  display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 48px 32px;
+}
+.point { display: flex; flex-direction: column; padding-top: 20px; border-top: 1px solid var(--line); transition: border-color 300ms ease; }
+.point-num { font-size: 14px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+/* The accent is too dim for small text on the dark ground, so dark mode uses the lighter blue */
+#research .point-num { color: var(--accent); }
+html.dark #research .point-num { color: var(--hl-b); }
+.point-stat {
+  margin: 18px 0 0; font-family: var(--font-display); font-size: clamp(44px, 4.4vw, 64px); font-weight: 400;
+  line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+}
+.point-stat small { display: block; margin-top: 8px; font-family: var(--font-text); font-size: 14px; letter-spacing: 0; color: var(--ink-3); }
+.point-title { margin: 18px 0 0; font-family: var(--font-display); font-size: 26px; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; }
+.point-text { margin: 12px 0 0; font-size: 17px; line-height: 1.55; color: var(--ink-2); }
+.point-eg { margin: auto 0 0; padding-top: 18px; font-size: 14px; line-height: 1.45; color: var(--ink-3); }
+
+/* Event flow: five stages joined by a line. Stages a CF representative runs get a filled dot and a tag. */
+.flow {
+  --dot: 14px; --flow-gap: 24px;
+  list-style: none; margin: 0 0 72px; padding: 0;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--flow-gap);
+}
+.flow-step { position: relative; padding-top: 40px; }
+.flow-step::before {
+  content: ""; position: absolute; left: 0; top: 0; z-index: 1; box-sizing: border-box;
+  width: var(--dot); height: var(--dot); border-radius: 50%;
+  border: 2px solid var(--accent); background: var(--ground); transition: background-color 300ms ease;
+}
+.flow-step::after {
+  content: ""; position: absolute; left: var(--dot); right: calc(var(--flow-gap) * -1); top: calc(var(--dot) / 2 - 1px);
+  height: 2px; background: var(--accent); transform-origin: left;
+}
+.flow-step:last-child::after { display: none; }
+.flow-step.is-rep::before { background: var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+.flow-num { font-size: 14px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.flow-title { margin: 8px 0 0; font-family: var(--font-display); font-size: 24px; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; }
+.flow-tag {
+  display: inline-flex; align-items: center; height: 24px; margin-top: 10px; padding: 0 10px; border-radius: 12px;
+  background: var(--accent); color: var(--on-accent); font-size: 12px; letter-spacing: 0.01em;
+}
+.flow-text { margin: 12px 0 0; font-size: 16px; line-height: 1.55; color: var(--ink-2); }
+
+/* CF representatives: why they matter, beside what they do */
+.reps-why { margin: 0; font-family: var(--font-display); font-size: 26px; line-height: 1.38; }
+.reps-why + .reps-why { margin-top: 1em; }
+.reps-intro { margin-bottom: 72px; align-items: start; }
+.reps-intro .cs-sec-title { max-width: 6em; }
+
+@supports (animation-timeline: view()) {
+  .point, .flow-step { animation: rise var(--ease) both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+  .point:nth-child(2), .flow-step:nth-child(2) { animation-range: entry 6% entry 86%; }
+  .point:nth-child(3), .flow-step:nth-child(3) { animation-range: entry 12% entry 92%; }
+  .point:nth-child(4), .flow-step:nth-child(4) { animation-range: entry 18% entry 98%; }
+  .flow-step:nth-child(5) { animation-range: entry 24% entry 100%; }
+  .flow-step::after { animation: draw linear both; animation-timeline: view(); animation-range: entry 100% cover 30%; }
+}
+
+@media (max-width: 1100px) {
+  .points { --cols: 2; }
+  .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 48px; }
+  .flow-step:nth-child(3)::after { display: none; }
+}
+
+@media (max-width: 720px) {
+  .cs-note { margin-top: -4px; font-size: 17px; }
+  .points { --cols: 1; gap: 36px; margin-bottom: 56px; }
+  .point-title { font-size: 24px; }
+  /* The flow turns vertical, with the line running down the left */
+  .flow { grid-template-columns: minmax(0, 1fr); gap: 0; margin-bottom: 56px; }
+  .flow-step { padding: 0 0 36px 36px; }
+  .flow-step:last-child { padding-bottom: 0; }
+  .flow-step::after, .flow-step:nth-child(3)::after {
+    display: block; left: calc(var(--dot) / 2 - 1px); right: auto; top: var(--dot); bottom: 0;
+    width: 2px; height: auto; transform-origin: top; animation-name: draw-y;
+  }
+  .flow-step:last-child::after { display: none; }
+  .flow-title { margin-top: 4px; }
+  .reps-why { font-family: var(--font-text); font-size: 19px; line-height: 1.5; }
+  .reps-intro { margin-bottom: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .point, .flow-step, .flow-step::after { animation: none !important; }
+}
